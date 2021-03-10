@@ -15,28 +15,40 @@ class Model {
         }
         return this;
     }
+
+    public clear(): Model {
+        this.datasets.length = 0;
+        return this;
+    }
 }
 
-interface Dataset {
+export interface Dataset {
+    name: String;
+    type: String;
     url: String;
 }
 
-class LigatureDataset implements Dataset {
+export class LigatureDataset implements Dataset {
+    name: String;
+    type: String;
     url: String;
 }
 
-class SparqlDataset implements Dataset {
+export class SparqlDataset implements Dataset {
+    name: String;
+    type: String;
     url: String;
 }
 
 function createModel() {
-    const { subscribe, set, update } = writable(new Model());
+    const { subscribe, update } = writable(new Model());
 
     return {
         subscribe,
         addDataset: (dataset: Dataset) => update(m => m.addDataset(dataset)),
         removeDataset: (dataset: Dataset) => update(m => m.removeDataset(dataset)),
+        clear: (dataset: Dataset) => update(m => m.clear())
     };
 }
 
-export const count = createModel();
+export const store = createModel();
