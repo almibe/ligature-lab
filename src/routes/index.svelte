@@ -6,6 +6,12 @@ import DatasetManagement from "../components/DatasetManagement.svelte";
     <title>Ligature Lab</title>
 </svelte:head>
 
-<h1 class="title">Ligature Lab</h1>
+<div class="container">
+    <div class="row p-4">
+        <div class="col-sm-auto">
+            <h1>Ligature Lab</h1>
+        </div>
+    </div>
 
-<DatasetManagement />
+    <DatasetManagement />
+</div>

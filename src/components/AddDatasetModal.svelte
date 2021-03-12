@@ -1,11 +1,27 @@
-<div class="modal is-active">
-    <div class="modal-background"></div>
+<script lang="typescript">
+  import { onMount } from 'svelte';
+
+  onMount(() => {
+    var modal = document.getElementById('newDatasetModal');
+    var datasetName = document.getElementById('datasetName');
+
+    modal.addEventListener('shown.bs.modal', function () {
+      datasetName.focus()
+    });
+  })
+</script>
+
+<div class="modal" id="newDatasetModal" tabindex="-1">
+    <div class="modal-dialog"></div>
     <div class="modal-content">
-        <div class="box">
+      <div class="modal-header">
+        Add New Dataset
+      </div>
+        <div class="modal-body">
         <div class="field">
             <label class="label">Name</label>
             <div class="control">
-              <input class="input" type="text" placeholder="Text input">
+              <input id="datasetName" class="input" type="text" placeholder="Text input">
             </div>
           </div>
 
