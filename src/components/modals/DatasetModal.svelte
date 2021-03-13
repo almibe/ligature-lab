@@ -19,15 +19,16 @@
     	newDatasetModal = new bs.Modal(modalEl, {});
 
         addDataset = () => {
-            document.getElementById('datasetName').value = '';
-            document.getElementById('datasetUrl').value = '';
-            document.getElementById('ligatureEndpoint').checked = false;
-            document.getElementById('sparqlEndpoint').checked = false;
+            (document.getElementById('datasetName') as any).value = '';
+            (document.getElementById('datasetUrl') as any).value = '';
+            (document.getElementById('ligatureEndpoint') as any).checked = false;
+            (document.getElementById('sparqlEndpoint') as any).checked = false;
 	        newDatasetModal.show()
             showModal.show = true;
         }
 
         modalEl.addEventListener('hide.bs.modal', function (event) {
+            errorMessages.length = 0;
             showModal.show = false;
         })
 
@@ -43,15 +44,16 @@
     export let showModal;
 
     function addNewDataset() {
-        let name = document.getElementById('datasetName').value;
-        let url = document.getElementById('datasetUrl').value;
-        let ligatureEndpoint = document.getElementById('ligatureEndpoint').checked;
-        let sparqlEndpoint = document.getElementById('sparqlEndpoint').checked;
+        errorMessages.length = 0;
+        let name = (document.getElementById('datasetName') as any).value;
+        let url = (document.getElementById('datasetUrl') as any).value;
+        let ligatureEndpoint = (document.getElementById('ligatureEndpoint') as any).checked;
+        let sparqlEndpoint = (document.getElementById('sparqlEndpoint') as any).checked;
         let type: "Ligature" | "SPARQL"
         let valid = true;
 
         if (name.trim().length == 0) {
-            errorMessages.concat("Name is required.");
+            errorMessages.push("Name is required.");
             errorMessages = errorMessages;
             valid = false;
         }
@@ -61,13 +63,13 @@
         } else if (sparqlEndpoint) {
             type = "SPARQL";
         } else {
-            errorMessages.concat("Must set Endpoint tpye.");
+            errorMessages.push("Must set Endpoint tpye.");
             errorMessages = errorMessages;
             valid = false;
         }
 
         if (url.trim().length == 0) { //todo just check if URL is valid
-            errorMessages.concat("URL is required.");
+            errorMessages.push("URL is required.");
             errorMessages = errorMessages;
             valid = false;
         }
@@ -75,8 +77,6 @@
         if (valid) {
             store.addDataset({name: name, url: url, type: type})
             newDatasetModal.hide()
-        } else {
-            //TODO show error message
         }
     }
 

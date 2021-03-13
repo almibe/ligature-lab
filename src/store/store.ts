@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 
 class Model {
-    public datasets: Array<Dataset> = new Array({name: "New Name", type: "Ligature", url: "http://localhost:1234/new"}); //TODO this should be empty after testing
+    public datasets: Array<Dataset> = new Array();
 
     public addDataset(dataset: Dataset): Model {
         this.datasets.push(dataset);
@@ -9,7 +9,10 @@ class Model {
     }
 
     public removeDataset(dataset: Dataset): Model {
-        const index = this.datasets.indexOf(dataset, 0);
+        console.log("Datasets ", this.datasets);
+        console.log("Removing ", dataset);
+        const index = this.datasets.findIndex(d => dataset.name === d.name);
+        console.log("Index " + index);
         if (index > -1) {
            this.datasets.splice(index, 1);
         }
