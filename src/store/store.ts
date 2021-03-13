@@ -1,7 +1,7 @@
 import { writable } from 'svelte/store';
 
 class Model {
-    private datasets: Array<Dataset> = new Array();
+    public datasets: Array<Dataset> = new Array({name: "New Name", type: "Ligature", url: "http://localhost:1234/new"}); //TODO this should be empty after testing
 
     public addDataset(dataset: Dataset): Model {
         this.datasets.push(dataset);
@@ -41,7 +41,7 @@ export class SparqlDataset implements Dataset {
 }
 
 function createModel() {
-    const { subscribe, update } = writable(new Model());
+    const { subscribe, set, update } = writable(new Model());
 
     return {
         subscribe,
