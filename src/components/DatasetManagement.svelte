@@ -1,22 +1,12 @@
 <script>
     import AddDatasetModal from "./modals/DatasetModal.svelte";
     import DatasetList from "./DatasetList.svelte";
-    import { onMount } from "svelte";
 
-    let addDataset = () => {}
+    let showModal = {show: false};
 
-    onMount(async () => {
-        let bs = await import("../../node_modules/bootstrap/dist/js/bootstrap.bundle");
-    	let myModal = new bs.Modal(document.getElementById('newDatasetModal'), {});
-
-        addDataset = () => {
-            document.getElementById('datasetName').value = '';
-            document.getElementById('datasetUrl').value = '';
-            document.getElementById('ligatureEndpoint').checked = false;
-            document.getElementById('sparqlEndpoint').checked = false;
-	        myModal.show()
-        }
-    })
+    let addDataset = () => {
+        showModal.show = true;
+    }
 </script>
 
 <div class="row">
@@ -29,4 +19,4 @@
 </div>
 
 <DatasetList />
-<AddDatasetModal />
+<AddDatasetModal showModal={showModal} />

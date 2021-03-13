@@ -1,11 +1,35 @@
 <script lang="typescript">
     import { onMount } from 'svelte';
 
-    let datasetName: String;
-    let datasetUrl: String;
-    let datasetType: "Ligature" | "Sparql";
+    let addDataset = () => {}
 
-    onMount(() => {
+    $: {
+        if (showModal.show) {
+            addDataset()
+        }
+    }
+
+    let myModal;
+
+    onMount(async () => {
+        let bs = await import("../../../node_modules/bootstrap/dist/js/bootstrap.bundle");
+        let modalEl = document.getElementById('newDatasetModal');
+    	myModal = new bs.Modal(modalEl, {});
+
+        addDataset = () => {
+            document.getElementById('datasetName').value = '';
+            document.getElementById('datasetUrl').value = '';
+            document.getElementById('ligatureEndpoint').checked = false;
+            document.getElementById('sparqlEndpoint').checked = false;
+	        myModal.show()
+            showModal.show = true;
+        }
+
+        modalEl.addEventListener('hide.bs.modal', function (event) {
+            showModal.show = false;
+        })
+
+        //handle focus
         var modal = document.getElementById('newDatasetModal');
         var datasetName = document.getElementById('datasetName');
 
@@ -13,6 +37,20 @@
             datasetName.focus()
         });
     })
+
+    export let showModal;
+
+    let datasetName: String;
+    let datasetUrl: String;
+    let datasetType: "Ligature" | "Sparql";
+
+    function addNewDataset() {
+
+    }
+
+    function cancel() {
+        myModal.hide();
+    }
 </script>
 
 <div class="modal fade" id="newDatasetModal" tabindex="-1" aria-labelledby="newDatasetModalLabel" aria-hidden="true">
@@ -52,10 +90,10 @@
             </div>
             <div class="modal-footer">
                 <div class="control">
-                    <button class="btn btn-outline-dark">Add</button>
+                    <button class="btn btn-outline-dark" on:click={addNewDataset}>Add</button>
                 </div>
                 <div class="control">
-                    <button class="btn btn-outline-danger">Cancel</button>
+                    <button class="btn btn-outline-danger" on:click={cancel}>Cancel</button>
                 </div>
             </div>
         </div>

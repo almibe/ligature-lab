@@ -22,21 +22,9 @@ class Model {
     }
 }
 
-export interface Dataset {
+export class Dataset {
     name: String;
-    type: String;
-    url: String;
-}
-
-export class LigatureDataset implements Dataset {
-    name: String;
-    type: String;
-    url: String;
-}
-
-export class SparqlDataset implements Dataset {
-    name: String;
-    type: String;
+    type: "Ligature" | "SPARQL";
     url: String;
 }
 
