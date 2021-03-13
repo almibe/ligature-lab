@@ -1,7 +1,9 @@
 <script lang="typescript">
     import { onMount } from 'svelte';
+    import { store } from "../../store/store";
 
     let addDataset = () => {}
+    export let errorMessages = [];
 
     $: {
         if (showModal.show) {
@@ -9,19 +11,19 @@
         }
     }
 
-    let myModal;
+    let newDatasetModal;
 
     onMount(async () => {
         let bs = await import("../../../node_modules/bootstrap/dist/js/bootstrap.bundle");
         let modalEl = document.getElementById('newDatasetModal');
-    	myModal = new bs.Modal(modalEl, {});
+    	newDatasetModal = new bs.Modal(modalEl, {});
 
         addDataset = () => {
             document.getElementById('datasetName').value = '';
             document.getElementById('datasetUrl').value = '';
             document.getElementById('ligatureEndpoint').checked = false;
             document.getElementById('sparqlEndpoint').checked = false;
-	        myModal.show()
+	        newDatasetModal.show()
             showModal.show = true;
         }
 
@@ -40,16 +42,46 @@
 
     export let showModal;
 
-    let datasetName: String;
-    let datasetUrl: String;
-    let datasetType: "Ligature" | "Sparql";
-
     function addNewDataset() {
+        let name = document.getElementById('datasetName').value;
+        let url = document.getElementById('datasetUrl').value;
+        let ligatureEndpoint = document.getElementById('ligatureEndpoint').checked;
+        let sparqlEndpoint = document.getElementById('sparqlEndpoint').checked;
+        let type: "Ligature" | "SPARQL"
+        let valid = true;
 
+        if (name.trim().length == 0) {
+            errorMessages.concat("Name is required.");
+            errorMessages = errorMessages;
+            valid = false;
+        }
+
+        if (ligatureEndpoint) {
+            type = "Ligature";
+        } else if (sparqlEndpoint) {
+            type = "SPARQL";
+        } else {
+            errorMessages.concat("Must set Endpoint tpye.");
+            errorMessages = errorMessages;
+            valid = false;
+        }
+
+        if (url.trim().length == 0) { //todo just check if URL is valid
+            errorMessages.concat("URL is required.");
+            errorMessages = errorMessages;
+            valid = false;
+        }
+
+        if (valid) {
+            store.addDataset({name: name, url: url, type: type})
+            newDatasetModal.hide()
+        } else {
+            //TODO show error message
+        }
     }
 
     function cancel() {
-        myModal.hide();
+        newDatasetModal.hide();
     }
 </script>
 
@@ -71,11 +103,11 @@
                 <div class="field">
                     <div class="control">
                         <label class="radio">
-                            <input type="radio" name="ligatureEndpoint" id="ligatureEndpoint">
+                            <input type="radio" name="endpoint" id="ligatureEndpoint">
                             Ligature Endpoint
                         </label>
                         <label class="radio">
-                            <input type="radio" name="sparqlEndpoint" id="sparqlEndpoint">
+                            <input type="radio" name="endpoint" id="sparqlEndpoint">
                             SPARQL Endpoint
                         </label>
                     </div>
@@ -88,6 +120,15 @@
                     </div>
                 </div>
             </div>
+            {#if errorMessages.length > 0}
+            <div class="alert alert-danger" role="alert">
+                <ul>
+                    {#each errorMessages as errorMessage}
+                        <li>{errorMessage}</li>
+                    {/each}
+                </ul>
+            </div>
+            {/if}
             <div class="modal-footer">
                 <div class="control">
                     <button class="btn btn-outline-dark" on:click={addNewDataset}>Add</button>
