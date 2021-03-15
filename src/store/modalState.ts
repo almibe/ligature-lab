@@ -37,6 +37,7 @@ function create() {
         showNewDatasetModal: () => update(m => m.showNewDatasetModal()),
         showEditDatasetModal: (dataset: Dataset) => update(m => m.showEditDatasetModal(dataset)),
         hide: () => update(m => m.hide()),
+        dataset: () => modalState.dataset
     };
 }
 

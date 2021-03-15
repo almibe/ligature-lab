@@ -7,10 +7,12 @@
 
     let showModal = (dataset: null | Dataset) => {}
     let title: String = ""
+    let submitButton: String = ""
 
 	const unsubscribe = modalState.subscribe(modalState => {
         if (modalState.show) {
             title = modalState.title
+            submitButton = modalState.dataset ? "Edit" : "Add"
             showModal(modalState.dataset)
         }
 	});
@@ -76,6 +78,9 @@
         }
 
         if (valid) {
+            if (modalState.dataset() != null) {
+                store.removeDataset(modalState.dataset())
+            }
             store.addDataset({name: name, url: url, type: type})
             newDatasetModal.hide()
         }
@@ -132,7 +137,7 @@
             {/if}
             <div class="modal-footer">
                 <div class="control">
-                    <button class="btn btn-outline-dark" on:click={addNewDataset}>Add</button>
+                    <button class="btn btn-outline-dark" on:click={addNewDataset}>{submitButton}</button>
                 </div>
                 <div class="control">
                     <button class="btn btn-outline-danger" on:click={cancel}>Cancel</button>

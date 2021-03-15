@@ -9,10 +9,7 @@ class Model {
     }
 
     public removeDataset(dataset: Dataset): Model {
-        console.log("Datasets ", this.datasets);
-        console.log("Removing ", dataset);
         const index = this.datasets.findIndex(d => dataset.name === d.name);
-        console.log("Index " + index);
         if (index > -1) {
            this.datasets.splice(index, 1);
         }
