@@ -5,6 +5,7 @@ class Model {
 
     public addDataset(dataset: Dataset): Model {
         this.datasets.push(dataset);
+        this.datasets.sort((a,b) => a.name.localeCompare(b.name.toString()))
         return this;
     }
 
@@ -20,6 +21,10 @@ class Model {
         this.datasets.length = 0;
         return this;
     }
+
+    public checkDuplicate(datasetName: String): Boolean {
+        return this.datasets.some((v) => v.name == datasetName)
+    }
 }
 
 export class Dataset {
@@ -29,13 +34,15 @@ export class Dataset {
 }
 
 function createModel() {
-    const { subscribe, set, update } = writable(new Model());
+    const model = new Model()
+    const { subscribe, set, update } = writable(model);
 
     return {
         subscribe,
         addDataset: (dataset: Dataset) => update(m => m.addDataset(dataset)),
         removeDataset: (dataset: Dataset) => update(m => m.removeDataset(dataset)),
-        clear: (dataset: Dataset) => update(m => m.clear())
+        clear: (dataset: Dataset) => update(m => m.clear()),
+        checkDuplicate: (datasetName: String) => model.checkDuplicate(datasetName)
     };
 }
 

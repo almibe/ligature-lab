@@ -48,15 +48,21 @@
 
     function addNewDataset() {
         errorMessages.length = 0;
-        let name = (document.getElementById('datasetName') as any).value;
+        let name = (document.getElementById('datasetName') as any).value.trim();
         let url = (document.getElementById('datasetUrl') as any).value;
         let ligatureEndpoint = (document.getElementById('ligatureEndpoint') as any).checked;
         let sparqlEndpoint = (document.getElementById('sparqlEndpoint') as any).checked;
         let type: "Ligature" | "SPARQL"
         let valid = true;
 
-        if (name.trim().length == 0) {
+        if (name.length == 0) {
             errorMessages.push("Name is required.");
+            errorMessages = errorMessages;
+            valid = false;
+        }
+
+        if (store.checkDuplicate(name)) {
+            errorMessages.push("Dataset name already exists.");
             errorMessages = errorMessages;
             valid = false;
         }
