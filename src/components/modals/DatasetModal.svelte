@@ -49,7 +49,7 @@
     function addNewDataset() {
         errorMessages.length = 0;
         let name = (document.getElementById('datasetName') as any).value.trim();
-        let url = (document.getElementById('datasetUrl') as any).value;
+        let url = (document.getElementById('datasetUrl') as any).value.trim();
         let ligatureEndpoint = (document.getElementById('ligatureEndpoint') as any).checked;
         let sparqlEndpoint = (document.getElementById('sparqlEndpoint') as any).checked;
         let type: "Ligature" | "SPARQL"
@@ -77,8 +77,14 @@
             valid = false;
         }
 
-        if (url.trim().length == 0) { //todo just check if URL is valid
+        if (url.length == 0) {
             errorMessages.push("URL is required.");
+            errorMessages = errorMessages;
+            valid = false;
+        }
+
+        if (!validURL(url)) {
+            errorMessages.push("URL is invalid.");
             errorMessages = errorMessages;
             valid = false;
         }
@@ -90,6 +96,18 @@
             store.addDataset({name: name, url: url, type: type})
             newDatasetModal.hide()
         }
+    }
+
+    const urlPattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+            '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
+            '((\\d{1,3}\\.){3}\\d{1,3}))|'+ // OR ip (v4) address
+            '(localhost)'+ // OR localhost
+            '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*'+ // port and path
+            '(\\?[;&a-z\\d%_.~+=-]*)?'+ // query string
+            '(\\#[-a-z\\d_]*)?$','i'); // fragment locator
+
+    function validURL(str: string) {
+        return urlPattern.test(str);
     }
 
     function cancel() {
