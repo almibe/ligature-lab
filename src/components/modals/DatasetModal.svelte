@@ -1,15 +1,19 @@
 <script lang="typescript">
     import { onMount } from 'svelte';
-    import { store } from "../../store/store";
+    import { store, Dataset } from "../../store/store";
+    import { modalState } from '../../store/modalState';
 
-    let addDataset = () => {}
     export let errorMessages = [];
 
-    $: {
-        if (showModal.show) {
-            addDataset()
+    let showModal = (dataset: null | Dataset) => {}
+    let title: String = ""
+
+	const unsubscribe = modalState.subscribe(modalState => {
+        if (modalState.show) {
+            title = modalState.title
+            showModal(modalState.dataset)
         }
-    }
+	});
 
     let newDatasetModal;
 
@@ -18,18 +22,17 @@
         let modalEl = document.getElementById('newDatasetModal');
     	newDatasetModal = new bs.Modal(modalEl, {});
 
-        addDataset = () => {
-            (document.getElementById('datasetName') as any).value = '';
-            (document.getElementById('datasetUrl') as any).value = '';
-            (document.getElementById('ligatureEndpoint') as any).checked = false;
-            (document.getElementById('sparqlEndpoint') as any).checked = false;
+        showModal = (dataset: null | Dataset) => {
+            (document.getElementById('datasetName') as any).value = dataset ? dataset.name : '';
+            (document.getElementById('datasetUrl') as any).value = dataset ? dataset.url : '';
+            (document.getElementById('ligatureEndpoint') as any).checked = dataset ? dataset.type == "Ligature" : false;
+            (document.getElementById('sparqlEndpoint') as any).checked = dataset ? dataset.type == "SPARQL" : false;
 	        newDatasetModal.show()
-            showModal.show = true;
         }
 
         modalEl.addEventListener('hide.bs.modal', function (event) {
             errorMessages.length = 0;
-            showModal.show = false;
+            modalState.hide();
         })
 
         //handle focus
@@ -40,8 +43,6 @@
             datasetName.focus()
         });
     })
-
-    export let showModal;
 
     function addNewDataset() {
         errorMessages.length = 0;
@@ -89,7 +90,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 class="modal-title" id="newDatasetModalLabel">Add New Dataset</h3>
+                <h3 class="modal-title" id="newDatasetModalLabel">{title}</h3>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">

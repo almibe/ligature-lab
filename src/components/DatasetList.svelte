@@ -1,17 +1,22 @@
 <script lang="typescript">
     import { store, Dataset } from "../store/store";
     import RemoveDatasetModal from "./modals/RemoveDatasetModal.svelte";
+    import { modalState } from '../store/modalState';
 
     let datasets: Array<Dataset>;
-    let modalState = {show: false, dataset: null};
+    let removeModalState = {show: false, dataset: null};
 
     const unsubscribe = store.subscribe(value => {
         datasets = value.datasets;
     });
 
+    let editDataset = (dataset: Dataset) => {
+        modalState.showEditDatasetModal(dataset)
+    }
+
     function removeDataset(dataset: Dataset) {
-        modalState.dataset = dataset;
-        modalState.show = true;
+        removeModalState.dataset = dataset;
+        removeModalState.show = true;
     }
 </script>
 
@@ -31,7 +36,7 @@
             <td class="pt-4">{dataset.type}</td>
             <td class="pt-4">{dataset.url}</td>
             <td>
-                <button type="button" class="btn btn-outline-dark">Edit</button>
+                <button type="button" class="btn btn-outline-dark" on:click={() => editDataset(dataset)}>Edit</button>
                 <button type="button" class="btn btn-outline-danger" on:click={() => removeDataset(dataset)}>Remove</button>
             </td>
         </tr>
@@ -39,4 +44,4 @@
     </tbody>
 </table>
 
-<RemoveDatasetModal modalState={modalState} />
+<RemoveDatasetModal removeModalState={removeModalState} />

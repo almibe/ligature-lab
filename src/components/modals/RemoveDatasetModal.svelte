@@ -2,10 +2,12 @@
     import { onMount } from 'svelte';
     import { Dataset, store } from "../../store/store";
 
+    export let removeModalState;
+
     let showModal = () => {}
 
     $: {
-        if (modalState.show) {
+        if (removeModalState.show) {
             showModal();
         }
     }
@@ -19,18 +21,16 @@
 
         showModal = () => {
 	        removeDatasetModal.show()
-            modalState.show = true;
+            removeModalState.show = true;
         }
 
         modalEl.addEventListener('hide.bs.modal', function (event) {
-            modalState.show = false;
+            removeModalState.show = false;
         })
     })
 
-    export let modalState;
-
     function removeDataset() {
-        store.removeDataset({name: modalState.dataset.name, url: modalState.dataset.url, type: modalState.dataset.type})
+        store.removeDataset({name: removeModalState.dataset.name, url: removeModalState.dataset.url, type: removeModalState.dataset.type})
         removeDatasetModal.hide();
     }
 
@@ -47,7 +47,7 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                Are you sure you want to remove {modalState.dataset ? modalState.dataset.name : ""}?
+                Are you sure you want to remove {removeModalState.dataset ? removeModalState.dataset.name : ""}?
             </div>
             <div class="modal-footer">
                 <div class="control">

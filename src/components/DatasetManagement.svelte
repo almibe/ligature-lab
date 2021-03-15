@@ -1,11 +1,10 @@
-<script>
-    import AddDatasetModal from "./modals/DatasetModal.svelte";
+<script lang="typescript">
+    import DatasetModal from "./modals/DatasetModal.svelte";
     import DatasetList from "./DatasetList.svelte";
-
-    let showModal = {show: false};
+    import { modalState } from '../store/modalState';
 
     let addDataset = () => {
-        showModal.show = true;
+        modalState.showNewDatasetModal()
     }
 </script>
 
@@ -19,4 +18,4 @@
 </div>
 
 <DatasetList />
-<AddDatasetModal showModal={showModal} />
+<DatasetModal />
