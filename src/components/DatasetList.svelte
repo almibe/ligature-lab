@@ -32,7 +32,7 @@
     <tbody>
         { #each datasets as dataset }
         <tr>
-            <td class="pt-4">{dataset.name}</td>
+            <td class="pt-4"><a class="link-dark" href="dataset/{dataset.name}">{dataset.name}</a></td>
             <td class="pt-4">{dataset.type}</td>
             <td class="pt-4">{dataset.url}</td>
             <td>
