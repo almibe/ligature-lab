@@ -36,6 +36,10 @@ class Model {
         return this;
     }
 
+    public lookup(datasetName: String): Dataset {
+        return this.datasets.find((v) => v.name == datasetName)
+    }
+
     public isDuplicate(datasetName: String): Boolean {
         return this.datasets.some((v) => v.name == datasetName)
     }
@@ -55,8 +59,9 @@ function createModel() {
         subscribe,
         addDataset: (dataset: Dataset) => update(m => m.addDataset(dataset)),
         removeDataset: (dataset: Dataset) => update(m => m.removeDataset(dataset)),
-        clear: (dataset: Dataset) => update(m => m.clear()),
+        clear: () => update(m => m.clear()),
         isDuplicate: (datasetName: String) => model.isDuplicate(datasetName),
+        lookup: (datasetName: String) => model.lookup(datasetName),
         initialLoad: () => update(m => model.initialLoad())
     };
 }
