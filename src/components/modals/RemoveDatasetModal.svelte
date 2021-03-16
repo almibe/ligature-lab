@@ -14,6 +14,15 @@
 
     let removeDatasetModal;
 
+    const enterKeyListener = event => {
+        if (event.isComposing) {
+            return;
+        }
+        if (event.code === "Enter") {
+            removeDataset()
+        }
+    }
+
     onMount(async () => {
         let bs = await import("../../../node_modules/bootstrap/dist/js/bootstrap.bundle");
         let modalEl = document.getElementById('removeDatasetModal');
@@ -22,9 +31,11 @@
         showModal = () => {
 	        removeDatasetModal.show()
             removeModalState.show = true;
+            window.addEventListener("keypress", enterKeyListener)
         }
 
         modalEl.addEventListener('hide.bs.modal', function (event) {
+            window.removeEventListener("keypress", enterKeyListener)
             removeModalState.show = false;
         })
     })

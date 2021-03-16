@@ -19,6 +19,15 @@
 
     let newDatasetModal;
 
+    const enterKeyListener = event => {
+        if (event.isComposing) {
+            return;
+        }
+        if (event.code === "Enter") {
+            addNewDataset()
+        }
+    }
+
     onMount(async () => {
         let bs = await import("../../../node_modules/bootstrap/dist/js/bootstrap.bundle");
         let modalEl = document.getElementById('newDatasetModal');
@@ -30,10 +39,13 @@
             (document.getElementById('ligatureEndpoint') as any).checked = dataset ? dataset.type == "Ligature" : false;
             (document.getElementById('sparqlEndpoint') as any).checked = dataset ? dataset.type == "SPARQL" : false;
 	        newDatasetModal.show()
+            window.addEventListener("keydown", enterKeyListener);
+
         }
 
         modalEl.addEventListener('hide.bs.modal', function (event) {
             errorMessages.length = 0;
+            window.removeEventListener("keydown", enterKeyListener)
             modalState.hide();
         })
 
