@@ -40,7 +40,6 @@
             (document.getElementById('sparqlEndpoint') as any).checked = dataset ? dataset.type == "SPARQL" : false;
 	        newDatasetModal.show()
             window.addEventListener("keydown", enterKeyListener);
-
         }
 
         modalEl.addEventListener('hide.bs.modal', function (event) {
@@ -73,7 +72,7 @@
             valid = false;
         }
 
-        if (store.checkDuplicate(name)) {
+        if ((modalState.dataset() == null || name != modalState.dataset().name) && store.isDuplicate(name)) {
             errorMessages.push("Dataset name already exists.");
             errorMessages = errorMessages;
             valid = false;
@@ -110,7 +109,7 @@
         }
     }
 
-    const urlPattern = new RegExp('^(https?:\\/\\/)?'+ // protocol
+    const urlPattern = new RegExp('^(https?:\\/\\/)'+ // protocol
             '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|'+ // domain name
             '((\\d{1,3}\\.){3}\\d{1,3}))|'+ // OR ip (v4) address
             '(localhost)'+ // OR localhost

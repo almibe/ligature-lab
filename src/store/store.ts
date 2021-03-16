@@ -36,7 +36,7 @@ class Model {
         return this;
     }
 
-    public checkDuplicate(datasetName: String): Boolean {
+    public isDuplicate(datasetName: String): Boolean {
         return this.datasets.some((v) => v.name == datasetName)
     }
 }
@@ -56,7 +56,7 @@ function createModel() {
         addDataset: (dataset: Dataset) => update(m => m.addDataset(dataset)),
         removeDataset: (dataset: Dataset) => update(m => m.removeDataset(dataset)),
         clear: (dataset: Dataset) => update(m => m.clear()),
-        checkDuplicate: (datasetName: String) => model.checkDuplicate(datasetName),
+        isDuplicate: (datasetName: String) => model.isDuplicate(datasetName),
         initialLoad: () => update(m => model.initialLoad())
     };
 }
