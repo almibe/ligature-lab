@@ -1,7 +1,13 @@
 <script lang="typescript">
     import DatasetModal from "./modals/DatasetModal.svelte";
     import DatasetList from "./DatasetList.svelte";
+    import { store } from '../store/store';
     import { modalState } from '../store/modalState';
+    import { onMount } from 'svelte';
+
+    onMount(() => {
+        store.initialLoad();
+    })
 
     let addDataset = () => {
         modalState.showNewDatasetModal()
