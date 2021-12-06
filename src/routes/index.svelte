@@ -1,17 +1,2 @@
-<script>
-import DatasetManagement from "../components/DatasetManagement.svelte";
-
-</script>
-<svelte:head>
-    <title>Ligature Lab</title>
-</svelte:head>
-
-<div class="container">
-    <div class="row p-4">
-        <div class="col-sm-auto">
-            <h1>Ligature Lab</h1>
-        </div>
-    </div>
-
-    <DatasetManagement />
-</div>
+<h1>Welcome to SvelteKit</h1>
+<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
