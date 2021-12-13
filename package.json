@@ -1,5 +1,5 @@
 {
-  "name": "@ligature/ligature-lab",
+  "name": "@ligature/ligature-components",
   "version": "0.0.1",
   "scripts": {
     "dev": "svelte-kit dev",

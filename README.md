@@ -1,6 +1,6 @@
-# ligature-lab
+# ligature-components
 
-ligature-lab is a set of Svelte components that support working with ligature.
+ligature-components is a set of Svelte components that support working with ligature.
 
 ## Developing
 
