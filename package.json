@@ -33,7 +33,6 @@
   },
   "type": "module",
   "dependencies": {
-    "@ligature/ligature": "^0.1.0",
     "bootstrap": "^5.1.3"
   }
 }

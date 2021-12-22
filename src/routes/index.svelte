@@ -1,5 +1,10 @@
 <script lang="ts">
-    import LigatureLab from '../lib/LigatureLab.svelte'
+    import LigatureInstance from '$lib/LigatureInstance.svelte'
+    import LigatureDataset from '$lib/LigatureDataset.svelte'
 </script>
 
-<LigatureLab></LigatureLab>
+<LigatureInstance></LigatureInstance>
+
+<hr />
+
+<LigatureDataset></LigatureDataset>
