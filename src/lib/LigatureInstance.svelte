@@ -1,5 +1,4 @@
 <script>
-    import { Modal } from 'bootstrap';
 	import { createEventDispatcher, onMount } from 'svelte'
 	const dispatch = createEventDispatcher()
 
@@ -9,6 +8,8 @@
     let datasetToAdd = ""
 
     onMount(async () => {
+        await import("../../node_modules/bootstrap/dist/js/bootstrap.esm")
+
         document.getElementById('addDatasetModal').addEventListener('show.bs.modal', function () {
             datasetToAdd = ""
         })
