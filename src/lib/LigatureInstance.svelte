@@ -1,25 +1,29 @@
 <script>
+    import { Modal } from 'bootstrap';
 	import { createEventDispatcher, onMount } from 'svelte'
 	const dispatch = createEventDispatcher()
 
     export let datasets = []
 
-    let removeDatasetModal
+    let datasetToRemove = ""
+    let datasetToAdd = ""
 
     onMount(async () => {
-        let bs = await import("../../node_modules/bootstrap/dist/js/bootstrap.esm")
-        removeDatasetModal = new bs.Modal(document.getElementById('removeDatasetModal'), {})
+        document.getElementById('addDatasetModal').addEventListener('show.bs.modal', function () {
+            datasetToAdd = ""
+        })
+
+        document.getElementById('addDatasetModal').addEventListener('shown.bs.modal', function () {
+            document.getElementById('datasetName').focus()  
+        })
     })
 
     function addDataset(name) {
-        //TODO show modal
-        //TODO if okay then publish addDataset event
+        dispatch('addDataset', {name})
     }
 
     function removeDataset(name) {
-        removeDatasetModal.show()
-        //TODO show modal
-        //TODO if okay then publish removeDataset event
+        dispatch('removeDataset', {name})
     }
 
     function refreshDatasets() {
@@ -54,7 +58,7 @@
                             {dataset}
                         </td>
                         <td>
-                            <button type="button" class="btn btn-secondary" on:click={e => removeDataset(dataset)}>Remove</button>
+                            <button type="button" class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#removeDatasetModal" on:click={e => datasetToRemove = dataset}>Remove</button>
                         </td>
                     </tr>
                 {/each}
@@ -71,15 +75,20 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                ...
+                <div class="field">
+                    <label for="datasetName" class="label">Name</label>
+                    <div class="control">
+                        <input id="datasetName" class="input" type="text" bind:value={datasetToAdd}>
+                    </div>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" on:click={e => addDataset(datasetToAdd)}>Add Dataset</button>
             </div>
         </div>
     </div>
-</div>  
+</div>
 
 <div class="modal fade" id="removeDatasetModal" tabindex="-1" aria-labelledby="removeDatasetModalLabel" aria-hidden="true">
     <div class="modal-dialog">
@@ -89,17 +98,15 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                ...
+                Remove {datasetToRemove}?
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="button" class="btn btn-primary">Save changes</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary" data-bs-dismiss="modal" on:click={e => removeDataset(datasetToRemove)}>Remove</button>
             </div>
         </div>
     </div>
 </div>  
-
-
 
 <style>
     @import '../../node_modules/bootstrap/dist/css/bootstrap.min.css';
