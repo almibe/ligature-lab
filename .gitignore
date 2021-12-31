@@ -1,5 +1,7 @@
-node_modules
 .DS_Store
-dist
-types
-*.local
+node_modules
+/build
+/.svelte-kit
+/package
+.env
+.env.*
