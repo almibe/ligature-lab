@@ -1,0 +1,11 @@
+body {
+  font-family: var(--sl-font-sans);
+}
+  
+table {
+  width: 100%;
+}
+
+th {
+  text-align: left;
+}
