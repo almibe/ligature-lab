@@ -20,9 +20,22 @@ function LigatureInstance(props: LigatureInstanceCompanion) {
     const input = dialog.querySelector('#newDatasetName')
     addDatasetButton.addEventListener('click', () => dialog.show())
     dialog.addEventListener('sl-initial-focus', event => {
+      input.value = ""
       event.preventDefault()
       input.focus({ preventScroll: true })
+      document.addEventListener("keyup", checkEnterKey)
     })
+    dialog.addEventListener('sl-hide', event => {
+      document.removeEventListener("keyup", checkEnterKey)
+    })
+
+    function checkEnterKey(event) {
+      if (event.code === 'Enter') {
+        if (input.value != "") {
+          props.addDataset(input.value)
+        }
+      }
+    }
   })
 
   return <>
