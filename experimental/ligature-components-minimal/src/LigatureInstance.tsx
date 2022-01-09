@@ -4,6 +4,7 @@ import '../node_modules/@shoelace-style/shoelace/dist/components/button/button.j
 import '../node_modules/@shoelace-style/shoelace/dist/components/input/input.js'
 import '../node_modules/@shoelace-style/shoelace/dist/components/dialog/dialog.js'
 import './ligature.css'
+import AddDatasetModal from './AddDatasetModal'
 import { createEffect, createSignal, onMount } from 'solid-js'
 
 type LigatureInstanceCompanion = {
@@ -14,29 +15,15 @@ type LigatureInstanceCompanion = {
 }
 
 function LigatureInstance(props: LigatureInstanceCompanion) {
+  const [showAddDatasetModal, setShowAddDatasetModal] = createSignal(false)
   onMount(async () => {
-    const dialog = document.querySelector('#addDatasetDialog')
     const addDatasetButton = document.querySelector('#addDatasetButton')
-    const input = dialog.querySelector('#newDatasetName')
-    addDatasetButton.addEventListener('click', () => dialog.show())
-    dialog.addEventListener('sl-initial-focus', event => {
-      input.value = ""
-      event.preventDefault()
-      input.focus({ preventScroll: true })
-      document.addEventListener("keyup", checkEnterKey)
-    })
-    dialog.addEventListener('sl-hide', event => {
-      document.removeEventListener("keyup", checkEnterKey)
-    })
-
-    function checkEnterKey(event) {
-      if (event.code === 'Enter') {
-        if (input.value != "") {
-          props.addDataset(input.value)
-        }
-      }
-    }
+    addDatasetButton.addEventListener('click', () => setShowAddDatasetModal(true))
   })
+
+  function addDataset(dataset: string) {
+    props.addDataset(dataset)
+  }
 
   return <>
     <div bp="container">
@@ -60,13 +47,7 @@ function LigatureInstance(props: LigatureInstanceCompanion) {
       </table>
     </div>
 
-    <sl-dialog label="Add Dataset" id="addDatasetDialog" style="--width: 50vw;">
-      <sl-input id="newDatasetName" label="Dataset Name"></sl-input>
-      <div slot="footer">
-        <sl-button variant="primary" bp="margin-right">Add</sl-button>
-        <sl-button variant="danger">Cancel</sl-button>
-      </div>
-    </sl-dialog>
+    <AddDatasetModal addDataset={props.addDataset} show={showAddDatasetModal}></AddDatasetModal>
 
     <sl-dialog label="Remove Dataset" id="removeDatasetDialog" style="--width: 50vw;">
       Lorem ipsum dolor sit amet, consectetur adipiscing elit.

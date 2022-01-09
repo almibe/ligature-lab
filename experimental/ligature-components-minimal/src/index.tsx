@@ -8,8 +8,8 @@ render(() =>
   <>
     <LigatureInstance 
       datasets={datasets}
-      addDataset={async (dataset: string) => {console.log("adding ", dataset); return unit} }
-      removeDataset={async (dataset: string) => {console.log("removing ", dataset); return unit} } />
+      addDataset={async (dataset: string) => {console.log("adding ", dataset); return null} }
+      removeDataset={async (dataset: string) => {console.log("removing ", dataset); return null} } />
   </>,
   document.getElementById('root') as HTMLElement
 )
