@@ -12,13 +12,16 @@ type LigatureInstanceCompanion = {
   addDataset: (dataset: string) => Promise<void>
   removeDataset: (dataset: string) => Promise<void>
   selectDataset: (dataset: string) => Promise<void>
+  refreshDatasets: () => Promise<void>
 }
 
 function LigatureInstance(props: LigatureInstanceCompanion) {
   const [showAddDatasetModal, setShowAddDatasetModal] = createSignal(false)
   onMount(async () => {
     const addDatasetButton = document.querySelector('#addDatasetButton')
+    const refreshDatasetsButton = document.querySelector('#refreshDatasetsButton')
     addDatasetButton.addEventListener('click', () => setShowAddDatasetModal(true))
+    refreshDatasetsButton.addEventListener('click', async () => props.refreshDatasets())
   })
 
   function addDataset(dataset: string) {
@@ -27,8 +30,8 @@ function LigatureInstance(props: LigatureInstanceCompanion) {
 
   return <>
     <div bp="container">
-        <sl-button bp="float-left" variant="primary" outline id="addDatasetButton">Add Dataset</sl-button>
-        <sl-button bp="float-right" variant="primary" outline>Refresh</sl-button>
+        <sl-button id="addDatasetButton" bp="float-left" variant="primary" outline>Add Dataset</sl-button>
+        <sl-button id="refreshDatasetsButton" bp="float-right" variant="primary" outline>Refresh</sl-button>
         <div bp="clear-fix"></div>
     </div>
     <div bp="container">
