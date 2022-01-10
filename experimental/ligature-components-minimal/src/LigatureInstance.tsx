@@ -47,7 +47,7 @@ function LigatureInstance(props: LigatureInstanceCompanion) {
       </table>
     </div>
 
-    <AddDatasetModal addDataset={props.addDataset} show={showAddDatasetModal}></AddDatasetModal>
+    <AddDatasetModal addDataset={props.addDataset} show={showAddDatasetModal} setShow={setShowAddDatasetModal}></AddDatasetModal>
 
     <sl-dialog label="Remove Dataset" id="removeDatasetDialog" style="--width: 50vw;">
       Lorem ipsum dolor sit amet, consectetur adipiscing elit.
