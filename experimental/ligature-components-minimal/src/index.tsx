@@ -19,8 +19,23 @@ render(() =>
           }
         }
       }
-      removeDataset={async (dataset: string) => {console.log("removing ", dataset); return null} }
-      refreshDatasets={async () => {console.log("Refreshing Datasets.")} } />
+      removeDataset={
+        async (dataset: string) => {
+          console.log("Removing:", dataset)
+          setDatasets(datasets().filter(e => e != dataset))
+          return null
+        } 
+      }
+      refreshDatasets={
+        async () => {
+          console.log("Refreshing Datasets.")
+        } 
+      }
+      selectDataset={
+        async (dataset: string) => {
+          console.log("Selected:", dataset)
+        }
+      }/>
   </>,
   document.getElementById('root') as HTMLElement
 )

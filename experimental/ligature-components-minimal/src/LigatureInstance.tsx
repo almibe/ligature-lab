@@ -6,6 +6,7 @@ import '../node_modules/@shoelace-style/shoelace/dist/components/dialog/dialog.j
 import './ligature.css'
 import AddDatasetModal from './AddDatasetModal'
 import { createEffect, createSignal, onMount } from 'solid-js'
+import RemoveDatasetModal from './RemoveDatasetModal'
 
 type LigatureInstanceCompanion = {
   datasets: () => string[]
@@ -17,6 +18,8 @@ type LigatureInstanceCompanion = {
 
 function LigatureInstance(props: LigatureInstanceCompanion) {
   const [showAddDatasetModal, setShowAddDatasetModal] = createSignal(false)
+  const [showRemoveDatasetModal, setShowRemoveDatasetModal] = createSignal(false)
+  const [datasetToRemove, setDatasetToRemove] = createSignal(null)
   onMount(async () => {
     const addDatasetButton = document.querySelector('#addDatasetButton')
     const refreshDatasetsButton = document.querySelector('#refreshDatasetsButton')
@@ -44,38 +47,37 @@ function LigatureInstance(props: LigatureInstanceCompanion) {
         </thead>
         <tbody>
           <For each={props.datasets()}>{(dataset) =>
-            <DatasetRow dataset={dataset}></DatasetRow>
+            <DatasetRow dataset={dataset} datasetToRemove={setDatasetToRemove}></DatasetRow>
           }</For>
         </tbody>
       </table>
     </div>
 
     <AddDatasetModal addDataset={props.addDataset} show={showAddDatasetModal} setShow={setShowAddDatasetModal}></AddDatasetModal>
-
-    <sl-dialog label="Remove Dataset" id="removeDatasetDialog" style="--width: 50vw;">
-      Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-      <div slot="footer">
-        <sl-button variant="primary" bp="margin-right">Remove</sl-button>
-        <sl-button variant="primary">Cancel</sl-button>
-      </div>
-    </sl-dialog>
+    <RemoveDatasetModal removeDataset={props.removeDataset} dataset={datasetToRemove} show={showRemoveDatasetModal} setShow={setShowRemoveDatasetModal}></RemoveDatasetModal>
   </>
 }
 
-function DatasetRow(props: any) {
-  function remove() {
-    console.log("remove")
-  }
+type DatasetRowCompanion = {
+  dataset: string
+  removeDataset: (dataset: string) => Promise<void>
+  datasetToRemove: (dataset: string) => string
+}
 
+function DatasetRow(props: DatasetRowCompanion) {
   onMount(async () => {
     const dialog = document.querySelector('#removeDatasetDialog')
     const removeDatasetButton = document.querySelector("#removeDataset" + props.dataset)
-    removeDatasetButton.addEventListener('click', () => dialog.show())
+    props.datasetToRemove(props.dataset)
+    removeDatasetButton.addEventListener('click', () => {
+      props.datasetToRemove(props.dataset)
+      dialog.show()
+    })
   })
 
   return <tr>
     <td>{props.dataset}</td>
-    <td><sl-button variant="danger" outline id={"removeDataset" + props.dataset} onClick={() => remove()}>Remove</sl-button></td>
+    <td><sl-button variant="danger" outline id={"removeDataset" + props.dataset}>Remove</sl-button></td>
   </tr>
 }
 
