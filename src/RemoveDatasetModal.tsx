@@ -1,9 +1,3 @@
-import '../node_modules/blueprint-css/dist/blueprint.css'
-import '../node_modules/@shoelace-style/shoelace/dist/themes/light.css'
-import '../node_modules/@shoelace-style/shoelace/dist/components/button/button.js'
-import '../node_modules/@shoelace-style/shoelace/dist/components/input/input.js'
-import '../node_modules/@shoelace-style/shoelace/dist/components/dialog/dialog.js'
-import './ligature.css'
 import { onMount } from 'solid-js'
 
 type RemoveDatasetModalCompanion = {

@@ -1,7 +1,15 @@
+import 'blueprint-css/dist/blueprint.css'
 import { createSignal } from 'solid-js'
 import { render } from 'solid-js/web'
-import LigatureInstance from './LigatureInstance'
-import LigatureDataset from './LigatureDataset'
+import LigatureInstance from './src/LigatureInstance'
+import LigatureDataset from './src/LigatureDataset'
+import '@shoelace-style/shoelace/dist/themes/light.css'
+import '@shoelace-style/shoelace/dist/components/button/button.js'
+import '@shoelace-style/shoelace/dist/components/textarea/textarea.js'
+import '@shoelace-style/shoelace/dist/components/input/input.js'
+import '@shoelace-style/shoelace/dist/components/dialog/dialog.js'
+import '@shoelace-style/shoelace/dist/components/badge/badge.js'
+import './src/ligature.css'
 
 const [datasets, setDatasets] = createSignal(["hello", "world"])
 
@@ -45,11 +53,13 @@ render(() =>
         writer={
           async (input: string) => {
             console.log("Writing:", input)
+            return "Writing response. Input Length = " + input.length
           }
         }
         interpreter={
           async (input: string) => {
             console.log("Running:", input)
+            return "Query response. Input Length = " + input.length
           }
         }
       />

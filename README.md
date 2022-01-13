@@ -1,6 +1,6 @@
 # ligature-components
 
-ligature-components is a set of Svelte components that support working with ligature.
+ligature-components is a set of SolidJS components that support working with ligature.
 
 ## Usage
 

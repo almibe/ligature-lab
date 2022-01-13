@@ -3,12 +3,21 @@ body {
 }
   
 table {
+  border-collapse: collapse;
   width: 100%;
 }
 
 th {
   text-align: left;
 }
+
+th, td {
+  padding: 8px;
+  text-align: left;
+  border-bottom: 1px solid #ddd;
+}
+
+tbody tr:hover {background-color: #eeeeee;}
 
 #datasetName {
   padding-top: 12px;
