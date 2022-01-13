@@ -70,7 +70,7 @@ function LigatureDataset(props: LigatureDatasetCompanion) {
 function WritePanel(props: WritePanelCompanion) {
   return <>
     <div bp="container">
-        <sl-textarea id="writeTextArea"></sl-textarea>
+        <sl-textarea id="writeTextArea" rows="12"></sl-textarea>
         <div id="writeResults"></div>
     </div>
   </>
@@ -79,8 +79,8 @@ function WritePanel(props: WritePanelCompanion) {
 function QueryPanel(props: QueryPanelCompanion) {
   return <>
     <div bp="container">
-        <sl-textarea id="queryTextArea"></sl-textarea>
-        <sl-textarea id="queryResultTextArea"></sl-textarea>
+        <sl-textarea id="queryTextArea" rows="8"></sl-textarea>
+        <sl-textarea id="queryResultTextArea" readonly></sl-textarea>
     </div>
   </>
 }
