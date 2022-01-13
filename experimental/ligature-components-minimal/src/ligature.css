@@ -9,3 +9,11 @@ table {
 th {
   text-align: left;
 }
+
+#datasetName {
+  padding-top: 12px;
+}
+
+.selected-button {
+  border-bottom: 3px solid gray;
+}

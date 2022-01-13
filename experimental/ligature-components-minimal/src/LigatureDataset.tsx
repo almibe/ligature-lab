@@ -1,7 +1,88 @@
+import '../node_modules/blueprint-css/dist/blueprint.css'
+import '../node_modules/@shoelace-style/shoelace/dist/themes/light.css'
+import '../node_modules/@shoelace-style/shoelace/dist/components/button/button.js'
+import '../node_modules/@shoelace-style/shoelace/dist/components/textarea/textarea.js'
+import './ligature.css'
+import { createEffect, createSignal, onMount } from 'solid-js'
 
+type LigatureDatasetCompanion = {
+  datasetName: string
+  writer: (input: string) => Promise<string>
+  interpreter: (input: string) => Promise<string>
+}
 
-function LigatureDataset(props: any) {
-  return <div>Ligature Dataset</div>
+function LigatureDataset(props: LigatureDatasetCompanion) {
+  let writeButton
+  let queryButton
+  let writePanel
+  let queryPanel
+  let runButton
+  let mode: "query" | "write"
+
+  onMount(async () => {
+    writeButton.classList.add("selected-button")
+    queryButton.classList.remove('selected-button')
+    writePanel.style.display = 'block'
+    queryPanel.style.display = 'none'
+    mode = "write"
+
+    writeButton.addEventListener('click', () => {
+      writeButton.classList.add("selected-button")
+      queryButton.classList.remove('selected-button')
+      writePanel.style.display = 'block'
+      queryPanel.style.display = 'none'
+      mode ="write"
+    })
+    
+    queryButton.addEventListener('click', () => { 
+      queryButton.classList.add("selected-button")
+      writeButton.classList.remove('selected-button')
+      queryPanel.style.display = 'block'
+      writePanel.style.display = 'none'
+      mode= "query"
+    })
+
+    runButton.addEventListener('click', async () => {
+      console.log("in run")
+      if (mode == "query") {
+        let input = document.querySelector("#queryTextArea").textContent
+        let result = await props.interpreter(input)
+        document.querySelector("#queryResultTextArea").textContent = result
+      } else {
+
+      }
+    })
+  })
+
+  return <>
+    <div bp="container">
+      <sl-button variant="text" bp="float-left" ref={writeButton}>Write</sl-button>
+      <sl-button variant="text" bp="float-left" ref={queryButton}>Query</sl-button>
+      <sl-button bp="float-right" variant="primary" outline ref={runButton}>Run</sl-button>
+      <span bp="float-center text-center" id="datasetName">{props.datasetName}</span>
+      <div bp="clear-fix"></div>
+      <div ref={queryPanel}><QueryPanel interpreter={props.interpreter}></QueryPanel></div>
+      <div ref={writePanel}><WritePanel writer={props.writer}></WritePanel></div>
+    </div>
+  </>
+}
+
+function WritePanel(props: WritePanelCompanion) {
+  return <>
+    <div bp="container">
+        <sl-textarea id="writeTextArea"></sl-textarea>
+        <div id="writeResults"></div>
+    </div>
+  </>
+}
+
+function QueryPanel(props: QueryPanelCompanion) {
+  return <>
+    <div bp="container">
+        <sl-textarea id="queryTextArea"></sl-textarea>
+        <sl-textarea id="queryResultTextArea"></sl-textarea>
+    </div>
+  </>
 }
 
 export default LigatureDataset

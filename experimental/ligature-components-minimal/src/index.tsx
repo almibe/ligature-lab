@@ -1,6 +1,7 @@
 import { createSignal } from 'solid-js'
 import { render } from 'solid-js/web'
 import LigatureInstance from './LigatureInstance'
+import LigatureDataset from './LigatureDataset'
 
 const [datasets, setDatasets] = createSignal(["hello", "world"])
 
@@ -36,6 +37,22 @@ render(() =>
           console.log("Selected:", dataset)
         }
       }/>
+
+      <hr></hr>
+
+      <LigatureDataset
+        datasetName='test'
+        writer={
+          async (input: string) => {
+            console.log("Writing:", input)
+          }
+        }
+        interpreter={
+          async (input: string) => {
+            console.log("Running:", input)
+          }
+        }
+      />
   </>,
   document.getElementById('root') as HTMLElement
 )
