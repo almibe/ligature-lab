@@ -41,7 +41,7 @@ function LigatureInstance(props: LigatureInstanceCompanion) {
         </thead>
         <tbody>
           <For each={props.datasets()}>{(dataset) =>
-            <DatasetRow dataset={dataset} datasetToRemove={setDatasetToRemove}></DatasetRow>
+            <DatasetRow dataset={dataset} datasetToRemove={setDatasetToRemove} selectDataset={props.selectDataset}></DatasetRow>
           }</For>
         </tbody>
       </table>
@@ -56,6 +56,7 @@ type DatasetRowCompanion = {
   dataset: string
   removeDataset: (dataset: string) => Promise<void>
   datasetToRemove: (dataset: string) => string
+  selectDataset: (dataset: string) => Promise<void>
 }
 
 function DatasetRow(props: DatasetRowCompanion) {
@@ -70,7 +71,7 @@ function DatasetRow(props: DatasetRowCompanion) {
   })
 
   return <tr>
-    <td>{props.dataset}</td>
+    <td><sl-button variant="text" onClick={() => props.selectDataset(props.dataset)}>{props.dataset}</sl-button></td>
     <td><sl-button variant="danger" outline id={"removeDataset" + props.dataset}>Remove</sl-button></td>
   </tr>
 }
