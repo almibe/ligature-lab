@@ -38,13 +38,14 @@ function LigatureDataset(props: LigatureDatasetCompanion) {
     })
 
     runButton.addEventListener('click', async () => {
-      console.log("in run")
       if (mode == "query") {
-        let input = document.querySelector("#queryTextArea").textContent
+        let input = document.querySelector("#queryTextArea").value
         let result = await props.interpreter(input)
-        document.querySelector("#queryResultTextArea").textContent = result
+        document.querySelector("#queryResultTextArea").value = result
       } else {
-
+        let input = document.querySelector("#writeTextArea").value
+        let result = await props.writer(input)
+        document.querySelector("#writeResults").innerHTML = result
       }
     })
   })
