@@ -1,13 +1,28 @@
 {
-  "name": "vite-template-solid",
-  "version": "0.0.0",
-  "description": "",
+  "name": "@ligature/ligature-components",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A set of SolidJS components for working with Ligature.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/almibe/ligature-components.git"
+  },
+  "files": ["dist"],
+  "main": "./dist/ligature-components.umd.js",
+  "module": "./dist/ligature-components.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/ligature-components.es.js",
+      "require": "./dist/ligature-components.umd.js"
+    }
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
-    "serve": "vite preview"
+    "serve": "vite preview",
+    "prepublish": "build"
   },
-  "license": "MIT",
+  "license": "MPL-2.0",
   "devDependencies": {
     "typescript": "^4.5.4",
     "vite": "^2.7.6",
