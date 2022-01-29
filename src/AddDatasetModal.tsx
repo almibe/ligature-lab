@@ -62,7 +62,7 @@ function AddDatasetModal(props: AddDatasetModalCompanion) {
         <sl-badge variant="danger" pill>{errorMessage()}</sl-badge>
       </Show>
       <div slot="footer">
-        <sl-button id="addButton" variant="primary" bp="margin-right">Add</sl-button>
+        <sl-button id="addButton" variant="primary">Add</sl-button>
         <sl-button id="cancelButton" variant="danger">Cancel</sl-button>
       </div>
     </sl-dialog>

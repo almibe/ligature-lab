@@ -38,7 +38,7 @@ function RemoveDatasetModal(props: RemoveDatasetModalCompanion) {
   return <>
     <sl-dialog label={"Remove " + props.dataset() + "?"} id="removeDatasetDialog" style="--width: 50vw;">
       <div slot="footer">
-        <sl-button id="removeButton" variant="primary" bp="margin-right">Remove</sl-button>
+        <sl-button id="removeButton" variant="primary">Remove</sl-button>
         <sl-button id="cancelRemoveButton" variant="primary">Cancel</sl-button>
       </div>
     </sl-dialog>

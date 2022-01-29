@@ -51,12 +51,12 @@ function LigatureDataset(props: LigatureDatasetCompanion) {
   })
 
   return <>
-    <div bp="container">
-      <sl-button variant="text" bp="float-left" ref={writeButton}>Write</sl-button>
-      <sl-button variant="text" bp="float-left" ref={queryButton}>Query</sl-button>
-      <sl-button bp="float-right" variant="primary" outline ref={runButton}>Run</sl-button>
-      <span bp="float-center text-center" id="datasetName">{props.datasetName}</span>
-      <div bp="clear-fix"></div>
+    <div>
+      <sl-button variant="text" ref={writeButton}>Write</sl-button>
+      <sl-button variant="text" ref={queryButton}>Query</sl-button>
+      <sl-button variant="primary" outline ref={runButton}>Run</sl-button>
+      <span id="datasetName">{props.datasetName}</span>
+      <div></div>
       <div ref={queryPanel}><QueryPanel interpreter={props.interpreter}></QueryPanel></div>
       <div ref={writePanel}><WritePanel writer={props.writer}></WritePanel></div>
     </div>
@@ -65,7 +65,7 @@ function LigatureDataset(props: LigatureDatasetCompanion) {
 
 function WritePanel(props: WritePanelCompanion) {
   return <>
-    <div bp="container">
+    <div>
         <sl-textarea id="writeTextArea" rows="12"></sl-textarea>
         <div id="writeResults"></div>
     </div>
@@ -74,7 +74,7 @@ function WritePanel(props: WritePanelCompanion) {
 
 function QueryPanel(props: QueryPanelCompanion) {
   return <>
-    <div bp="container">
+    <div>
         <sl-textarea id="queryTextArea" rows="8"></sl-textarea>
         <sl-textarea id="queryResultTextArea" readonly></sl-textarea>
     </div>

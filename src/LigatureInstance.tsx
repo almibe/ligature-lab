@@ -26,12 +26,12 @@ function LigatureInstance(props: LigatureInstanceCompanion) {
   }
 
   return <>
-    <div bp="container">
-        <sl-button id="addDatasetButton" bp="float-left" variant="primary" outline>Add Dataset</sl-button>
-        <sl-button id="refreshDatasetsButton" bp="float-right" variant="primary" outline>Refresh</sl-button>
-        <div bp="clear-fix"></div>
+    <div>
+        <sl-button id="addDatasetButton" variant="primary" outline>Add Dataset</sl-button>
+        <sl-button id="refreshDatasetsButton" variant="primary" outline>Refresh</sl-button>
+        <div></div>
     </div>
-    <div bp="container">
+    <div>
       <table>
         <thead>
           <tr>
