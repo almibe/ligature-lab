@@ -1,6 +1,5 @@
 import { render } from 'solid-js/web'
-import LigatureEditor from './src/LigatureEditor'
-import './src/ligature-components.css'
+import { LigatureEditor } from './src/index'
 
 render(() =>
   <>
