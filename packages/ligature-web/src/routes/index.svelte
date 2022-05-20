@@ -1,9 +1,6 @@
-<script>
-  import Datasets from '../lib/Datasets.svelte'
-
-  console.log("xxx")
+<script>  
+  let datasets = [];
 </script>
 
-<Datasets></Datasets>
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://kit.svelte.dev">kit.svelte.dev</a> to read the documentation</p>
+<h1>Datasets</h1>
+<button>Add</button>
