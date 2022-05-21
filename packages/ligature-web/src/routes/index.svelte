@@ -12,13 +12,27 @@
     const removeContainer = document.querySelector('#removeDatasetDialog');
     addDialog = new A11yDialog(addContainer);
     removeDialog = new A11yDialog(removeContainer);
+    addDialog.on('show', function(element, event) {
+      document.addEventListener("keyup", addDatasetEnterKeyHandler)
+      document.getElementById("datasetName").value = "";
+      document.getElementById("datasetName").focus();
+    })
+    addDialog.on('hide', function(element) {
+      document.removeEventListener("keyup", addDatasetEnterKeyHandler)
+    })
     refreshDatasets();
   })
 
-  function showAddDialog() {
-    addDialog.show();
-    document.getElementById("datasetName").value = "";
-    document.getElementById("datasetName").focus();
+  function addDatasetEnterKeyHandler(event) {
+      if (event.code === 'Enter') {
+        addDataset();
+      }
+  }
+
+  function removeDatasetEnterKeyHandler(event) {
+    if (event.code === 'Enter') {
+      removeDataset();
+    }
   }
 
   async function addDataset() {
@@ -30,9 +44,18 @@
     addDialog.hide();
   }
 
-  function showRemoveDataset(datasetName) {
+  async function showRemoveDataset(datasetName) {
+    document.addEventListener("keyup", removeDatasetEnterKeyHandler)
     datasetToRemove = datasetName;
     removeDialog.show();
+  }
+
+  async function removeDataset() {
+    document.removeEventListener("keyup", removeDatasetEnterKeyHandler)
+    console.log(`in remove dataset ${datasetToRemove}`);
+    let response = await fetch(`/datasets/${datasetToRemove}`, {method: 'DELETE'});
+    refreshDatasets();
+    removeDialog.hide();
   }
 
   async function refreshDatasets() {
@@ -46,7 +69,7 @@
 </script>
 
 <h1>Datasets</h1>
-<button on:click={() => showAddDialog()}>Add</button>
+<button on:click={() => addDialog.show()}>Add</button>
 
 <table>
   <tr>
@@ -73,11 +96,9 @@
       &times;
     </button>
     <h1 id="addDatasetTitle">Add Dataset</h1>
-    <form id="addDatasetForm" on:submit|preventDefault={addDataset}>
-      <p><label>Name: <input required name="datasetName" id="datasetName"></label></p>
-      <p><input type=submit formnovalidate name="addDataset" value="Add Dataset"></p>
-      <p><input type=submit formnovalidate name=cancel value="Cancel" on:click={() => addDialog.hide()}></p>
-    </form>
+    <p><label>Name: <input required name="datasetName" id="datasetName"></label></p>
+    <p><input type=submit formnovalidate name="addDataset" value="Add Dataset"></p>
+    <p><input type=submit formnovalidate name=cancel value="Cancel" on:click={() => addDialog.hide()}></p>
   </div>
 </div>
 
@@ -93,9 +114,7 @@
       &times;
     </button>
     <h1 id="removeDatasetTitle">Remove {datasetToRemove}?</h1>
-    <form id="removeDatasetForm" on:submit|preventDefault={addDataset}>
-      <p><input type=submit formnovalidate name="addDataset" value="Yes"></p>
-      <p><input type=submit formnovalidate name=cancel value="No" on:click={() => removeDialog.hide()}></p>
-    </form>
+    <p><input type=submit formnovalidate name="addDataset" value="Yes"></p>
+    <p><input formnovalidate name=cancel value="No" on:click={() => removeDialog.hide()}></p>
   </div>
 </div>
