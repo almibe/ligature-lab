@@ -1,4 +1,5 @@
 <script>
+  import "blueprint-css/dist/blueprint.css"
   import A11yDialog from 'a11y-dialog'
   import { onMount } from 'svelte';
 
@@ -69,9 +70,9 @@
 </script>
 
 <h1>Datasets</h1>
-<button on:click={() => addDialog.show()}>Add</button>
+<button on:click={() => addDialog.show()}>Add Dataset</button>
 
-<table>
+<table bp="fill">
   <tr>
     <th>Dataset Name</th>
     <th>Remove?</th>
@@ -79,7 +80,7 @@
   {#each datasets as dataset}
     <tr>
       <td><a href="/datasets/{dataset}">{dataset}</a></td>
-      <td on:click={() => showRemoveDataset(dataset)}>❌</td>
+      <td><button on:click={() => showRemoveDataset(dataset)}>❌</button></td>
     </tr>
   {/each}
 </table>
