@@ -74,7 +74,7 @@
 
 <table bp="fill">
   <tr>
-    <th>Dataset Name</th>
+    <th>Dataset</th>
     <th>Remove?</th>
   </tr>
   {#each datasets as dataset}
