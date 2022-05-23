@@ -33,3 +33,13 @@
     width: 600px;
     border-radius: 2px;
 }
+
+.dialog-close {
+    border: none;
+    float:right;
+    font-size: 2em;
+}
+
+.dialog-response-button {
+    float:right;
+}

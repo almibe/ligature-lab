@@ -98,8 +98,8 @@
     </button>
     <h1 id="addDatasetTitle">Add Dataset</h1>
     <p><label>Name: <input required name="datasetName" id="datasetName"></label></p>
-    <p><input type=submit formnovalidate name="addDataset" value="Add Dataset"></p>
-    <p><input type=submit formnovalidate name=cancel value="Cancel" on:click={() => addDialog.hide()}></p>
+    <p><button class="dialog-response-button" on:click={() => addDataset()}>Add Dataset</button>
+    <p><button class="dialog-response-button" on:click={() => addDialog.hide()}>Cancel</button>
   </div>
 </div>
 
@@ -115,7 +115,7 @@
       &times;
     </button>
     <h1 id="removeDatasetTitle">Remove {datasetToRemove}?</h1>
-    <p><input type=submit formnovalidate name="addDataset" value="Yes"></p>
-    <p><input formnovalidate name=cancel value="No" on:click={() => removeDialog.hide()}></p>
+    <p><button class="dialog-response-button" on:click={() => removeDataset()}>Yes</button>
+    <p><button class="dialog-response-button" on:click={() => removeDialog.hide()}>No</button>
   </div>
 </div>
