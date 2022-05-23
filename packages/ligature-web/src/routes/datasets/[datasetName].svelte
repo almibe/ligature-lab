@@ -6,11 +6,14 @@ import { page } from '$app/stores';
 import { onMount, onDestroy } from 'svelte';
 
 let inputEditor = null;
-let queryText = "";
-let insertText = "";
-let removeText = "";
+let text = {
+    query : "",
+    insert : "",
+    remove : ""
+}
 let tabs = null;
 let currentTab = "query"
+let dataset = "";
 
 onMount(async () => {
     const Tabby = (await import('tabbyjs')).default
@@ -18,6 +21,7 @@ onMount(async () => {
     tabs = new Tabby('[data-tabs]');
     inputEditor = CodeMirror.fromTextArea(document.getElementById("editorTextArea"), {lineNumbers: true});
     document.addEventListener('tabby', onTabChange, false);
+    dataset = page.params.datasetName;
 
     //clean up
     return () => document.removeEventListener('tabby', onTabChange);
@@ -25,29 +29,35 @@ onMount(async () => {
 
 function onTabChange(event) {
     var tab = event.target.href.split("#")[1];
-    console.log(tab);
+    text[currentTab] = inputEditor.getValue();
+    inputEditor.setValue(text[tab]);
+    currentTab = tab;
 }
 
 function runQuery() {
-    console.log("run")
+    fetch(`/datasets/${dataset}/wander`, {
+        method: 'POST',
+        body: inputEditor.getValue()
+    });
 }
 
 function runInsert() {
-
+    console.log("insert")
 }
 
 function runRemove() {
-
+    console.log("remove")
 }
 
 function clear() {
-
+    inputEditor.setValue("");
+    inputEditor.clearHistory();
+    text[currentTab] = "";
 }
-
 </script>
 
 <h1>{$page.params.datasetName}</h1>
-<button style="float:right">Back</button>
+<button class="backButton" on:click={() => window.location.href = '/'}>Back</button>
 
 <ul data-tabs>
     <li><a data-tabby-default href="#query">Query</a></li>
@@ -76,3 +86,9 @@ function clear() {
 
 <div id="results">
 </div>
+
+<style>
+.backButton {
+    float: right
+}
+</style>

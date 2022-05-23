@@ -16,6 +16,10 @@ p, div, button {
     font-family: 'Raleway';
 }
 
+.CodeMirror * {
+    font-family: monospace;
+}
+
 button {
     background-color: #fff;
     border: 1px solid black;
