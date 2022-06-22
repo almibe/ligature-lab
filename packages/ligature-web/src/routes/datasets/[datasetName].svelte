@@ -13,7 +13,6 @@ let text = {
 }
 let tabs = null;
 let currentTab = "query"
-let dataset = "";
 
 onMount(async () => {
     const Tabby = (await import('tabbyjs')).default
@@ -21,7 +20,6 @@ onMount(async () => {
     tabs = new Tabby('[data-tabs]');
     inputEditor = CodeMirror.fromTextArea(document.getElementById("editorTextArea"), {lineNumbers: true});
     document.addEventListener('tabby', onTabChange, false);
-    dataset = page.params.datasetName;
 
     //clean up
     return () => document.removeEventListener('tabby', onTabChange);
@@ -34,15 +32,20 @@ function onTabChange(event) {
     currentTab = tab;
 }
 
-function runQuery() {
-    fetch(`/datasets/${dataset}/wander`, {
+async function runQuery() {
+    let result = await fetch(`/datasets/${$page.params.datasetName}/wander`, {
         method: 'POST',
         body: inputEditor.getValue()
     });
+    console.log(result); //TODO print in results div
 }
 
-function runInsert() {
-    console.log("insert")
+async function runInsert() {
+    let result = await fetch(`/datasets/${$page.params.datasetName}/statements`, {
+        method: 'POST',
+        body: inputEditor.getValue()
+    })
+    console.log(result); //TODO print in results div
 }
 
 function runRemove() {
