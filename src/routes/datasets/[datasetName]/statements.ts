@@ -1,5 +1,7 @@
+import { ligatureUrl } from "../../_util";
+
 export async function get({ params }) {
-    let result = await fetch(`http://localhost:8080/datasets/${ params.datasetName }/statements`, 
+    let result = await fetch(`${ligatureUrl}/datasets/${ params.datasetName }/statements`, 
     { 
         method: 'GET',
         body: params.body
@@ -9,7 +11,7 @@ export async function get({ params }) {
 
 export async function post({ params, request }) {
     let body = await request.text()
-    let result = await fetch(`http://localhost:8080/datasets/${ params.datasetName }/statements`, { 
+    let result = await fetch(`${ligatureUrl}/datasets/${ params.datasetName }/statements`, { 
         method: 'POST',
         body: body
     })
@@ -18,7 +20,7 @@ export async function post({ params, request }) {
 
 export async function del({ params, request }) {
     let body = await request.text()
-    let result = await fetch(`http://localhost:8080/datasets/${ params.datasetName }/statements`, { 
+    let result = await fetch(`${ligatureUrl}/datasets/${ params.datasetName }/statements`, { 
         method: 'DELETE',
         body: body
     })

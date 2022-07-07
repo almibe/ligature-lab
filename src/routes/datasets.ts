@@ -1,5 +1,7 @@
+import { ligatureUrl } from "./_util"
+
 export async function get() {
-    let result = await fetch("http://localhost:8080/datasets")
+    let result = await fetch(`${ligatureUrl}/datasets`)
     return {
         status: 200,
         headers: {},
