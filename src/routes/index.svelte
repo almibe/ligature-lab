@@ -1,4 +1,4 @@
-<script>
+<script lang="ts">
   import "blueprint-css/dist/blueprint.css"
   import A11yDialog from 'a11y-dialog'
   import { onMount } from 'svelte';
@@ -62,7 +62,7 @@
   async function refreshDatasets() {
     try {
       const response = await fetch('/datasets');
-      datasets = await response.json();
+      datasets = await (await response.text()).trim().split("\n");
     } catch (error) {
       console.error(error);
     }

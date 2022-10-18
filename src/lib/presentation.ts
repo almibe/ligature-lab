@@ -121,6 +121,7 @@ export function wanderResultToPresentation(input: string): Presentation | error 
         ignoreSpaceAndNewLine(state);
 
         result.addStatement([entityRes, attributeRes, valueRes]);
+    }
     return result
 }
 
