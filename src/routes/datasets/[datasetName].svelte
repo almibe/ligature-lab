@@ -7,6 +7,7 @@ import "codemirror/lib/codemirror.css";
 import { page } from '$app/stores';
 import { onMount, onDestroy } from 'svelte';
 import { wanderResultToPresentation } from '../../lib/presentation';
+import cytoscape from 'cytoscape';
 
 let inputEditor = null;
 let text = {
@@ -19,8 +20,48 @@ let text = {
 };
 let tabs = null;
 let table = null;
+let cy = null;
 let currentTab = "query";
 let resultText = "";
+
+function initGraph() {
+    cy = cytoscape({
+      container: document.getElementById('cy'),
+      elements: [],
+      style: [{
+        selector: 'node',
+        style: {
+            'width': 10,
+            'height': 10,
+            'background-color': '#666',
+            'label': 'data(id)'
+        }},
+        {
+        selector: 'edge',
+        style: {
+            'width': 3,
+            'line-color': '#ccc',
+            'target-arrow-color': '#ccc',
+            'target-arrow-shape': 'triangle',
+            'curve-style': 'bezier',
+            'label': 'data(label)'
+        }
+        }
+    ],
+
+    layout: {
+        name: 'cose',
+    }
+    });
+}
+
+function updateGraph(elements) {
+    cy.filter().forEach(element => {
+        element.remove();
+    });
+    cy.add(elements);
+    cy.layout({name: 'cose'}).run();
+}
 
 onMount(async () => {
     const Tabby = (await import('tabbyjs')).default;
@@ -34,6 +75,8 @@ onMount(async () => {
  	    data:[],
  	    layout:"fitColumns",
  	    columns:[{title:"", field:""}]});
+
+    initGraph();
 
     //clean up
     return () => {
@@ -56,16 +99,18 @@ async function runQuery() {
         body: inputEditor.getValue()
     });
     resultText = await result.text();
-    //handle table
+
     let presentation = wanderResultToPresentation(resultText);
     if ('error' in presentation) {
         //TODO handle error
     } else {
+        //handle table
         let tablePresentation = presentation.tableView();
         table.setColumns(tablePresentation.columns);
         table.replaceData(tablePresentation.data);
+        //handle graph
+        updateGraph(presentation.graphElements());
     }
-    //TODO handle graph
     text["queryResults"] = resultText;
 }
 
@@ -125,11 +170,17 @@ function clear() {
 
 <div id="results">
     <div id="resultText">{resultText}</div>
+    <div id="graph"><div id="cy"></div></div>
     <div id="table"></div>
-    <div id="graph"></div>
 </div>
 
 <style>
+#cy {
+  width: 1000px;
+  height: 500px;
+  display: block;
+}
+
 .backButton {
     float: right
 }

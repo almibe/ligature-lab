@@ -8,7 +8,8 @@ test('Read Identifier', () => {
 
 test('Read basic Statement', () => {
     let input = "<a> <b> <c>";
-    let expected = {
+    
+    let tableExpected = {
         data: [
             {"id": 1, "<entity>": "a", "b": "<c>"},
         ],
@@ -17,20 +18,42 @@ test('Read basic Statement', () => {
             {title:"b", field:"b", sorter: "string"}
         ]
     };
-    expect(wanderResultToPresentation(input).tableView()).toEqual(expected);
+
+    let elementsExpected = [
+        {data: {id: "<a>"}},
+        {data: {id: "<c>"}},
+        {data: {label: "b", source: "<a>", target: "<c>"}}
+    ]
+
+    let presentation = wanderResultToPresentation(input);
+    expect(presentation.tableView()).toEqual(tableExpected);
+    expect(presentation.graphElements()).toEqual(elementsExpected);
 });
 
-// test('Read multiple Statements aobut a single Entity', () => {
-//     let input = "<a> <b> <c>\n<a> <b> <e>";
-//     let expected = new Map<Identifier, Map<Identifier, Set<Value>>>();
-//     let bMap = new Map<Identifier, Set<Value>>();
-//     let values = new Set<Value>();
-//     values.add({identifier: "c"});
-//     values.add({identifier: "e"});
-//     bMap.set({identifier: "b"}, values);
-//     expected.set({identifier:"a"}, bMap);
+test('Read multiple Statements aobut a single Entity', () => {
+    let input = "<a> <b> <c>\n<a> <d> <e>"; //TODO add test with a duplicate attribute
 
-//     console.log(wanderResultToPresentation(input));
-//     console.log(expected);
-//     expect(wanderResultToPresentation(input)).toEqual(expected);
-// });
+    let tableExpected = {
+        data: [
+            { id: 1, "<entity>": "a", "b": "<c>", "d": "<e>"}
+        ],
+        columns: [
+            {title:"Entity", field:"<entity>", sorter:"string"},
+            {title:"b", field:"b", sorter:"string"},
+            {title:"d", field:"d", sorter:"string"}
+        ]
+    };
+
+    let elementsExpected = [
+        {data: {id: "<a>"}},
+        {data: {id: "<c>"}},
+        {data: {label: "b", source: "<a>", target: "<c>"}},
+        {data: {id: "<a>"}},
+        {data: {id: "<e>"}},
+        {data: {label: "d", source: "<a>", target: "<e>"}}        
+    ];
+
+    let presentation = wanderResultToPresentation(input);
+    expect(presentation.tableView()).toEqual(tableExpected);
+    expect(presentation.graphElements()).toEqual(elementsExpected);
+});

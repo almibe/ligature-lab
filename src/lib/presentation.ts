@@ -15,6 +15,10 @@ export type State = {
 
 export type Statement = [Identifier, Identifier, Value]
 
+type GElement = GNode | GEdge
+type GNode = { data: { id: string } }
+type GEdge = { data: { label: string, source: string, target: string}}
+
 type Data = { id: number }
 type Column = { title: string, field: string, sorter: string }
 
@@ -59,6 +63,18 @@ export class Presentation {
             columns, 
             data
         };
+    }
+
+    public graphElements(): Array<GElement> {
+        let result: Array<GElement> = []
+        this.store.forEach((statement) => {
+            let entity = this.writeValue(statement[0])
+            let value = this.writeValue(statement[2])
+            result.push({data: {id: entity}})
+            result.push({data: {id: value}})
+            result.push({data: {label: statement[1].identifier, source: entity, target: value}})
+        })
+        return result;
     }
 
     private writeValue(value: Value): any {
