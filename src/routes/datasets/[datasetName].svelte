@@ -1,34 +1,52 @@
-<script>    
+<script lang="ts">
+import {TabulatorFull as Tabulator} from 'tabulator-tables';
+import  "tabulator-tables/dist/css/tabulator.min.css";
 import "blueprint-css/dist/blueprint.css";
 import "tabbyjs/dist/css/tabby-ui.css";
 import "codemirror/lib/codemirror.css";
 import { page } from '$app/stores';
 import { onMount, onDestroy } from 'svelte';
+import { wanderResultToPresentation } from '../../lib/presentation';
 
 let inputEditor = null;
 let text = {
     query : "",
     insert : "",
-    remove : ""
-}
+    remove : "",
+    queryResults: "",
+    insertResults: "",
+    removeResults: ""
+};
 let tabs = null;
-let currentTab = "query"
+let table = null;
+let currentTab = "query";
+let resultText = "";
 
 onMount(async () => {
-    const Tabby = (await import('tabbyjs')).default
-    const CodeMirror = (await import('codemirror')).default
+    const Tabby = (await import('tabbyjs')).default;
+    const CodeMirror = (await import('codemirror')).default;
     tabs = new Tabby('[data-tabs]');
     inputEditor = CodeMirror.fromTextArea(document.getElementById("editorTextArea"), {lineNumbers: true});
     document.addEventListener('tabby', onTabChange, false);
 
+    table = new Tabulator("#table", {
+ 	    height:205,
+ 	    data:[],
+ 	    layout:"fitColumns",
+ 	    columns:[{title:"", field:""}]});
+
     //clean up
-    return () => document.removeEventListener('tabby', onTabChange);
+    return () => {
+        document.removeEventListener('tabby', onTabChange);
+    };
 });
 
 function onTabChange(event) {
     var tab = event.target.href.split("#")[1];
     text[currentTab] = inputEditor.getValue();
+    text[currentTab + "Results"] = resultText;
     inputEditor.setValue(text[tab]);
+    resultText = text[tab + "Results"];
     currentTab = tab;
 }
 
@@ -37,7 +55,18 @@ async function runQuery() {
         method: 'POST',
         body: inputEditor.getValue()
     });
-    console.log(result); //TODO print in results div
+    resultText = await result.text();
+    //handle table
+    let presentation = wanderResultToPresentation(resultText);
+    if ('error' in presentation) {
+        //TODO handle error
+    } else {
+        let tablePresentation = presentation.tableView();
+        table.setColumns(tablePresentation.columns);
+        table.replaceData(tablePresentation.data);
+    }
+    //TODO handle graph
+    text["queryResults"] = resultText;
 }
 
 async function runInsert() {
@@ -45,17 +74,24 @@ async function runInsert() {
         method: 'POST',
         body: inputEditor.getValue()
     })
-    console.log(result); //TODO print in results div
+    resultText = await result.text();
+    text["insertResults"] = resultText;
 }
 
-function runRemove() {
-    console.log("remove")
+async function runRemove() {
+    let result = await fetch(`/datasets/${$page.params.datasetName}/statements`, {
+        method: 'DELETE',
+        body: inputEditor.getValue()
+    })
+    resultText = await result.text();
+    text["removeResults"] = resultText;
 }
 
 function clear() {
     inputEditor.setValue("");
     inputEditor.clearHistory();
     text[currentTab] = "";
+    text[currentTab + "Results"] = "";
 }
 </script>
 
@@ -88,6 +124,9 @@ function clear() {
 </div>
 
 <div id="results">
+    <div id="resultText">{resultText}</div>
+    <div id="table"></div>
+    <div id="graph"></div>
 </div>
 
 <style>
