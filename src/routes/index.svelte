@@ -69,10 +69,10 @@
   }
 </script>
 
-<h1>Datasets</h1>
-<button on:click={() => addDialog.show()}>Add Dataset</button>
+<h1 class="title">Datasets</h1>
+<button class="button" on:click={() => addDialog.show()}>Add Dataset</button>
 
-<table bp="fill">
+<table class="table" bp="fill">
   <tr>
     <th>Dataset</th>
     <th>Remove?</th>
@@ -80,7 +80,7 @@
   {#each datasets as dataset}
     <tr>
       <td><a href="/datasets/{dataset}">{dataset}</a></td>
-      <td><button on:click={() => showRemoveDataset(dataset)}>❌</button></td>
+      <td><button class="button" on:click={() => showRemoveDataset(dataset)}>❌</button></td>
     </tr>
   {/each}
 </table>
@@ -93,7 +93,7 @@
 >
   <div class="dialog-overlay" data-a11y-dialog-hide></div>
   <div class="dialog-content" role="document">
-    <button class="dialog-close" type="button" data-a11y-dialog-hide aria-label="Close dialog">
+    <button class="dialog-close button" type="button" data-a11y-dialog-hide aria-label="Close dialog">
       &times;
     </button>
     <h1 id="addDatasetTitle">Add Dataset</h1>

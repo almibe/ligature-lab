@@ -138,10 +138,30 @@ function clear() {
     text[currentTab] = "";
     text[currentTab + "Results"] = "";
 }
+
+function resultDisplay(selectedResultTab: string) {
+    document.getElementById("result-table-tab")?.classList.remove("is-active");
+    document.getElementById("result-graph-tab")?.classList.remove("is-active");
+    document.getElementById("result-text-tab")?.classList.remove("is-active");
+
+    document.getElementById(`result-${selectedResultTab}-tab`)?.classList.add("is-active");
+
+    document.getElementById("table").style.display = "none";
+    document.getElementById("graph").style.display = "none";
+    document.getElementById("resultText").style.display = "none";
+    
+    if (selectedResultTab == 'table') {
+        document.getElementById("table").style.display = "block";
+    } else if (selectedResultTab == 'graph') {
+        document.getElementById("graph").style.display = "block";
+    } else {
+        document.getElementById("resultText").style.display = "block";
+    }
+}
 </script>
 
-<h1>{$page.params.datasetName}</h1>
-<button class="backButton" on:click={() => window.location.href = '/'}>Back</button>
+<h1 class="title">{$page.params.datasetName}</h1>
+<button class="button backButton" on:click={() => window.location.href = '/'}>Back</button>
 
 <ul data-tabs>
     <li><a data-tabby-default href="#query">Query</a></li>
@@ -150,18 +170,18 @@ function clear() {
 </ul>
 
 <div id="query">
-    <button on:click={() => runQuery()}>Run</button>
-    <button on:click={() => clear()}>Clear</button>
+    <button class="button" on:click={() => runQuery()}>Run</button>
+    <button class="button" on:click={() => clear()}>Clear</button>
 </div>
 
 <div id="insert">
-    <button on:click={() => runInsert()}>Run</button>
-    <button on:click={() => clear()}>Clear</button>
+    <button class="button" on:click={() => runInsert()}>Run</button>
+    <button class="button" on:click={() => clear()}>Clear</button>
 </div>
 
 <div id="remove">
-    <button on:click={() => runRemove()}>Run</button>
-    <button on:click={() => clear()}>Clear</button>
+    <button class="button" on:click={() => runRemove()}>Run</button>
+    <button class="button" on:click={() => clear()}>Clear</button>
 </div>
 
 <div id="textEditor">
@@ -169,19 +189,26 @@ function clear() {
 </div>
 
 <div id="results">
-    <div id="resultText">{resultText}</div>
-    <div id="graph"><div id="cy"></div></div>
+    <div class="tabs">
+        <ul>
+          <li id="result-table-tab" class="is-active"><a on:click={() => resultDisplay("table")}>Table</a></li>
+          <li id="result-graph-tab"><a on:click={() => resultDisplay("graph")}>Graph</a></li>
+          <li id="result-text-tab"><a on:click={() => resultDisplay("text")}>Text</a></li>
+        </ul>
+    </div>
     <div id="table"></div>
+    <div id="graph"><div id="cy"></div></div>
+    <div id="resultText"><pre>{resultText}</pre></div>
 </div>
 
 <style>
-#cy {
-  width: 1000px;
-  height: 500px;
-  display: block;
-}
+    #cy {
+        width: 1000px;
+        height: 500px;
+        display: block;
+    }
 
-.backButton {
-    float: right
-}
+    .backButton {
+        float: right;
+    }
 </style>
