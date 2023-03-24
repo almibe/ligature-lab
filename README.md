@@ -1,28 +1,11 @@
-# ligature-web
+# Ligature Lab
 
-This application is a simple front-end to an instance of ligature-http.
-Right now it is setup to work with ligature-http running in local mode on port 8080.
-This application is still in it's early days, so it should only be ran locally for experimenting or development.
-It is built with SvelteKit to learn more visit https://kit.svelte.dev/.
-To learn more about Ligature visit https://ligature.dev.
+This repo contains the following projects
 
-## Developing
+ * ligature-components - A set of Svelte components for working with Ligature.
+ * ligature-lab - A web application for working with Ligature.
 
-After checking out run:
+To use ligature-lab you'll need a running backend.
+See https://github.com/almibe/ligature-fs for the most up to date backend.
 
-```bash
-npm install
-npm run dev
-```
-
-And then open your browser to http://localhost:3000
-
-## Building
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
+TODO link to docs on how to run ligature from the website when they are updated
