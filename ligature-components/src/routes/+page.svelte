@@ -1,5 +1,13 @@
-<h1>Ligature-Components Demo App</h1>
-<ul>
-    <li><a href="/datasets">datasets</a></li>
-    <li><a href="/dataset">dataset</a></li>
-</ul>
+<script lang="ts">
+    import Ligature from '../lib/Ligature.svelte';
+    let results: Array<string> = [];
+    async function runQuery(event: {detail: string}) {
+        const res = await fetch('/wander', {
+            method: "POST",
+            body: event.detail
+        })
+        results = [await res.text(), ...results];
+    }
+</script>
+
+<Ligature {results} on:runQuery={runQuery}></Ligature>

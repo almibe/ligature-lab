@@ -8,9 +8,21 @@
     let dispatch = createEventDispatcher();
     onMount(async () => {
         inputEditor = new EditorView({
-            extensions: [basicSetup, javascript()],
+            extensions: [
+                EditorView.domEventHandlers({
+                    keydown: e => {
+                        console.log(e.code)
+                        if((e.code == "Enter") && (e.metaKey || e.ctrlKey)) {
+                            runQuery();
+                            e.preventDefault();
+                        }
+                    }
+                }),
+                basicSetup, 
+                javascript()
+            ],
             parent: document.getElementById("textEditor")!!
-        });
+        });        
     });
     async function runQuery() {
         dispatch('runQuery', inputEditor!!.state.doc.toString());
