@@ -5,15 +5,19 @@
     import {EditorState} from "@codemirror/state";
     import {javascript} from "@codemirror/lang-javascript";
     let inputEditor: EditorView | null = null;
-    let dispatch = createEventDispatcher();
+    const dispatch = createEventDispatcher();
     onMount(async () => {
+        document.body.addEventListener('keydown', function(e) {
+            if((e.code == "Enter") && (e.metaKey || e.ctrlKey)) {
+                runQuery();
+            }
+        });
+        const editorNode = document.getElementById("textEditor")!!;
         inputEditor = new EditorView({
             extensions: [
                 EditorView.domEventHandlers({
                     keydown: e => {
-                        console.log(e.code)
                         if((e.code == "Enter") && (e.metaKey || e.ctrlKey)) {
-                            runQuery();
                             e.preventDefault();
                         }
                     }
@@ -21,14 +25,29 @@
                 basicSetup, 
                 javascript()
             ],
-            parent: document.getElementById("textEditor")!!
-        });        
+            parent: editorNode
+        });
+        inputEditor.focus();
     });
     async function runQuery() {
         dispatch('runQuery', inputEditor!!.state.doc.toString());
     }
     function clear() {
-        inputEditor!!.setState(EditorState.create({doc: "", extensions: [basicSetup, javascript()]}))
+        inputEditor!!.setState(EditorState.create({
+            doc: "", 
+            extensions: [
+                EditorView.domEventHandlers({
+                    keydown: e => {
+                        if((e.code == "Enter") && (e.metaKey || e.ctrlKey)) {
+                            e.preventDefault();
+                        }
+                    }
+                }),
+                basicSetup, 
+                javascript()
+            ]
+        }))
+        dispatch('clear');
     }
 </script>
 
@@ -36,7 +55,7 @@
     <button class="button" on:click={() => runQuery()}>Run</button>
     <button class="button" on:click={() => clear()}>Clear</button>
 </div>
-    
+
 <div id="textEditor"></div>
 
 <style>

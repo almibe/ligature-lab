@@ -8,6 +8,10 @@
         })
         results = [await res.text(), ...results];
     }
+
+    function clear() {
+        results = [];
+    }
 </script>
 
-<Ligature {results} on:runQuery={runQuery}></Ligature>
+<Ligature {results} on:runQuery={runQuery} on:clear={clear}></Ligature>
