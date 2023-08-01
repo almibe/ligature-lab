@@ -1,0 +1,11 @@
+#container, html, body {
+    height: 100%;
+    margin: 0 auto;
+    width: 800px;
+}
+
+#container {
+    display: flex;
+    flex-direction: column;
+    min-height: 100%;
+}

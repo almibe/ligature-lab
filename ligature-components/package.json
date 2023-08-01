@@ -3,6 +3,12 @@
   "private": true,
   "version": "0.2.0",
   "type": "module",
+  "license": "MPL-2.0",
+  "homepage": "https://github.com/almibe/ligature-lab",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/almibe/ligature-lab.git"
+  },
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -10,12 +16,11 @@
   },
   "dependencies": {
     "@ligature/ligature": "link:..\\..\\ligature-rs\\ligature-wasm\\pkg",
-    "lit": "^2.7.6",
-    "pkg": "link:..\\..\\..\\ligature-rs\\ligature-wasm\\pkg"
+    "ace-builds": "^1.23.4",
+    "lit": "^2.7.6"
   },
   "devDependencies": {
     "typescript": "^5.0.2",
-    "vite": "^4.4.5",
-    "vite-plugin-wasm-pack": "^0.1.12"
+    "vite": "^4.4.5"
   }
 }
