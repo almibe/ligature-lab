@@ -52,13 +52,6 @@ export class LigatureEditor extends LitElement {
       <div id="container">
         <span id="controls">
           <sl-button @click="${this._run}">Run</sl-button>
-
-          <sl-select id="resultDisplay" value="json">
-            <sl-option value="json">JSON</sl-option>
-            <sl-option value="text">Text</sl-option>
-            <sl-option value="table">Table</sl-option>
-            <sl-option value="graph">Graph</sl-option>
-          </sl-select>
         </span>
         <div id="editor"></div>
         <ligature-result id="result"></ligature-result>
@@ -95,29 +88,42 @@ export class LigatureEditor extends LitElement {
   `;
 
   private _updateResult() {
-    let displayType: "text" | "json" = this.shadowRoot.getElementById("resultDisplay").value;
-    if (displayType == "text") {
-      this.shadowRoot.getElementById("result").resultText = this._scriptResultToText();
+    this.shadowRoot.getElementById("result").resultText = this._scriptResultToText();
+  }
+
+  private _scriptValueToText(value: any): String {
+    if (value["Int"]) { //TODO get rid of naming this Int eventually (this issue is on the Rust side)
+      return value["Int"];
+    } else if (value["Integer"]) {
+      return JSON.stringify(value["Integer"]);
+    } else if (value["String"]) {
+      return JSON.stringify(value["String"]);
+    } else if (value["Boolean"] != undefined) {
+      return value["Boolean"];
+    } else if (value["Identifier"]) {
+      return "<" + value["Identifier"] + ">";
+    } else if (value["List"]) {
+      let list: any[] = value["List"]
+      let res = list.map((item) => this._scriptValueToText(item)).join(" ");
+      return "[" + res + "]";
+    } else if (value["Graph"]) {
+      let statements: any[] = value["Graph"]["statements"];
+      let res = statements.map((statement) => `(<${statement.entity}> <${statement.attribute}> ${this._scriptValueToText(statement["value"])})`).join(" ");
+      return "Graph([" + res + "])";
+    } else if (value["Tuple"]) {
+      let list: any[] = value["Tuple"];
+      let res = list.map((item) => this._scriptValueToText(item)).join(" ");
+      return "(" + res + ")";
     } else {
-      this.shadowRoot.getElementById("result").resultText = JSON.stringify(this.lastResult, null, 2);
+      return value;
     }
   }
 
   private _scriptResultToText(): String {
     if (this.lastResult["Ok"]) {
-      if (this.lastResult["Ok"]["Int"]) {
-        return this.lastResult["Ok"]["Int"];
-      } else if (this.lastResult["Ok"]["String"]) {
-        return this.lastResult["Ok"]["String"];
-      } else if (this.lastResult["Ok"]["Identifier"]) {
-        return "<" + this.lastResult["Ok"]["Identifier"] + ">";
-      } else if (this.lastResult["Ok"]["List"]) {
-        return "[...]";
-      } else {
-        return this.lastResult["Ok"];
-      }
+      return this._scriptValueToText(this.lastResult["Ok"]);
     } else {
-      return "Error: " + this.lastResult;
+      return "Error: " + this.lastResult["Err"];
     }
   }
 
@@ -129,7 +135,7 @@ export class LigatureEditor extends LitElement {
         method: "POST",
         body: script
       })).text());
-      this._updateResult();
+     this._updateResult();
     }
   }
 }
