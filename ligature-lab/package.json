@@ -13,6 +13,7 @@
   "dependencies": {
     "@ligature/ligature-components": "workspace:0.2.0",
     "@supabase/supabase-js": "^2.32.0",
-    "astro": "^2.10.7"
+    "astro": "^2.10.7",
+    "jsonwebtoken": "^9.0.1"
   }
 }
