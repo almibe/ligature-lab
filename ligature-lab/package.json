@@ -11,9 +11,12 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@astrojs/svelte": "^3.1.0",
     "@ligature/ligature-components": "workspace:0.2.0",
+    "@shoelace-style/shoelace": "^2.7.0",
     "@supabase/supabase-js": "^2.32.0",
     "astro": "^2.10.7",
-    "jsonwebtoken": "^9.0.1"
+    "jsonwebtoken": "^9.0.1",
+    "svelte": "^4.2.0"
   }
 }

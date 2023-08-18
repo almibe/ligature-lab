@@ -15,9 +15,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "@shoelace-style/shoelace": "^2.6.0",
     "codemirror": "^6.0.1",
-    "lit": "^2.7.6",
     "tabulator-tables": "^5.5.1"
   },
   "devDependencies": {
