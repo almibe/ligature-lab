@@ -76,3 +76,7 @@ td {
     text-align: center;
     vertical-align: middle;
 }
+
+.resultText {
+    padding-top: 2em;
+}

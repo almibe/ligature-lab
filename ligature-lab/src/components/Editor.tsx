@@ -87,5 +87,5 @@ export function Editor() {
     onMount(async () => {
         initializeEditor("editor");
     })
-    return [<div id="editor" class="code"></div>, 
+    return <div id="editor" class="code"></div>
 }
