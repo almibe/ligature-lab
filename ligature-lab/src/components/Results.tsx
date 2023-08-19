@@ -25,3 +25,10 @@ declare global {
     'ligature-result': LigatureResult
   }
 }
+
+
+export function Results() {
+    return <div>
+        <textarea id="results"></textarea>
+    </div>;
+}

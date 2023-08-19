@@ -10,15 +10,18 @@ const supabaseKey = import.meta.env.SUPABASE_KEY;
 let session = Astro.cookies.get("SESSION").value;
 
 if (session != undefined) {
-    jwt.verify(session, jwtKey);
-    return Astro.redirect("/");
+    try {
+        jwt.verify(session, jwtKey);
+        return Astro.redirect("/");
+    } catch {
+        //do nothing
+    }
 }
 
 if (Astro.request.method === "POST") {
     let data = await Astro.request.formData();
     let username = data.get("username") || "";
     let password = data.get("password") || "";
-    console.log(username + " - " + password);
     if (username != "" && password != "") {
         const supabase = createClient(
             supabaseUrl, 
@@ -37,9 +40,7 @@ if (Astro.request.method === "POST") {
             password: password,
         });
 
-        console.log("x")
         if (data.user != null) {
-            console.log("y")
             let token = jwt.sign({user: username}, jwtKey, { expiresIn: '1h' });
             Astro.cookies.set("SESSION", token);
             return Astro.redirect("/");

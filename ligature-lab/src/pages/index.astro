@@ -1,17 +1,34 @@
 ---
 import Layout from '../layouts/Layout.astro';
----
+import jwt from "jsonwebtoken";
+import { Editor } from '../components/Editor';
+import { Controls } from "../components/Controls";
+import { Results } from "../components/Results";
+const jwtKey = import.meta.env.JWT_KEY;
 
+let session = Astro.cookies.get("SESSION").value;
+let username = "";
+let datasets = [];
+
+if (session == undefined) {
+    return Astro.redirect("/login");
+} else {
+    try {
+        let token = jwt.verify(session, jwtKey);
+        username = token.user;
+
+    } catch {
+        return Astro.redirect("/login");
+    }
+}
+---
 <Layout title="Ligature Lab">
     <main>
+        <span style="float:right">{username}</span>
         <h1>Ligature Lab</h1>
-
-        <div><a href="/login">Login</a></div>
-
-        <h2>Datasets</h2>
-        <ul>
-            <li>Test</li>
-        </ul>
+        <Controls></Controls>
+        <Editor client:only="solid"></Editor> 
+        <Results></Results>
     </main>
 </Layout>
 
