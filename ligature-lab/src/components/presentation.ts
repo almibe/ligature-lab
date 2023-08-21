@@ -104,7 +104,26 @@ export class StatementsPresentation {
     }
 }
 
-function checkValue(input: string): Presentation | null {
+function checkValue(input: WanderValue): Presentation | null {
+    if (input["String"] != undefined) {
+        let value = input["String"];
+        return {
+            tableData: { columns: [{title: "Value", field: "value", sorter: "string"}], data: [{id: 1, value}]},
+            graphData: [{ data: { id: value } }]
+        }
+    } else if (input["Identifier"]) {
+        let value = input["Identifier"];
+        let valueString = "<" + value.identifier + ">";
+        return {
+            tableData: { columns: [{title: "Value", field: "value", sorter: "string"}], data: [{id: 1, value: valueString}]},
+            graphData: [{ data: { id: valueString } }]
+        }
+    } else {
+        return null;
+    }
+}
+
+function oldCheckValue(input: string): Presentation | null { //TODO delete
     let state = { input: input.trim(), location: 0 };
     let value = readValue(state)
     if (state.location != state.input.length) {
@@ -124,6 +143,43 @@ function checkValue(input: string): Presentation | null {
     } else {
         return null;
     }
+}
+
+type BooleanValue = { "Boolean": boolean };
+type StringValue = { "String": string };
+type GraphValue = {};
+type WanderValue = BooleanValue | StringValue;
+
+export function wanderResultToPresentation(input: WanderValue): Presentation | error {
+    let valuePresentation = checkValue(input)
+    if (valuePresentation != null) {
+        return valuePresentation;
+    }
+
+    let state = { input, location: 0 };
+    let result = new StatementsPresentation();
+
+    while (state.location < state.input.length) {
+        ignoreSpace(state);
+        let entityRes = readIdentifier(state);
+        if (typeof entityRes == 'object' && 'error' in entityRes) {
+            return entityRes;
+        }
+        ignoreSpace(state);
+        let attributeRes = readIdentifier(state);
+        if (typeof attributeRes == 'object' && 'error' in attributeRes) {
+            return attributeRes;
+        }
+        ignoreSpace(state);
+        let valueRes = readValue(state);
+        if (typeof valueRes == 'object' && 'error' in valueRes) {
+            return valueRes;
+        }
+        ignoreSpaceAndNewLine(state);
+
+        result.addStatement([entityRes, attributeRes, valueRes]);
+    }
+    return result.presentation();
 }
 
 /**
@@ -154,7 +210,7 @@ function checkValue(input: string): Presentation | null {
  *      ]
  *    }
  */
-export function wanderResultToPresentation(input: string): Presentation | error {
+export function oldWanderResultToPresentation(input: string): Presentation | error { //TODO delete
     let valuePresentation = checkValue(input)
     if (valuePresentation != null) {
         return valuePresentation;

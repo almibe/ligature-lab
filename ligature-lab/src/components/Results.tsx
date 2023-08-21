@@ -1,8 +1,23 @@
-import { createSignal } from 'solid-js';
+import { TextResult } from './TextResult';
+import { TableResult } from './TableResult';
 
 export function Results(props) {
   const resultText = props.resultText;
-  return <div class="resultText">
-      <pre>{resultText()}</pre>
-    </div>;
+  const resultDisplay = () => {
+    if (resultText().toString().startsWith("Graph")) {
+      return props.resultDisplay();
+    } else {
+      return "Text";
+    }
+  };
+
+  return <div class="results"><Switch fallback={<TextResult resultText={resultText}></TextResult>}>
+    <Match when={resultDisplay() == "Graph"} >
+      <p>Show graph.</p>
+    </Match>
+    <Match when={resultDisplay() == "Table"}>
+      <TableResult></TableResult>
+    </Match>
+  </Switch>
+  </div>
 }

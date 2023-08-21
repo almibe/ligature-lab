@@ -3,15 +3,14 @@ import { Controls } from "./Controls";
 import { Results } from "./Results";
 
 import { createSignal } from 'solid-js'
-import { createStore } from "solid-js/store";
-
 export function MainEditor() {
     let [text, setText] = createSignal("");
     let [resultText, setResultText] = createSignal("");
+    let [resultDisplay, setResultDisplay] = createSignal("Table");
 
     return <>
-        <Controls text={text} resultText={setResultText}></Controls>
+        <Controls text={text} resultText={setResultText} resultDisplay={setResultDisplay}></Controls>
         <Editor text={setText} resultText={setResultText}></Editor> 
-        <Results resultText={resultText}></Results>
+        <Results resultText={resultText} resultDisplay={resultDisplay}></Results>
     </>;
 }
