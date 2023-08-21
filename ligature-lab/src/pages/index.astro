@@ -1,9 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import jwt from "jsonwebtoken";
-import { Editor } from '../components/Editor';
-import { Controls } from "../components/Controls";
-import { Results } from "../components/Results";
+import { MainEditor } from '../components/MainEditor';
 const jwtKey = import.meta.env.JWT_KEY;
 
 let session = Astro.cookies.get("SESSION").value;
@@ -26,9 +24,7 @@ if (session == undefined) {
     <main>
         <span style="float:right">{username}</span>
         <h1>Ligature Lab</h1>
-        <Controls></Controls>
-        <Editor client:only="solid"></Editor> 
-        <Results></Results>
+        <MainEditor client:only="solid"></MainEditor>
     </main>
 </Layout>
 
