@@ -12,7 +12,6 @@ export async function run(script, setResult) {
       } else {
         //TODO clear table?
       }
-      //setResult(JSON.stringify(lastResult));
     }
   }
   
@@ -27,25 +26,25 @@ export async function run(script, setResult) {
   }
   
   function scriptValueToText(value: any): String {
-    if (value["Int"]) { //TODO get rid of naming this Int eventually (this issue is on the Rust side)
+    if ("Int" in value) { //TODO get rid of naming this Int eventually (this issue is on the Rust side)
       return value["Int"];
-    } else if (value["Integer"]) {
+    } else if ("Integer" in value) {
       return JSON.stringify(value["Integer"]);
-    } else if (value["String"]) {
+    } else if ("String" in value) {
       return JSON.stringify(value["String"]);
-    } else if (value["Boolean"] != undefined) {
+    } else if ("Boolean" in value) {
       return value["Boolean"].toString();
-    } else if (value["Identifier"]) {
+    } else if ("Identifier" in value) {
       return "<" + value["Identifier"] + ">";
-    } else if (value["List"]) {
+    } else if ("List" in value) {
       let list: any[] = value["List"]
       let res = list.map((item) => scriptValueToText(item)).join(" ");
       return "[" + res + "]";
-    } else if (value["Graph"]) {
+    } else if ("Graph" in value) {
       let statements: any[] = value["Graph"]["statements"];
       let res = statements.map((statement) => `(<${statement.entity}> <${statement.attribute}> ${scriptValueToText(statement["value"])})`).join(" ");
       return "Graph([" + res + "])";
-    } else if (value["Tuple"]) {
+    } else if ("Tuple" in value) {
       let list: any[] = value["Tuple"];
       let res = list.map((item) => scriptValueToText(item)).join(" ");
       return "(" + res + ")";
