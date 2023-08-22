@@ -104,82 +104,22 @@ export class StatementsPresentation {
     }
 }
 
-function checkValue(input: WanderValue): Presentation | null {
-    if (input["String"] != undefined) {
-        let value = input["String"];
-        return {
-            tableData: { columns: [{title: "Value", field: "value", sorter: "string"}], data: [{id: 1, value}]},
-            graphData: [{ data: { id: value } }]
-        }
-    } else if (input["Identifier"]) {
-        let value = input["Identifier"];
-        let valueString = "<" + value.identifier + ">";
-        return {
-            tableData: { columns: [{title: "Value", field: "value", sorter: "string"}], data: [{id: 1, value: valueString}]},
-            graphData: [{ data: { id: valueString } }]
-        }
-    } else {
-        return null;
-    }
-}
-
-function oldCheckValue(input: string): Presentation | null { //TODO delete
-    let state = { input: input.trim(), location: 0 };
-    let value = readValue(state)
-    if (state.location != state.input.length) {
-        return null;
-    }
-    if (typeof value == 'string') {
-        return {
-            tableData: { columns: [{title: "Value", field: "value", sorter: "string"}], data: [{id: 1, value}]},
-            graphData: [{ data: { id: value } }]
-        }
-    } else if ('identifier' in value) {
-        let valueString = "<" + value.identifier + ">";
-        return {
-            tableData: { columns: [{title: "Value", field: "value", sorter: "string"}], data: [{id: 1, value: valueString}]},
-            graphData: [{ data: { id: valueString } }]
-        }
-    } else {
-        return null;
-    }
-}
-
 type BooleanValue = { "Boolean": boolean };
 type StringValue = { "String": string };
 type GraphValue = {};
 type WanderValue = BooleanValue | StringValue;
 
-export function wanderResultToPresentation(input: WanderValue): Presentation | error {
-    let valuePresentation = checkValue(input)
-    if (valuePresentation != null) {
-        return valuePresentation;
+function jsonToValue(value: any): Value {
+    console.log("in jsonToValue")
+    if ("String" in value) {
+        return value["String"];
+    } else if ("Identifier" in value) {
+        return { identifier: value["Identifier"] };
+    } else if ("Integer" in value) {
+        return value["Integer"].toString();
+    } else {
+        throw new Error();
     }
-
-    let state = { input, location: 0 };
-    let result = new StatementsPresentation();
-
-    while (state.location < state.input.length) {
-        ignoreSpace(state);
-        let entityRes = readIdentifier(state);
-        if (typeof entityRes == 'object' && 'error' in entityRes) {
-            return entityRes;
-        }
-        ignoreSpace(state);
-        let attributeRes = readIdentifier(state);
-        if (typeof attributeRes == 'object' && 'error' in attributeRes) {
-            return attributeRes;
-        }
-        ignoreSpace(state);
-        let valueRes = readValue(state);
-        if (typeof valueRes == 'object' && 'error' in valueRes) {
-            return valueRes;
-        }
-        ignoreSpaceAndNewLine(state);
-
-        result.addStatement([entityRes, attributeRes, valueRes]);
-    }
-    return result.presentation();
 }
 
 /**
@@ -210,134 +150,19 @@ export function wanderResultToPresentation(input: WanderValue): Presentation | e
  *      ]
  *    }
  */
-export function oldWanderResultToPresentation(input: string): Presentation | error { //TODO delete
-    let valuePresentation = checkValue(input)
-    if (valuePresentation != null) {
-        return valuePresentation;
-    }
-
-    let state = { input, location: 0 };
+export function wanderResultToPresentation(input: WanderValue): Presentation | error {
     let result = new StatementsPresentation();
 
-    while (state.location < state.input.length) {
-        ignoreSpace(state);
-        let entityRes = readIdentifier(state);
-        if (typeof entityRes == 'object' && 'error' in entityRes) {
-            return entityRes;
-        }
-        ignoreSpace(state);
-        let attributeRes = readIdentifier(state);
-        if (typeof attributeRes == 'object' && 'error' in attributeRes) {
-            return attributeRes;
-        }
-        ignoreSpace(state);
-        let valueRes = readValue(state);
-        if (typeof valueRes == 'object' && 'error' in valueRes) {
-            return valueRes;
-        }
-        ignoreSpaceAndNewLine(state);
-
-        result.addStatement([entityRes, attributeRes, valueRes]);
+    if (input["Graph"] == undefined) {
+        return result.presentation();
     }
+
+    for (let statement of input["Graph"]["statements"]) {
+        let entity: Identifier = { identifier: statement.entity };
+        let attribute: Identifier = { identifier: statement.attribute };
+        let value: Value = jsonToValue(statement.value);
+        result.addStatement([entity, attribute, value]);
+    }
+    console.log(result.presentation());
     return result.presentation();
-}
-
-function ignoreSpace(state: State) {
-    while (state.location < state.input.length) {
-        let char = state.input[state.location];
-        if (char === " ") {
-            state.location++;
-        } else {
-            return
-        }
-    }
-}
-
-function ignoreSpaceAndNewLine(state: State) {
-    while (state.location < state.input.length) {
-        let char = state.input[state.location];
-        if (char === " " || char == "\r" || char == "\n") {
-            state.location++;
-        } else {
-            return
-        }
-    }
-}
-
-export function readIdentifier(state: State): Identifier | error {
-    let identifier = "";
-    if (state.input[state.location] == "<") {
-        state.location++; //skip <
-        while(state.location < state.input.length) {
-            if (/[a-zA-Z0-9-._~:/?#\[\]@!$&'()*+,;%=]/.test(state.input[state.location])) {
-                identifier = identifier + state.input[state.location];
-                state.location++;
-            } else if (state.input[state.location] == ">") {
-                if (identifier.length == 0) {
-                    return {error: "Identifier can't be empty."};
-                } else {
-                    state.location++; //skip >
-                    return {identifier};
-                }
-            } else {
-                return {error: "Invalid identifier character " + state.input[state.location]}
-            }
-        }
-    }
-    return {error: "Invalid Identifier"}
-}
-
-function readInteger(state: State): string | error {
-    let integer = "";
-    while(state.location < state.input.length) {
-        if (/[0-9-]/.test(state.input[state.location])) {
-            integer = integer + state.input[state.location];
-            state.location++;
-        } else {
-            if (integer.length > 0) {
-                return integer;
-            } else {
-                return {error: "Invalid Integer"};
-            }
-        }
-    }
-    if (integer.length > 0) {
-        return integer;
-    } else {
-        return {error: "Invalid Integer"};
-    }
-}
-
-function readString(state: State): string | error {
-    let result = "";
-    if (state.input[state.location] == '"') {
-        state.location++;
-    } else {
-        return {error: "Invalid String"};
-    }
-    while(state.location < state.input.length) {
-        if (state.input[state.location] != '"') {
-            result = result + state.input[state.location];
-            state.location++;
-        } else {
-            state.location++; //skip "
-            if (result.length > 0) {
-                return '"' + result + '"';
-            } else {
-                return {error: "Invalid String"};
-            }
-        }
-    }
-    return {error: "Invalid String"};
-}
-
-function readValue(state: State): string | { identifier: string } | error {
-    let nextChar = state.input[state.location];
-    if (/[0-9-]/.test(nextChar)) { //TODO not complete
-        return readInteger(state);
-    } else if (nextChar == '"') {
-        return readString(state);
-    } else {
-        return readIdentifier(state);
-    }
 }

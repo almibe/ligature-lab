@@ -2,6 +2,7 @@ import { onMount } from 'solid-js';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import "tabulator-tables/dist/css/tabulator.min.css";
 import { wanderResultToPresentation } from './presentation';
+import { updateGraph } from './GraphResult';
 
 let table; //TODO remove
 export function TableResult() {
@@ -26,7 +27,7 @@ export function updateTable(result) {
             table.setColumns(tablePresentation.columns);
             table.replaceData(tablePresentation.data);
             //handle graph
-            //updateGraph(presentation.graphData);
+            updateGraph(presentation.graphData);
         }
     }
 }
