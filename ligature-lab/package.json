@@ -12,9 +12,9 @@
   },
   "dependencies": {
     "@astrojs/solid-js": "^2.2.1",
-    "@shoelace-style/shoelace": "^2.7.0",
-    "@supabase/supabase-js": "^2.32.0",
-    "astro": "^2.10.7",
+    "@shoelace-style/shoelace": "^2.8.0",
+    "@supabase/supabase-js": "^2.33.1",
+    "astro": "^2.10.14",
     "codemirror": "^6.0.1",
     "jsonwebtoken": "^9.0.1",
     "solid-js": "^1.7.11",

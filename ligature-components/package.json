@@ -1,0 +1,23 @@
+{
+  "name": "@ligature/ligature-components",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Reusuable components for working with Ligature with HTML5 + JS.",
+  "main": "src/index.mjs",
+  "type": "module",
+  "scripts": {
+    "test": "pnpm run build && ava",
+    "build": "rescript",
+    "dev": "rescript build -w"
+  },
+  "keywords": [],
+  "author": "Alex Michael Berry",
+  "license": "MPL-v2",
+  "dependencies": {
+    "rescript": "^10.1.4"
+  },
+  "devDependencies": {
+    "ava": "^5.3.1",
+    "rescript-js": "1.0.0-beta.2"
+  }
+}
