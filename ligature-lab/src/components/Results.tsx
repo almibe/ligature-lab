@@ -4,13 +4,7 @@ import { GraphResult } from './GraphResult';
 
 export function Results(props) {
   const resultText = props.resultText;
-  const resultDisplay = () => {
-    if (resultText().toString().startsWith("Graph")) {
-      return props.resultDisplay();
-    } else {
-      return "Text";
-    }
-  };
+  const resultDisplay = props.resultDisplay;
 
   return <div class="results"><Switch fallback={<TextResult resultText={resultText}></TextResult>}>
     <Match when={resultDisplay() == "Graph"} >
