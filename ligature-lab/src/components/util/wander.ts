@@ -1,5 +1,4 @@
 import { updateTable } from "../TableResult";
-//import { readScriptValue } from "@ligature/ligature-components";
 import { run as run1 } from "@ligature/ligature";
 
 export async function run(script, setResult, setDisplayTypeEnabled, setResultDisplay) {
@@ -10,10 +9,11 @@ export async function run(script, setResult, setDisplayTypeEnabled, setResultDis
         });
         let resultText = await result.text();
         setResult(resultText);
-        if (!resultText.startsWith("graph")) {
+        let resultIsGraph = resultText.startsWith("graph");
+        if (!resultIsGraph) {
             setResultDisplay("Text");
         }
-        setDisplayTypeEnabled(resultText.startsWith("graph"));    
+        setDisplayTypeEnabled(resultIsGraph);    
         if (result.ok) {
             updateTable(run1(resultText));
         } else {

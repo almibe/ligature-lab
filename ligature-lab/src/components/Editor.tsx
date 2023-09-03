@@ -18,6 +18,10 @@ export function initializeEditor(id: string, setText, setResult, setDisplayTypeE
   const editorNode = document.getElementById(id)!!;
   inputEditor = new EditorView({
     extensions: [
+      EditorView.theme({
+        "&": {height: "300px", overflow: "auto", resize: "vertical"},
+        ".cm-scroller": {overflow: "auto"}
+      }),
       EditorView.domEventHandlers({
         keydown: e => {
           if((e.code == "Enter") && (e.metaKey || e.ctrlKey)) {
@@ -33,7 +37,7 @@ export function initializeEditor(id: string, setText, setResult, setDisplayTypeE
       basicSetup,
       keymap.of([indentWithTab]), 
       ],
-      parent: editorNode
+      parent: editorNode,
     });
     inputEditor.focus();
     runEvent = (e) => {
