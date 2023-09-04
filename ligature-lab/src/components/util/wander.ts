@@ -1,14 +1,15 @@
 import { updateTable } from "../TableResult";
 import { run as run1 } from "@ligature/ligature";
 
-export async function run(script, setResult, setDisplayTypeEnabled, setResultDisplay) {
+export async function run(editorText, setResultText, setDisplayTypeEnabled, setResultDisplay) {
+    let script = editorText();
     if (script != null && script != undefined) {
         let result = await fetch("/wander", {
             method: "POST",
             body: script
         });
         let resultText = await result.text();
-        setResult(resultText);
+        setResultText(resultText);
         let resultIsGraph = resultText.startsWith("graph");
         if (!resultIsGraph) {
             setResultDisplay("Text");

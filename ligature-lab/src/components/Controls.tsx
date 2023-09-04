@@ -1,10 +1,11 @@
 import { createSignal, createEffect } from 'solid-js';
+import { updateTable } from './TableResult';
 
 export function Controls(props) {
     let [textChecked, setTextChecked] = createSignal(true);
     let [tableChecked, setTableChecked] = createSignal(false);
     let [graphChecked, setGraphChecked] = createSignal(false);
-    let text = props.text;
+    let editorText = props.editorText;
     let resultText = props.resultText;
     let resultDisplay = props.resultDisplay;
     let setResultDisplay = props.setResultDisplay;
@@ -33,7 +34,7 @@ export function Controls(props) {
      })
 
     return <div>
-        <button onClick={() => run(text())}>Run</button>
+        <button onClick={() => run()}>Run</button>
         <input type="radio" id="textDisplayButton" name="resultDisplay" value="Text" checked={textChecked()} disabled={!displayTypeEnabled()}
             onClick={() => setResultDisplay("Text")} />
         <label for="textDisplayButton">Text</label>

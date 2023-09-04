@@ -1,6 +1,6 @@
 import { onMount } from "solid-js";
-import {Springy, Graph} from "./springy";
-import {springy } from "./springyui";
+import { Graph } from "./springy";
+import { springy } from "./springyui";
 
 export function GraphResult() {
     onMount(() => {

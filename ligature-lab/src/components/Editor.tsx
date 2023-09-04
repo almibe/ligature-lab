@@ -1,19 +1,18 @@
-import { createSignal, onMount } from "solid-js";
-import {EditorView, basicSetup} from "codemirror";
-import {keymap} from "@codemirror/view"
-import {indentWithTab} from "@codemirror/commands"
+import { onMount } from "solid-js";
+import { EditorView, basicSetup } from "codemirror";
+import { keymap } from "@codemirror/view"
+import { indentWithTab } from "@codemirror/commands"
 
 export function Editor(props: any) {
   onMount(async () => {
-      initializeEditor("editor", props.text, props.resultText, props.setDisplayTypeEnabled, props.run);
+      initializeEditor("editor", props.text, props.run);
   })
   return <div id="editor" class="code"></div>
 }
 
-export function initializeEditor(id: string, setText, setResult, setDisplayTypeEnabled, run) {
+export function initializeEditor(id: string, setText, run) {
   let inputEditor: EditorView;
   let runEvent;
-  let lastResult: any;
 
   const editorNode = document.getElementById(id)!!;
   inputEditor = new EditorView({

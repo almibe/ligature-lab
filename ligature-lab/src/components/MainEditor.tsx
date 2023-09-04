@@ -5,15 +5,15 @@ import { run as run1 } from "./util/wander.ts";
 
 import { createSignal } from 'solid-js'
 export function MainEditor() {
-    let [text, setText] = createSignal("");
+    let [editorText, setEditorText] = createSignal("");
     let [resultText, setResultText] = createSignal("");
     let [resultDisplay, setResultDisplay] = createSignal("Text");
     let [displayTypeEnabled, setDisplayTypeEnabled] = createSignal(true);
-    let run = (script: string) => { run1(script, setResultText, setDisplayTypeEnabled, setResultDisplay) }
+    let run = () => { run1(editorText, setResultText, setDisplayTypeEnabled, setResultDisplay) }
 
     return <>
         <Controls
-            text={text}
+            editorText={setEditorText}
             resultText={setResultText}
             resultDisplay={resultDisplay}
             setResultDisplay={setResultDisplay}
@@ -22,9 +22,7 @@ export function MainEditor() {
             run={run}>
         </Controls>
         <Editor
-            text={setText}
-            resultText={setResultText}
-            setDisplayTypeEnabled={setDisplayTypeEnabled}
+            text={setEditorText}
             run={run}>
         </Editor>
         <Results
