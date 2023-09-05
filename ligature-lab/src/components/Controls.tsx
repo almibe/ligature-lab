@@ -10,7 +10,7 @@ export function Controls(props) {
 
     return <div>
         <button onClick={() => run()}>Run</button>
-        <input type="radio" id="textDisplayButton" name="resultDisplay" value="Text" disabled={!displayTypeEnabled()}
+        <input type="radio" id="textDisplayButton" name="resultDisplay" value="Text" checked disabled={!displayTypeEnabled()}
             onClick={() => setResultDisplay("Text")} />
         <label for="textDisplayButton">Text</label>
         <input type="radio" id="tableDisplayButton" name="resultDisplay" value="Table" disabled={!displayTypeEnabled()}
