@@ -17,6 +17,9 @@ export function Results(props) {
     setShowTable(display === "Table");
     setShowGraph(display === "Graph");
     setShowText(display === "Text");
+    if (display == "Table") {
+      setTimeout(() => { table().redraw(true); }, 1);
+    }
  });
   
   return <div class="results">
