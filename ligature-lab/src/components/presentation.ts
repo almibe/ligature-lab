@@ -110,7 +110,6 @@ type GraphValue = {};
 type WanderValue = BooleanValue | StringValue;
 
 function jsonToValue(value: any): Value {
-    console.log("in jsonToValue")
     if ("String" in value) {
         return value["String"];
     } else if ("Identifier" in value) {
@@ -163,6 +162,5 @@ export function wanderResultToPresentation(input: WanderValue): Presentation | e
         let value: Value = jsonToValue(statement.value);
         result.addStatement([entity, attribute, value]);
     }
-    console.log(result.presentation());
     return result.presentation();
 }

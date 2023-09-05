@@ -1,22 +1,25 @@
-import { onMount } from 'solid-js';
+import { createEffect, onMount } from 'solid-js';
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import "tabulator-tables/dist/css/tabulator.min.css";
 import { wanderResultToPresentation } from './presentation';
 import { updateGraph } from './GraphResult';
 
-let table; //TODO remove
-export function TableResult() {
+export function TableResult(props) {
+    let table = props.table;
+    let setTable = props.setTable;
+    let resultObject = props.resultObject;
+    createEffect(() => updateTable(resultObject(), table()));
     onMount(() => {
-        table = new Tabulator("#table", {
+        setTable(new Tabulator("#table", {
             height:205,
             data:[],
             layout:"fitColumns",
-            columns:[{title:"", field:""}]});   
+            columns:[{title:"", field:""}]}));   
     });
     return <div id="table">Table Result</div>
 }
 
-export function updateTable(result) {
+export function updateTable(result, table) {
     if (table != undefined && table != null && table.initialized) {
         let presentation = wanderResultToPresentation(result);
         if ('error' in presentation) {

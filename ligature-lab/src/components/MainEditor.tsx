@@ -3,13 +3,24 @@ import { Controls } from "./Controls";
 import { Results } from "./Results";
 import { run as run1 } from "./util/wander.ts";
 
-import { createSignal } from 'solid-js'
+import { createEffect, createSignal } from 'solid-js'
+import { updateTable } from './TableResult';
 export function MainEditor() {
     let [editorText, setEditorText] = createSignal("");
     let [resultText, setResultText] = createSignal("");
+    let [resultObject, setResultObject] = createSignal({});
     let [resultDisplay, setResultDisplay] = createSignal("Text");
     let [displayTypeEnabled, setDisplayTypeEnabled] = createSignal(true);
-    let run = () => { run1(editorText, setResultText, setDisplayTypeEnabled, setResultDisplay) }
+    let [table, setTable] = createSignal({});
+    let run = () => { run1(editorText, setResultText, setResultObject, setDisplayTypeEnabled, setResultDisplay) }
+    createEffect(() => {
+        updateTable(resultObject());
+    });
+    createEffect(() => {
+        if (resultDisplay() != "Text") {
+            updateTable(resultObject());
+        }
+    })
 
     return <>
         <Controls
@@ -27,7 +38,10 @@ export function MainEditor() {
         </Editor>
         <Results
             resultText={resultText}
-            resultDisplay={resultDisplay}>
+            resultObject={resultObject}
+            resultDisplay={resultDisplay}
+            table={table}
+            setTable={setTable}>
         </Results>
     </>;
 }

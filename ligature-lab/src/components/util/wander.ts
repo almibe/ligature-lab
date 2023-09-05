@@ -1,7 +1,7 @@
 import { updateTable } from "../TableResult";
 import { run as run1 } from "@ligature/ligature";
 
-export async function run(editorText, setResultText, setDisplayTypeEnabled, setResultDisplay) {
+export async function run(editorText, setResultText, setResultObject, setDisplayTypeEnabled, setResultDisplay) {
     let script = editorText();
     if (script != null && script != undefined) {
         let result = await fetch("/wander", {
@@ -14,9 +14,9 @@ export async function run(editorText, setResultText, setDisplayTypeEnabled, setR
         if (!resultIsGraph) {
             setResultDisplay("Text");
         }
-        setDisplayTypeEnabled(resultIsGraph);    
+        setDisplayTypeEnabled(resultIsGraph);
         if (result.ok) {
-            updateTable(run1(resultText));
+            setResultObject(run1(resultText));
         } else {
             setDisplayTypeEnabled(false);
             //TODO tag error?
