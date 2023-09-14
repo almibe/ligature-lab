@@ -10,9 +10,10 @@ export function MainEditor() {
     let [resultText, setResultText] = createSignal("");
     let [resultObject, setResultObject] = createSignal({});
     let [resultDisplay, setResultDisplay] = createSignal("Text");
+    let [selectedResultDisplay, setSelectedResultDisplay] = createSignal("Text");
     let [displayTypeEnabled, setDisplayTypeEnabled] = createSignal(true);
     let [table, setTable] = createSignal({});
-    let run = () => { run1(editorText, setResultText, setResultObject, setDisplayTypeEnabled, setResultDisplay) }
+    let run = () => { run1(editorText, setResultText, setResultObject, setDisplayTypeEnabled, setResultDisplay, selectedResultDisplay) }
     createEffect(() => {
         updateTable(resultObject());
     });
@@ -30,6 +31,7 @@ export function MainEditor() {
             setResultDisplay={setResultDisplay}
             displayTypeEnabled={displayTypeEnabled}
             setDisplayTypeEnabled={setDisplayTypeEnabled}
+            setSelectedResultDisplay={setSelectedResultDisplay}
             run={run}>
         </Controls>
         <Editor
