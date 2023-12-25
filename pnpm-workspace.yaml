@@ -1,3 +1,4 @@
 packages:
   - 'ligature-lab'
+  - 'ligature-lab-new'
   - 'ligature-components'
