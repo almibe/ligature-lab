@@ -1,5 +1,8 @@
 # Ligature Lab
 
+*Note: this project isn't actively being worked on.*
+*See https://github.com/almibe/wander-web for current development on the successor project.*
+
 This repo contains the following projects
 
  * ligature-components - A set of web components for working with Ligature built with Lit.

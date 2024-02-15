@@ -1,5 +1,14 @@
 import { createSignal, createEffect } from 'solid-js';
 import { updateTable } from './TableResult';
+import '@shoelace-style/shoelace/dist/themes/light.css';
+import '@shoelace-style/shoelace/dist/components/button/button.js';
+import '@shoelace-style/shoelace/dist/components/icon/icon.js';
+import '@shoelace-style/shoelace/dist/components/input/input.js';
+import '@shoelace-style/shoelace/dist/components/rating/rating.js';
+import { setBasePath } from '@shoelace-style/shoelace/dist/utilities/base-path.js';
+
+// Set the base path to the folder you copied Shoelace's assets to
+setBasePath('/path/to/shoelace/dist');
 
 export function Controls(props) {
     let setResultDisplay = props.setResultDisplay;
@@ -7,18 +16,12 @@ export function Controls(props) {
     let displayTypeEnabled = props.displayTypeEnabled;
     let setSelectedResultDisplay = props.setSelectedResultDisplay;
     let run = props.run;
+    let environment = props.ShowEnvironment;
     setDisplayTypeEnabled(false);
 
     return <div>
-        <button onClick={() => run()}>Run</button>
-        <input type="radio" id="textDisplayButton" name="resultDisplay" value="Text" checked disabled={!displayTypeEnabled()}
-            onClick={() => {setSelectedResultDisplay("Text"); setResultDisplay("Text")}} />
-        <label for="textDisplayButton">Text</label>
-        <input type="radio" id="tableDisplayButton" name="resultDisplay" value="Table" disabled={!displayTypeEnabled()}
-            onClick={() => {setSelectedResultDisplay("Table"); setResultDisplay("Table")}} />
-        <label for="tableDisplayButton">Table</label>
-        <input type="radio" id="graphDisplayButton" name="resultDisplay" value="Graph" disabled={!displayTypeEnabled()}
-            onClick={() => {setSelectedResultDisplay("Graph"); setResultDisplay("Graph")}} />
-        <label for="graphDisplayButton">Graph</label>
+        <sl-button onClick={() => run()}>Run</sl-button>
+
+        <sl-button style="padding-left: 10px;" onClick={() => showEnvironment()}>Environment</sl-button>
     </div>;
 }

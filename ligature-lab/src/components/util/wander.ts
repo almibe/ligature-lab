@@ -27,3 +27,7 @@ export async function run(editorText, setResultText, setResultObject, setDisplay
         }
     }
 }
+
+export function showEnvironment() {
+
+}

@@ -1,7 +1,7 @@
 import { Editor } from './Editor';
 import { Controls } from "./Controls";
 import { Results } from "./Results";
-import { run as run1 } from "./util/wander.ts";
+import { run as run1, showEnvironment } from "./util/wander.ts";
 
 import { createEffect, createSignal } from 'solid-js'
 import { updateTable } from './TableResult';
@@ -32,6 +32,7 @@ export function MainEditor() {
             displayTypeEnabled={displayTypeEnabled}
             setDisplayTypeEnabled={setDisplayTypeEnabled}
             setSelectedResultDisplay={setSelectedResultDisplay}
+            showEnvironment={showEnvironment}
             run={run}>
         </Controls>
         <Editor
