@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Ligature Components Demo</title>
+    <link rel="stylesheet" href="./src/index.css" />
+  </head>
+  <body>
+    <div id="editor"></div>
+    <div id="repl"></div>
+    <script type="module">
+      import { initializeEditor } from './src/editor/ligature-editor';
+      import { initializeRepl } from './src/repl/repl'
+      initializeEditor({
+        element: document.querySelector("#editor"),
+        onRun: (script) => {},
+        onChange: (script) => {}
+      })
+      initializeRepl(document.querySelector("#editor"), (command) => {})
+    </script>
+  </body>
+</html>
