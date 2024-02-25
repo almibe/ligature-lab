@@ -35,6 +35,7 @@
 	"dependencies": {
 		"@auth/core": "^0.27.0",
 		"@auth/sveltekit": "^0.13.0",
-		"bits-ui": "^0.18.2"
+		"@ligature/ligature-components": "link:..\\ligature-components",
+		"@shoelace-style/shoelace": "^2.14.0"
 	}
 }

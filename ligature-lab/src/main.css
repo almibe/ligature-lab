@@ -1,0 +1,48 @@
+@font-face {
+    font-family: 'Comfortaa';
+    src: url('font/Comfortaa-VariableFont_wght.ttf');
+}
+
+@font-face {
+    font-family: 'Raleway';
+    src: url('font/Raleway-VariableFont_wght.ttf');
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Comfortaa';
+}
+
+p, div {
+    font-family: 'Raleway';
+}
+
+body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+main {
+    display: grid;
+    width: 1000px;
+}
+
+#signOut {
+    background: none!important;
+    border: none; 
+    padding: 0!important;   
+    cursor: pointer;
+    color: darkred;
+}
+
+#signOut:hover{
+    text-decoration: underline;
+}
+
+#addGraph {
+    margin-left:2em;
+}
+
+#graphs {
+    margin-top:3em;
+}
