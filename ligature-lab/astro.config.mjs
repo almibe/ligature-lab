@@ -1,12 +1,11 @@
 import { defineConfig } from 'astro/config';
 import auth from "auth-astro";
 import node from "@astrojs/node";
-
-import lit from "@astrojs/lit";
+import solidJs from "@astrojs/solid-js";
 
 // https://astro.build/config
 export default defineConfig({
-  integrations: [auth(), lit()],
+  integrations: [auth(), solidJs()],
   output: "server",
   adapter: node({
     mode: "standalone"

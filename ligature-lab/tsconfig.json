@@ -3,5 +3,8 @@
   "compilerOptions": {
     "experimentalDecorators": true,
     "useDefineForClassFields": false,
+    "allowImportingTsExtensions": true,
+    "jsx": "preserve",
+    "jsxImportSource": "solid-js"
   }
 }
