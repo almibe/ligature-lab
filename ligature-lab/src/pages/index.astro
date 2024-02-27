@@ -1,43 +1,34 @@
 ---
 import Layout from '../layouts/Layout.astro';
-// import { signIn, signOut } from '@auth/sveltekit/client'
-// import { page } from '$app/stores'
-// import Graphs from '$lib/Graphs.svelte';
-// import { onMount } from 'svelte';
+import {Graphs} from '../components/Graphs.ts';
 import '../main.css';
-// import '@shoelace-style/shoelace/dist/themes/light.css';
-// import '@shoelace-style/shoelace/dist/components/button/button.js';
+import '@shoelace-style/shoelace/dist/themes/light.css';
 import { getSession } from 'auth-astro/server';
 
 const session = await getSession(Astro.request);
-console.log(session)
+const loggedIn = session != null
+let userName = undefined
+if (loggedIn) {
+	userName = session.user?.email
+}
 ---
 
 <Layout title="Ligature Lab">
 	<header>
 		<h1>Ligature Lab</h1>
-	
-		<!-- {#if $page.data.session?.user}
-			<p>Hello, {$page.data.session.user.email} &dash; <button on:click={signOut} id="signOut">Sign out</button></p>
-			<Graphs />
-		{:else}
-			<p>Not signed in.</p>
-			<button on:click={() => signIn('github')}>Sign in with GitHub</button>
-		{/if} -->
+		{ loggedIn && <div>Hello, {userName} &dash; <button id="signOut">Logout</button></div> <Graphs client:only="lit" /> }
+		{ !loggedIn && <p>Not signed in.</p><button id="login">Login with GitHub</button> }
 	</header>
 
-	<button id="login">Login</button>
-	<button id="logout">Logout</button>
-  
 	<script>
 	  const { signIn, signOut } = await import("auth-astro/client")
-	  document.querySelector("#login").onclick = () => signIn("github")
-	  document.querySelector("#logout").onclick = () => signOut()
+	  const login = document.querySelector("#login");
+	  if (login != null) {
+		login.onclick = () => signIn("github")
+	  }
+	  const logout = document.querySelector("#signOut")
+	  if (logout != null) {
+		logout.onclick = () => signOut()
+	  }
 	</script>
-
-
-
 </Layout>
-
-<style>
-</style>
