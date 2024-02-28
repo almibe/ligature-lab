@@ -16,7 +16,10 @@ if (loggedIn) {
 <Layout title="Ligature Lab">
 	<header>
 		<h1>Ligature Lab</h1>
-		{ loggedIn && <div>Hello, {userName} &dash; <button id="signOut">Logout</button></div> <Graphs client:only="lit" /> }
+		{ loggedIn && 
+			<div>Hello, {userName} &dash; <button id="signOut">Logout</button></div>
+			<a id="gotoRepl" href="/repl">GOTO REPL</a>
+			<Graphs client:only="lit" /> }
 		{ !loggedIn && <p>Not signed in.</p><button id="login">Login with GitHub</button> }
 	</header>
 

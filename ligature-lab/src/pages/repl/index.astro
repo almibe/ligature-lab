@@ -1,21 +1,16 @@
 ---
 import Layout from '../../layouts/Layout.astro';
-//import '../../main.css';
-import "xterm/css/xterm.css";
+import { Repl } from "../../components/Repl.tsx";
 import '@shoelace-style/shoelace/dist/themes/light.css';
 import { getSession } from 'auth-astro/server';
 const session = await getSession(Astro.request);
 const loggedIn = session != null
 let userName = undefined
 if (loggedIn) {
-	userName = session.user?.email
+    userName = session.user?.email
 }
 ---
 
 <Layout title="Ligature Lab REPL">
-	<div id="term"></div>
+    <Repl client:only="solid"></Repl>
 </Layout>
-
-<script lang="ts">
-	console.log("yesh")
-</script>

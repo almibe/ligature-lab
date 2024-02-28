@@ -7,3 +7,14 @@ This project requires node and pnpm to be installed.
 pnpm install
 pnpm run dev
 ```
+
+To use this project create a .env file in the root of this directory and add the following values
+
+```env
+GITHUB_CLIENT_ID=???
+GITHUB_CLIENT_SECRET=???
+AUTH_SECRET=???
+AUTH_TRUST_HOST=true
+LIGATURE_PORT=4200
+```
+
