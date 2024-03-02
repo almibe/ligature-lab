@@ -44,11 +44,11 @@ main {
     text-decoration: underline;
 }
 
-#addGraph {
+#addDataset {
     margin-left:2em;
 }
 
-#graphs {
+#datasets {
     margin-top:3em;
 }
 

@@ -1,6 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import {Graphs} from '../components/Graphs.tsx';
+import { Datasets } from '../components/Datasets.tsx';
 import '../main.css';
 import '@shoelace-style/shoelace/dist/themes/light.css';
 import { getSession } from 'auth-astro/server';
@@ -23,7 +23,7 @@ const datasets = JSON.parse(await runBend("Ligature.datasets ()"))
 	{ loggedIn && 
 		<div>Hello, {userName} &dash; <button id="signOut">Logout</button></div>
 		<a id="gotoRepl" href="/repl">GOTO REPL</a>
-		<Graphs datasets={datasets} client:only="lit" /> }
+		<Datasets datasets={datasets} client:only="lit" /> }
 	{ !loggedIn && <p>Not signed in.</p><button id="login">Login with GitHub</button> }
 
 	<script>

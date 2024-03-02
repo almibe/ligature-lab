@@ -19,3 +19,4 @@ LIGATURE_PORT=4200
 ```
 
 Icons from https://icons.getbootstrap.com/
+Logo based on https://openmoji.org/library/emoji-1FAA2/
