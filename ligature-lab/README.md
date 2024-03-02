@@ -18,3 +18,4 @@ AUTH_TRUST_HOST=true
 LIGATURE_PORT=4200
 ```
 
+Icons from https://icons.getbootstrap.com/
