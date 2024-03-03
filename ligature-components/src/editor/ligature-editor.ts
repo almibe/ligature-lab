@@ -21,8 +21,8 @@ export function initializeEditor(config: EditorConfig): Editor {
     doc: script,
     extensions: [
       EditorView.theme({
-        "&": {height: "100%", overflow: "auto", resize: "verticle"},
-        ".cm-scroller": {overflow: "auto"}
+        "&": {height: "100%", overflow: "auto", resize: "verticle", fontFamily: "SourceCodePro, Menlo, Monaco, Lucida Console, monospace"},
+        ".cm-scroller": {overflow: "auto", fontFamily: "inherit",}
       }),
       EditorView.updateListener.of((v: ViewUpdate) => {
         if (v.docChanged) {

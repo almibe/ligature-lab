@@ -17,8 +17,20 @@ h1, h2, h3, h4, h5, h6 {
     font-family: 'Comfortaa';
 }
 
-p, div, a {
+p, .content {
     font-family: 'Raleway';
+}
+
+#term div {
+    font-family: 'SourceCodePro';
+}
+
+#editor {
+    font-family: 'SourceCodePro';
+}
+
+header h1 {
+    float: left;
 }
 
 body {
@@ -50,8 +62,4 @@ main {
 
 #datasets {
     margin-top:3em;
-}
-
-#gotoRepl {
-
 }

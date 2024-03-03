@@ -1,10 +1,9 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import { Datasets } from '../components/Datasets.tsx';
 import '../main.css';
 import '@shoelace-style/shoelace/dist/themes/light.css';
 import { getSession } from 'auth-astro/server';
-import { runBend } from '../lib/ligature-client';
+import { Editor } from '../components/Editor.tsx';
 
 const session = await getSession(Astro.request);
 const loggedIn = session != null
@@ -12,18 +11,16 @@ let userName = undefined
 if (loggedIn) {
 	userName = session.user?.email
 }
-const datasets = JSON.parse(await runBend("Ligature.datasets ()"))
 ---
 
 <Layout title="Ligature Lab">
 	<header>
 		<h1>Ligature Lab</h1>
+		{ loggedIn && <div class="content" id="user">Hello, {userName} &dash; <button id="signOut">Logout</button></div><div><img src="./terminal.svg" alt="Terminal"></sl-icon-button>
+		</div> }
 	</header>
 
-	{ loggedIn && 
-		<div>Hello, {userName} &dash; <button id="signOut">Logout</button></div>
-		<a id="gotoRepl" href="/repl">GOTO REPL</a>
-		<Datasets datasets={datasets} client:only="lit" /> }
+	{ loggedIn && <Editor client:only="solid" /> }
 	{ !loggedIn && <p>Not signed in.</p><button id="login">Login with GitHub</button> }
 
 	<script>
