@@ -7,7 +7,7 @@ export function Repl(props) {
     return <div id="term"></div>;
 }
 
-async function runCommand(command: string) {
+export async function runScript(command: string) {
     const response = await fetch('/bend', {
         method: 'post',
         body: command

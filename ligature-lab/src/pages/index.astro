@@ -3,7 +3,9 @@ import Layout from '../layouts/Layout.astro';
 import '../main.css';
 import '@shoelace-style/shoelace/dist/themes/light.css';
 import { getSession } from 'auth-astro/server';
+import { App } from '../components/App.tsx';
 import { Editor } from '../components/Editor.tsx';
+import { Results } from '../components/Results.tsx';
 
 const session = await getSession(Astro.request);
 const loggedIn = session != null
@@ -14,13 +16,9 @@ if (loggedIn) {
 ---
 
 <Layout title="Ligature Lab">
-	<header>
-		<h1>Ligature Lab</h1>
-		{ loggedIn && <div class="content" id="user">Hello, {userName} &dash; <button id="signOut">Logout</button></div><div><img src="./terminal.svg" alt="Terminal"></sl-icon-button>
-		</div> }
-	</header>
+	<App loggedIn={loggedIn} userName={userName} client:only="solid" />
 
-	{ loggedIn && <Editor client:only="solid" /> }
+	{ loggedIn && <Editor client:only="solid" /><Results client:only="solid" /> }
 	{ !loggedIn && <p>Not signed in.</p><button id="login">Login with GitHub</button> }
 
 	<script>

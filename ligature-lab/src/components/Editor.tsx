@@ -1,20 +1,16 @@
 import {initializeEditor} from '@ligature/ligature-components/src/editor/ligature-editor'
+import { runScript } from './Repl';
 
 export function Editor(props) {
+    console.log(props)
     setTimeout(() => {
         initializeEditor({
             element: document.querySelector("#editor"),
-            onRun: (script) => { console.log(script) },
+            onRun: async (script) => {
+                const result = await runScript(script) 
+                props.setResult("testtttt") },
             onChange: () => {}
         })
     })
     return <div id="editor"></div>;
 }
-
-// function runCommand(command: string) {
-//     const response = await fetch('/bend', {
-//         method: 'post',
-//         body: command
-//     });
-//     return await response.text();
-// }
