@@ -1,5 +1,4 @@
 packages:
   - 'ligature-components'
   - 'ligature-lab'
-  - 'ligature-lab-new'
   - 'sisal'
