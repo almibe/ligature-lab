@@ -1,0 +1,21 @@
+{
+  "name": "@ligature/ligature",
+  "version": "0.2.0",
+  "scripts": {
+    "res:build": "rescript",
+    "res:clean": "rescript clean",
+    "res:dev": "rescript -w"
+  },
+  "keywords": [
+    "rescript"
+  ],
+  "author": "Alex Michael Berry",
+  "license": "MPL-2.0",
+  "dependencies": {
+    "@rescript/core": "^1.3.0",
+    "rescript": "^11.1.0"
+  },
+  "devDependencies": {
+    "rescript-test": "^7.0.1"
+  }
+}
