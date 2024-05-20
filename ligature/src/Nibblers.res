@@ -13,29 +13,34 @@ let take = (t, gaze) =>
         Error(Gaze.NoMatch)
     }
 
-// /// <summary>Create a Nibbler that takes a list of tokens.</summary>
-// /// <param name="list">The list of tokens to take.</param>
-// /// <returns>The newly created Nibbler.</returns>
-// let takeList list gaze =
-//     let length = List.length (list)
-//     let mutable index = 0
-//     let mutable cont = true
+/// <summary>Create a Nibbler that takes a list of tokens.</summary>
+/// <param name="list">The list of tokens to take.</param>
+/// <returns>The newly created Nibbler.</returns>
+let takeArray = (array, gaze) => {
+    let length = array->Array.length
+    let index = ref(0)
+    let cont = ref(true)
 
-//     while not (Gaze.isComplete gaze) && cont && index < length do
-//         let next = Gaze.next (gaze)
+    while not (Gaze.isComplete(gaze)) && cont.contents && index.contents < length {
+        let next = Gaze.next (gaze)
 
-//         match next with
-//         | Ok value ->
-//             if value = list.Item(index) then
-//                 index <- index + 1
-//             else
-//                 cont <- false
-//         | Error(_) -> cont <- false
+        switch next {
+        | Ok(value) =>
+            if Some(value) == array[index.contents] {
+                index.contents = index.contents + 1
+            } else {
+                cont.contents = false
+            }
+        | Error(_) => cont.contents = false
+        }
+    }
 
-//     if cont && index = length then
-//         Ok list
-//     else
-//         Error Gaze.GazeError.NoMatch
+    if cont.contents && index.contents == length {
+        Ok(array)
+    } else {
+        Error(Gaze.NoMatch)
+    }
+}
 
 // /// <summary>Create a Nibbler that takes a String when working with a Gaze of Chars.
 // /// This is just a helper function that relies on takeList.</summary>

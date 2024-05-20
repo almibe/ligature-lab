@@ -11,35 +11,28 @@ type value = | String(string) | Int(bigint) | Identifier(identifier) | Bytes(Js.
 @genType
 type statement = (identifier, identifier, value)
 
-@genType
-type network = Js.Set.t<statement>
-
-type tokenType =
-//    | Name
-//    | EqualSign
-    | OpenBrace
-    | CloseBrace
-    | Identifier
-    | Int
-    | Bytes
-    | String
-//    | OpenSquare
-//    | CloseSquare
-//    | Colon
-    | Comma
-
-type token = { tokenType: tokenType, value: string }
-
-let tokenize = (input: string): array<token> => {
-    let gaze = Gaze.fromString(input)
-    let results = []
-    switch Nibblers.take("{", gaze) {
-        | Ok(res) => %todo
-        | Error(_) => %todo
+module StatementComparator =
+  Belt.Id.MakeComparableU({
+    type t = statement
+    let cmp = (statement0, statement1) =>{
+        let (e0, a0, v0) = statement0
+        let (e1, a1, v1) = statement1
+        let res = Pervasives.compare(e0, e1)
+        if res == 0 {
+            let res = Pervasives.compare(a0, a1)
+            if (res == 0) {
+                Pervasives.compare(v0, v1)
+            } else {
+                res
+            }
+        } else {
+            res
+        }
     }
-    results
-}
+  })
 
 @genType
-let parse = (input: array<token>): network =>
-    %todo
+type network = Belt.Set.t<statement, StatementComparator.identity>
+
+@genType
+type ligatureError = string
