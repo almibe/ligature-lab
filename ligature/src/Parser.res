@@ -3,5 +3,5 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 let parse = (input: array<Tokenizer.token>): result<Ligature.network, Ligature.ligatureError> => {
-    %todo
+    Ok(Ligature.emptyNetwork)
 }

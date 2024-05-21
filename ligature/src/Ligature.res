@@ -34,5 +34,7 @@ module StatementComparator =
 @genType
 type network = Belt.Set.t<statement, StatementComparator.identity>
 
+let emptyNetwork = Belt.Set.make(~id=module(StatementComparator))
+
 @genType
 type ligatureError = string

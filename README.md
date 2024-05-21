@@ -7,7 +7,6 @@ See each project's directory for notes.
 | ------------------- | -------------------------------------------- |
 | ligature            | Support for Ligature.                        |
 | ligature-components | Components for working with Ligature.        |
-| ligature-lab        | A web application for working with Ligature. |
 
 Icons from https://icons.getbootstrap.com/
 Logo based on https://openmoji.org/library/emoji-1FAA2/

@@ -3,5 +3,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 @genType
-let write = (network: Ligature.network): string =>
-    "TODO"
+let write = (network: Ligature.network): string => {
+    "{" ++ "}"
+}

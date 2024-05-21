@@ -4,8 +4,10 @@
   "scripts": {
     "res:build": "rescript",
     "res:clean": "rescript clean",
-    "res:dev": "rescript -w"
+    "res:dev": "rescript -w",
+    "test": "rescript && ava"
   },
+  "type": "module",
   "keywords": [
     "rescript"
   ],
@@ -16,6 +18,6 @@
     "rescript": "^11.1.0"
   },
   "devDependencies": {
-    "rescript-test": "^7.0.1"
+    "ava": "^6.1.3"
   }
 }

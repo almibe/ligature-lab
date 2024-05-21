@@ -1,9 +1,15 @@
 {
-  "name": "ligature",
-  "sources": {
-    "dir": "src",
-    "subdirs": true
-  },
+  "name": "@ligature/ligature",
+  "sources": [
+    {
+      "dir": "src",
+      "subdirs": true
+    },
+    {
+      "dir": "__tests__",
+      "type": "dev"
+    }
+  ],
   "gentypeconfig": {
     "module": "esmodule",
     "moduleResolution": "node",
@@ -16,6 +22,8 @@
   "suffix": ".res.js",
   "bs-dependencies": [
     "@rescript/core"
+  ],
+  "bs-dev-dependencies": [
   ],
   "bsc-flags": [
     "-open RescriptCore"
