@@ -32,7 +32,7 @@ let backTickNibber = Nibblers.take("`", ignoreToken)
 let whiteSpaceNibbler = Nibblers.take(" ", ignoreToken)
 
 let identifierValueNibbler: Gaze.nibbler<string, token> = 
-    Nibblers.takeWhile ((value) => value != "`", (value) => ignoreToken)
+    Nibblers.takeWhile ((value) => value != "`", (value) => { tokenType: Identifier, value: Array.join(value, "") })
 
 let identifierNibbler: Gaze.nibbler<string, token> = Nibblers.takeAll([
     backTickNibber,
@@ -54,7 +54,11 @@ let tokenize = (input: string): result<array<token>, Ligature.ligatureError> => 
     let cont = ref(true)
     while !Gaze.isComplete(gaze) && cont.contents {
         switch Gaze.attempt(tokenNibbler, gaze) {
-            | Ok(res) => results->Array.push(res)
+            | Ok(res) => {
+                if res.tokenType != Ignore {
+                    results->Array.push(res)
+                }
+            }
             | Error(_) => cont.contents = false
         }
     }

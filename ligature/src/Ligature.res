@@ -36,5 +36,8 @@ type network = Belt.Set.t<statement, StatementComparator.identity>
 
 let emptyNetwork = Belt.Set.make(~id=module(StatementComparator))
 
+let networkFromArray = (array) =>
+    Belt.Set.fromArray(array, ~id=module(StatementComparator))
+
 @genType
 type ligatureError = string

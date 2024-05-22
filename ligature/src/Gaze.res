@@ -17,11 +17,7 @@ let fromString = (input: string) =>
     { content: explode(input),
       offset: 0 }
 
-// let fromArray array = { content = array; offset = 0 }
-
-// let fromList list =
-//     { content = List.toArray list
-//       offset = 0 }
+let fromArray = (array) => { content: array, offset: 0 }
 
 let isComplete = (gaze: gaze<'i>) =>
     gaze.offset >= Array.length (gaze.content)
