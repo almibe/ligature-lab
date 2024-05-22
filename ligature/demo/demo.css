@@ -1,0 +1,9 @@
+#results, th, td {
+    border: 1px solid;
+}
+
+#results {
+    border: 1px solid;
+    width: 100%;
+    border-collapse: collapse;
+}

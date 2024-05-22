@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <title>Ligature Demo</title>
+    <link rel="stylesheet" href="./demo.css">
+  </head>
+  <body>
+    <h1>Ligature Demo</h1>
+    <table id="results">
+        <tr>
+            <th>Test Name</th>
+            <th>Input</th>
+            <th>Tokens</th>
+            <th>Read Result</th>
+            <th>Write Result</th>
+        </tr>
+    </table>
+
+    <script type="module">
+        import { read } from "../src/Reader.res.js"
+        import { write } from "../src/Writer.res.js"
+        import { tokenize } from "../src/Tokenizer.res.js"
+        const testCases = {
+            "empty string": "",
+            "empty network": "{}",
+            "network with single statement": "{`a` `b` `c`}",
+            //"network with multiple statements": "{`a` `b` `c`, `d` `e` `f`}",
+            //"network with multiple value types": "{`a` `b` \"hello\", `a` `b` 123, `a` `b` 0xDEADCAFE}",
+        }
+        var results = document.getElementById("results");
+        for (let testCase in testCases) {
+            const row = results.insertRow(-1)
+            const nameCell = row.insertCell(-1)
+            const inputCell = row.insertCell(-1)
+            const tokensCell = row.insertCell(-1)
+            const readResultCell = row.insertCell(-1)
+            const writeResultCell = row.insertCell(-1)
+            const readResult = read(testCases[testCase])
+            nameCell.innerHTML = testCase
+            inputCell.innerHTML = testCases[testCase]
+            tokensCell.innerHTML = JSON.stringify(tokenize(testCases[testCase]))
+            readResultCell.innerHTML = JSON.stringify(readResult)
+            if (readResult.TAG == "Ok") {
+                writeResultCell.innerHTML = write(readResult["_0"])
+            } else {
+                writeResultCell.innerHTML = "--"
+            }
+        }
+    </script>
+  </body>
+</html>

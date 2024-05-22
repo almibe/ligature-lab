@@ -3,4 +3,6 @@
 /lib/
 .bsb.lock
 .merlin
-*.tsx
+.parcel-cache/
+*.res.js
+*.gen.tsx

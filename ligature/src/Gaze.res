@@ -30,8 +30,7 @@ let peek = (gaze: gaze<'i>) : result<'i, gazeError> =>
     if isComplete(gaze) {
         Error(NoMatch)
     } else {
-        %todo
-        //Ok(gaze.content[gaze.offset])
+        Ok(gaze.content->Array.getUnsafe(gaze.offset))
     }
 
 let next = (gaze: gaze<'i>) : result<'i, gazeError> =>
