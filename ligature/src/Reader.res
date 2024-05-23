@@ -3,10 +3,13 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 @genType
-let read = (input: string): result<Ligature.network, Ligature.ligatureError> => {
+let read = (input: string): result<array<Ligature.statement>, Ligature.ligatureError> => {
     switch Tokenizer.tokenize(input) {
         | Ok(tokens) => {
-            Parser.parse(tokens)
+            switch Parser.parse(tokens) {
+                | Ok(network) => Ok(Belt.Set.toArray(network))
+                | Error(err) => Error(err)
+            }
         }
         | Error(err) => Error(err)
     }
