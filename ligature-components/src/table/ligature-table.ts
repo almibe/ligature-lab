@@ -1,6 +1,35 @@
 import { read } from "@ligature/ligature/src/Reader.gen.tsx"
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import "tabulator-tables/dist/css/tabulator.min.css";
+import {LitElement, html} from 'lit';
+import {customElement, query} from 'lit/decorators.js';
+
+@customElement('ligature-table')
+class LigatureTable extends LitElement {
+
+  @query("#table")
+  private table: Element
+
+  protected createRenderRoot() {
+   return this;
+  }
+
+  private text;
+
+  constructor() {
+   super()
+   this.text = this.innerText;
+   this.innerText = "";
+  }
+
+  render(){
+    setTimeout(() => {
+         initializeTable(this.table, this.text)
+    })
+    
+    return html`<div id="table"></div>`;
+  }
+}
 
 function valueToCell(value: any) {
    switch(value["TAG"]) {
@@ -51,7 +80,7 @@ function networkToTable(network: any[]) {
   }
 }
 
-export function initializeTable(element: HTMLElement, input: string) {
+export function initializeTable(element: Element, input: string) {
    const res = read(input)
    if (res["TAG"] == "Ok") {
       let tableData = networkToTable(res["_0"])
