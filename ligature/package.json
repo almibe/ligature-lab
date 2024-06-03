@@ -4,7 +4,8 @@
   "scripts": {
     "res:build": "rescript",
     "res:clean": "rescript clean",
-    "res:dev": "rescript -w"
+    "res:dev": "rescript -w",
+    "test": "vitest"
   },
   "type": "module",
   "keywords": [
@@ -17,6 +18,6 @@
     "rescript": "^11.1.0"
   },
   "devDependencies": {
-    "parcel": "^2.12.0"
+    "vitest": "^1.6.0"
   }
 }
