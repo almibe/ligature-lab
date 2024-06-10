@@ -1,7 +1,7 @@
 import {LitElement, html} from 'lit';
-import {customElement, query} from 'lit/decorators.js';
+import {customElement, property, query} from 'lit/decorators.js';
 import cytoscape from 'cytoscape';
-import { read } from "@ligature/ligature/src/Reader.gen.tsx"
+import { runWander } from "@ligature/ligature/src/Interpreter.gen.tsx"
 
 function graphToTable(network: any[]) {
   let data: any = {}
@@ -67,21 +67,16 @@ class LigatureGraph extends LitElement {
   @query("#graph")
   private graph: Element
 
-  private text: string
+  @property({ attribute: "value" })
+  public value: string;
 
   protected createRenderRoot() {
     return this;
   }
-
-  constructor() {
-    super()
-    this.text = this.innerText;
-    this.innerText = "";
-   }
  
   render(){
     setTimeout(() => {
-      initializeGraph(this.graph, this.text)
+      initializeGraph(this.graph, this.value)
     })
 
     return html`<div id="graph"></div>`;
@@ -89,7 +84,7 @@ class LigatureGraph extends LitElement {
 }
 
 export function initializeGraph(element: HTMLElement, input: string) {
-  const res = read(input)
+  const res = runWander(input)
   if (res["TAG"] == "Ok") {
      let graphData = networkToGraph(res["_0"])
      return cytoscape({

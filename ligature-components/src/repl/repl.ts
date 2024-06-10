@@ -5,7 +5,7 @@ import { FitAddon } from '@xterm/addon-fit';
 
 BigInt.prototype.toJSON = function() { return this.toString() }
 
-export function initializeRepl(element: HTMLElement, onRun: any) {
+export function initializeRepl(element: HTMLElement, onRun: any): Terminal {
   const term = new Terminal({
     theme: {
           background: "#191A19",
@@ -22,8 +22,7 @@ export function initializeRepl(element: HTMLElement, onRun: any) {
   term.loadAddon(fitAddon);
   term.open(element);
   term.focus();
-  fitAddon.fit();
-  
+
   rl.setCheckHandler((text) => {
     let trimmedText = text.trimEnd();
     if (trimmedText.endsWith("\\")) {
@@ -55,5 +54,6 @@ export function initializeRepl(element: HTMLElement, onRun: any) {
     setTimeout(readLine);
   }
   
-  readLine();  
+  readLine();
+  return term;
 }

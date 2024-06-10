@@ -1,8 +1,8 @@
-import { read } from "@ligature/ligature/src/Reader.gen.tsx"
+import { runWander } from "@ligature/ligature/src/Interpreter.gen.tsx"
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import "tabulator-tables/dist/css/tabulator.min.css";
 import {LitElement, html} from 'lit';
-import {customElement, query} from 'lit/decorators.js';
+import {customElement, property, query} from 'lit/decorators.js';
 
 @customElement('ligature-table')
 class LigatureTable extends LitElement {
@@ -10,21 +10,16 @@ class LigatureTable extends LitElement {
   @query("#table")
   private table: Element
 
+  @property({ attribute: "value" })
+  public value: string;
+  
   protected createRenderRoot() {
    return this;
   }
 
-  private text;
-
-  constructor() {
-   super()
-   this.text = this.innerText;
-   this.innerText = "";
-  }
-
   render(){
     setTimeout(() => {
-         initializeTable(this.table, this.text)
+         initializeTable(this.table, this.value)
     })
     
     return html`<div id="table"></div>`;
@@ -42,11 +37,12 @@ function valueToCell(value: any) {
    }
 }
 
-function networkToTable(network: any[]) {
+function networkToTable(network: any) {
+   console.log("network = ", network["_0"])
    let data: any = {}
    let columns = new Set<string>();
 
-   for (let statement of network) {
+   for (let statement of network["_0"]) {
       const entity: string = statement[0]["identifier"]
       const attribute: string = statement[1]["identifier"]
       const value: any = statement[2]
@@ -81,8 +77,12 @@ function networkToTable(network: any[]) {
 }
 
 export function initializeTable(element: Element, input: string) {
-   const res = read(input)
+   console.log("input", input)
+   const res = runWander(input)
+   console.log("result", res)
    if (res["TAG"] == "Ok") {
+      console.log("1", res)
+      console.log("2", JSON.stringify(res))
       let tableData = networkToTable(res["_0"])
       return new Tabulator(element, tableData)
    } else {

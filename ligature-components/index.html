@@ -7,15 +7,17 @@
     <link rel="stylesheet" href="./demo.css" />
   </head>
   <body>
-    <!-- <div id="editor"></div>
-    <div id="graph"></div>
-    <div id="table"></div> -->
-    
-    <ligature-text>{`a` `b` `c`}</ligature-text>
-    <ligature-table>{`a` `b` `c`}</ligature-table>
-    <!-- <div id="repl"></div> -->
+    <ligature-value value="{`a` `b` `c`}"></ligature-value>
+    <hr>
+    <ligature-text value="{`a` `b` `c`}"></ligature-text>
+    <hr>
+    <ligature-table value="{`a` `b` `c`}"></ligature-table>
+    <hr>
+    <ligature-graph value="{`a` `b` `c`}"></ligature-graph>
+
     <script type="module" src="src/text/ligature-text.ts"></script>
     <script type="module" src="src/table/ligature-table.ts"></script>
-    <!-- <script type="module" src="demo.ts"></script> -->
+    <script type="module" src="src/graph/ligature-graph.ts"></script>
+    <script type="module" src="src/value/ligature-value.ts"></script>
   </body>
 </html>

@@ -1,15 +1,14 @@
-import { initializeTable } from './src/table/table';
+import { initializeTable } from './src/table/ligature-table';
 import { initializeEditor } from './src/editor/ligature-editor';
-import { initializeGraph } from './src/cytoscape/graph';
-
-// import { initializeRepl } from './src/repl/repl'
-// initializeRepl(document.querySelector("#editor"), (command) => {})
+import { initializeGraph } from './src/graph/ligature-graph';
 
 initializeEditor({
   element: document.querySelector("#editor")!!,
-  onRun: (script) => {},
+  onRun: (script) => {
+    
+  },
   onChange: (script) => {
-    initializeTable(document.querySelector("#table")!!, script)
+   // initializeTable(document.querySelector("#table")!!, script)
     initializeGraph(document.querySelector("#graph")!!, script)
   }
 })

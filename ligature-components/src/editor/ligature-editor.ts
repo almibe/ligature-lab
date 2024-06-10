@@ -5,6 +5,7 @@ import { indentWithTab } from "@codemirror/commands"
 export interface Editor {
   readText(): string
   setText(text: string): void
+  editorView: EditorView
 }
 
 export interface EditorConfig {
@@ -43,11 +44,11 @@ export function initializeEditor(config: EditorConfig): Editor {
     parent: config.element,
   });
   inputEditor.focus();
-  
   return {
     readText: () => inputEditor.state.doc.toString(),
     setText: (text: string) => {
       inputEditor.dispatch({changes: {from: 0, to: inputEditor.state.doc.length, insert: text}})
-    }
+    },
+    editorView: inputEditor
   };
 }

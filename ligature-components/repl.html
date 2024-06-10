@@ -5,7 +5,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Ligature Components Demo</title>
     <link rel="stylesheet" href="./src/index.css" />
-    <script type="module" src="/src/repl/repl.ts"></script>
+    <script type="module">
+      import { initializeRepl } from "./src/repl/repl.ts"
+      import { runWander } from "@ligature/ligature/src/Interpreter.gen.tsx"
+      import { printResult } from "@ligature/ligature/src/Writer.gen.tsx"
+      initializeRepl(document.querySelector("#terminal"), (script) => { 
+        return printResult(runWander(script))
+      })
+    </script>
   </head>
   <body>
     <div id="terminal"></div>
