@@ -53,13 +53,18 @@ let takeArray = (array) => (gaze) => {
 /// and returns a bool.</summary>
 /// <param name="predicate">The function used to decide if a token matches.</param>
 /// <returns>A Nibbler that consumes one item as long as the predicate passes.</returns>
-let takeCond = (predicate, gaze) => {
+let takeCond = (predicateMapper) => (gaze) => {
     let next = Gaze.peek(gaze)
 
     switch next {
-    | Ok(value) when predicate (value) => {
-        Gaze.next(gaze) -> ignore
-        Ok(value)
+    | Ok(value) => {
+        switch predicateMapper(value) {
+            | Some(value) => {
+                Gaze.next(gaze) -> ignore
+                Ok(value)
+            }
+            | None => Error(Gaze.NoMatch)
+        }
     }
     | _ => Error(Gaze.NoMatch)
     }
@@ -228,19 +233,23 @@ let takeWhile = (predicate, mapper) => (gaze) => {
 //     else
 //         Ok(results)
 
-// let repeat nibbler gaze =
-//     let mutable cont = true
-//     let mutable results = []
+let repeat = (nibbler, gaze) => {
+    let cont = ref(true)
+    let results = []
 
-//     while cont do
-//         match Gaze.attempt nibbler gaze with
-//         | Ok(result) -> results <- results @ [ result ]
-//         | Error(_) -> cont <- false
+    while (cont.contents) {
+        switch Gaze.attempt(nibbler, gaze) {
+            | Ok(result) => results->Array.push(result)
+            | Error(_) => cont.contents = false
+        }
+    }
 
-//     if results = [] then
-//         Error(Gaze.GazeError.NoMatch)
-//     else
-//         Ok(results)
+    if (results == []) {
+        Error(Gaze.NoMatch)
+    } else {
+        Ok(results)
+    }
+}
 
 // let repeatOptional nibbler gaze =
 //     let mutable cont = true
