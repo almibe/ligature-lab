@@ -3,7 +3,6 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 let interpretIdentifier = (expression: Parser.expression): result<Ligature.identifier, Ligature.ligatureError> => {
-    Console.log(expression)
     switch expression {
         | Parser.Identifier(value) => Ok({Ligature.identifier: value})
         | _ => %todo

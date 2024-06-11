@@ -39,7 +39,6 @@ function valueToCell(value: any) {
 
 function networkToTable(_network: any) {
    let network = _network["_0"].data.v
-   console.log("network = ", network)
    let data: any = {}
    let columns = new Set<string>();
 
@@ -63,7 +62,6 @@ function networkToTable(_network: any) {
       }
 //   }
 
-   console.log(Object.values(data))
    let columnData: any[] = [{title: "Identifier", field: "Identifier"}]
    for (let column of columns) {
       columnData.push({title: column, field: column})
@@ -78,12 +76,8 @@ function networkToTable(_network: any) {
 }
 
 export function initializeTable(element: Element, input: string) {
-   console.log("input", input)
    const res = runWander(input)
-   console.log("result", res)
    if (res["TAG"] == "Ok") {
-      console.log("1", res)
-      console.log("2", JSON.stringify(res))
       let tableData = networkToTable(res["_0"])
       return new Tabulator(element, tableData)
    } else {

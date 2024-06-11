@@ -40,7 +40,6 @@ function graphToTable(network: any[]) {
 
 function networkToGraph(_network: any) {
   let network = _network["_0"].data.v
-  console.log("network = ", network)
 //  let nodes = new Set<string>()
   let graph = []
 

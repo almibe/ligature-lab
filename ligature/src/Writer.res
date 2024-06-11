@@ -25,7 +25,6 @@ let write = (network: Ligature.network): string => {
 
 @genType
 let printResult = (input: result<Wander.wanderValue, Ligature.ligatureError>) => {
-    Console.log(input)
     switch input {
         | Ok(Int(value)) => BigInt.toString(value)
         | Ok(String(value)) => Js.Json.stringifyAny(value)->Option.getUnsafe
