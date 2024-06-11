@@ -30,7 +30,7 @@ let printResult = (input: result<Wander.wanderValue, Ligature.ligatureError>) =>
         | Ok(Int(value)) => BigInt.toString(value)
         | Ok(String(value)) => Js.Json.stringifyAny(value)->Option.getUnsafe
         | Ok(Identifier(value)) => writeIdentifier(value)
+        | Ok(Network(value)) => write(value)
         | Error(err) => "Error: " ++ err
-        | _ => "TODO"
     }
 }

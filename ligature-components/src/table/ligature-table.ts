@@ -37,15 +37,16 @@ function valueToCell(value: any) {
    }
 }
 
-function networkToTable(network: any) {
-   console.log("network = ", network["_0"])
+function networkToTable(_network: any) {
+   let network = _network["_0"].data.v
+   console.log("network = ", network)
    let data: any = {}
    let columns = new Set<string>();
 
-   for (let statement of network["_0"]) {
-      const entity: string = statement[0]["identifier"]
-      const attribute: string = statement[1]["identifier"]
-      const value: any = statement[2]
+//   for (let statement of network) {
+      const entity: string = network[0]["identifier"]
+      const attribute: string = network[1]["identifier"]
+      const value: any = network[2]
       columns.add(attribute)
       let row = data[entity]
       if (row == undefined) {
@@ -60,7 +61,7 @@ function networkToTable(network: any) {
          //TODO handle repeated values
          throw new Error("TODO")
       }
-   }
+//   }
 
    console.log(Object.values(data))
    let columnData: any[] = [{title: "Identifier", field: "Identifier"}]

@@ -73,47 +73,6 @@ let parse = (input: array<Tokenizer.token>): result<array<expression>, Ligature.
             }
         }
 
-        // switch Gaze.attempt(openBraceNibbler, gaze) {
-        //     | Ok(value) => value->ignore
-        //     | Error(_) => cont.contents = false
-        // }
-        // while cont.contents && !Gaze.isComplete(gaze) {
-        //     switch Gaze.next(gaze) {
-        //         | Ok({ tokenType: CloseBrace }) => {
-        //             if !Gaze.isComplete(gaze) {
-        //                 cont.contents = false
-        //             }
-        //         }
-        //         | Ok({ tokenType: Identifier, value: entity }) => {
-        //             let attribute = Gaze.next(gaze)
-        //             let value = Gaze.next(gaze)
-        //             switch (attribute, value) {
-        //                 | (Ok({ tokenType: Identifier, value: attribute }), Ok({ tokenType: Identifier, value: value })) => {
-        //                     results->Array.push(({ Ligature.identifier: entity }, { Ligature.identifier: attribute }, Ligature.Identifier({identifier: value})))
-        //                 }
-        //                 | _ => cont.contents = false
-        //             }
-        //         }
-        //         | Ok(_) => cont.contents = false
-        //         | Error(_) => cont.contents = false
-        //     }
-        //     if !Gaze.isComplete(gaze) && cont.contents {
-        //         switch Gaze.peek(gaze) {
-        //             | Ok({tokenType: CloseBrace}) => {
-        //                 Gaze.next(gaze)->ignore
-        //                 if !Gaze.isComplete(gaze) {
-        //                     cont.contents = false
-        //                 }
-        //             }
-        //             | Ok({tokenType: Comma}) => {
-        //                 Gaze.next(gaze)->ignore
-        //             }
-        //             | _ => {
-        //                 cont.contents = false
-        //             }
-        //         }
-        //     }
-        // }
         if cont.contents {
             Ok(results)
         } else {
