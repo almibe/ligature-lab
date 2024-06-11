@@ -38,27 +38,24 @@ function graphToTable(network: any[]) {
  }
 }
 
-function networkToGraph(network: any) {
-  return [ // list of graph elements to start with
-    { // node a
-      data: { id: 'a' }
-    },
-    { // node b
-      data: { id: 'b' }
-    },
-    { // edge ab
-      data: { id: 'ab', source: 'a', target: 'b' }
-    },
-    { // node a
-      data: { id: 'a' }
-    },
-    { // node b
-      data: { id: 'b' }
-    },
-    { // edge ab
-      data: { id: 'ab', source: 'a', target: 'b' }
-    }
-  ]
+function networkToGraph(_network: any) {
+  let network = _network["_0"].data.v
+  console.log("network = ", network)
+//  let nodes = new Set<string>()
+  let graph = []
+
+//   for (let statement of network) {
+  const entity: string = network[0]["identifier"]
+  const attribute: string = network[1]["identifier"]
+  const value: any = network[2]["_0"]["identifier"]
+
+  // nodes.add(entity)
+  // nodes.add(value)
+  graph.push({data: {id: entity}})
+  graph.push({data: {id: attribute, source: entity, target: value}})
+  graph.push({data: {id: value}})
+
+  return graph
 }
 
 @customElement('ligature-graph')
