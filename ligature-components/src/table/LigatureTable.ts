@@ -1,30 +1,6 @@
 import { runWander } from "@ligature/ligature/src/Interpreter.gen.tsx"
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import "tabulator-tables/dist/css/tabulator.min.css";
-import {LitElement, html} from 'lit';
-import {customElement, property, query} from 'lit/decorators.js';
-
-@customElement('ligature-table')
-class LigatureTable extends LitElement {
-
-  @query("#table")
-  private table: Element
-
-  @property({ attribute: "value" })
-  public value: string;
-  
-  protected createRenderRoot() {
-   return this;
-  }
-
-  render(){
-    setTimeout(() => {
-         initializeTable(this.table, this.value)
-    })
-    
-    return html`<div id="table"></div>`;
-  }
-}
 
 function valueToCell(value: any) {
    switch(value["TAG"]) {
@@ -38,6 +14,10 @@ function valueToCell(value: any) {
 }
 
 function networkToTable(_network: any) {
+   console.log("in network", _network)
+   if (_network["TAG"] == "String") {
+      return {}
+   }
    let network = _network["_0"].data.v
    let data: any = {}
    let columns = new Set<string>();

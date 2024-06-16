@@ -7,11 +7,12 @@
     <link rel="stylesheet" href="./demo.css" />
   </head>
   <body>
-    <ligature-value value="{`a` `b` `c`}"></ligature-value>
+    <div id="value"></div>
 
-    <script type="module" src="src/text/ligature-text.ts"></script>
-    <script type="module" src="src/table/ligature-table.ts"></script>
-    <script type="module" src="src/graph/ligature-graph.ts"></script>
-    <script type="module" src="src/value/ligature-value.ts"></script>
+    <script type="module" src="src/value/LigatureDisplay.ts"></script>
+    <script type="module">
+      import { initializeDisplay } from "./src/display/LigatureDisplay.ts"
+      initializeDisplay(document.querySelector("#value"), "{`a` `b` `c`}")
+    </script>
   </body>
 </html>
