@@ -3,11 +3,7 @@ import { initializeGraph } from '../graph/LigatureGraph';
 import { initializeTable } from '../table/LigatureTable';
 
 function redrawGraph(graphElement: HTMLElement, input: string) {
-  console.log("in redraw graph")
   initializeGraph(graphElement, input)
-  //this._displayGraph.innerHTML =
-    // document.querySelector("#graph").innerHTML = 
-    // '<ligature-graph id="displayGraph" value=${this.value}></ligature-graph>'
 }
 
 function changeDisplay(
@@ -18,8 +14,6 @@ function changeDisplay(
   let graphElement: HTMLElement = document.querySelector("#displayGraph")
   let tableElement: HTMLElement = document.querySelector("#displayTable")
   let graphBody = document.querySelector("#graph")
-
-  console.log(selectedValue, input)
 
   if (selectedValue == "graph") {
     textElement.hidden = true

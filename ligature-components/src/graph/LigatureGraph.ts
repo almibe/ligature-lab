@@ -40,7 +40,6 @@ function redraw() {
 
 export function initializeGraph(element: HTMLElement, input: string) {
   const res = runWander(input)
-  console.log(JSON.stringify(res))
   if (res["TAG"] == "Ok") {
      let graphData = networkToGraph(res["_0"])
      return cytoscape({

@@ -14,7 +14,6 @@ function valueToCell(value: any) {
 }
 
 function networkToTable(_network: any) {
-   console.log("in network", _network)
    if (_network["TAG"] == "String") {
       return {}
    }
