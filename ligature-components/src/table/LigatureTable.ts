@@ -1,30 +1,27 @@
-import { runWander } from "@ligature/ligature/src/Interpreter.gen.tsx"
+import { run } from "@ligature/ligature"
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import "tabulator-tables/dist/css/tabulator.min.css";
 
-function valueToCell(value: any) {
-   switch(value["TAG"]) {
-      case "Identifier": {
-         return value["_0"]["identifier"]
-      }
-      default: {
-         return "TODO"
-      }
+function readValue(value: any) {
+   console.log("value", value)
+   if (value[0] == "Identifier") {
+      return value[1][1]
+   } else {
+      return {}
    }
 }
 
 function networkToTable(_network: any) {
-   if (_network["TAG"] == "String") {
-      return {}
-   }
-   let network = _network["_0"].data.v
+   console.log(_network[1])
+   let network = _network[1]
    let data: any = {}
    let columns = new Set<string>();
 
-//   for (let statement of network) {
-      const entity: string = network[0]["identifier"]
-      const attribute: string = network[1]["identifier"]
-      const value: any = network[2]
+   for (let statement of network) {
+      const entity: string = statement.Entity[1][1]
+      const attribute: string = statement.Attribute[1][1]
+      const value: any = readValue(statement.Value)
+      console.log(entity, " - ", attribute, " - ", value)
       columns.add(attribute)
       let row = data[entity]
       if (row == undefined) {
@@ -34,12 +31,12 @@ function networkToTable(_network: any) {
       }
       let cell = row[attribute]
       if (cell == undefined) {
-         row[attribute] = valueToCell(value)
+         row[attribute] = value
       } else {
          //TODO handle repeated values
          throw new Error("TODO")
       }
-//   }
+   }
 
    let columnData: any[] = [{title: "Identifier", field: "Identifier"}]
    for (let column of columns) {
@@ -55,12 +52,13 @@ function networkToTable(_network: any) {
 }
 
 export function initializeTable(element: Element, input: string) {
-   const res = runWander(input)
-   if (res["TAG"] == "Ok") {
-      let tableData = networkToTable(res["_0"])
+   const res = run(input)
+   console.log(res)
+   if (res[0] == "Ok") {
+      let tableData = networkToTable(res[1])
       return new Tabulator(element, tableData)
    } else {
-      element.innerHTML = "Error."
+      element.textContent = "Error creating table."
       return null
    }
 }
