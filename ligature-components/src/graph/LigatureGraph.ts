@@ -1,24 +1,32 @@
 import cytoscape from 'cytoscape';
-import { runWander } from "@ligature/ligature/src/Interpreter.gen.tsx"
+import { run } from "@ligature/ligature"
+
+function readValue(value: any) {
+  console.log("value", value)
+  if (value[0] == "Identifier") {
+     return value[1][1]
+  } else {
+     return {}
+  }
+}
 
 function networkToGraph(_network: any) {
-  if (_network["TAG"] == "String") {
-    return {}
-  }
-  let network = _network["_0"].data.v
-//  let nodes = new Set<string>()
+  console.log("network2graph", _network[1])
+  let network = _network[1]
+  //let nodes = new Set<string>()
   let graph = []
 
-//   for (let statement of network) {
-  const entity: string = network[0]["identifier"]
-  const attribute: string = network[1]["identifier"]
-  const value: any = network[2]["_0"]["identifier"]
-
-  // nodes.add(entity)
-  // nodes.add(value)
-  graph.push({data: {id: entity}})
-  graph.push({data: {id: attribute, source: entity, target: value}})
-  graph.push({data: {id: value}})
+  for (let statement of network) {
+    const entity: string = statement.Entity[1][1]
+    const attribute: string = statement.Attribute[1][1]
+    const value: any = readValue(statement.Value)
+    console.log(entity, " - ", attribute, " - ", value)
+    // nodes.add(entity)
+    // nodes.add(value)
+    graph.push({data: {id: entity}})
+    graph.push({data: {id: attribute, source: entity, target: value}})
+    graph.push({data: {id: value}})
+  }
 
   return graph
 }
@@ -39,9 +47,9 @@ function redraw() {
 }
 
 export function initializeGraph(element: HTMLElement, input: string) {
-  const res = runWander(input)
-  if (res["TAG"] == "Ok") {
-     let graphData = networkToGraph(res["_0"])
+  const res = run(input)
+  if (res[0] == "Ok") {
+     let graphData = networkToGraph(res[1])
      return cytoscape({
 
       container: element, // container to render in
