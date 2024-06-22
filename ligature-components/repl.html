@@ -6,11 +6,11 @@
     <title>Ligature Components Demo</title>
     <link rel="stylesheet" href="./src/index.css" />
     <script type="module">
-      import { initializeRepl } from "./src/repl/repl.ts"
-      import { runWander } from "@ligature/ligature/src/Interpreter.gen.tsx"
-      import { printResult } from "@ligature/ligature/src/Writer.gen.tsx"
+      import { initializeRepl } from "./src/repl/Repl.ts"
+      import { printResult } from '@ligature/ligature'
+
       initializeRepl(document.querySelector("#terminal"), (script) => { 
-        return printResult(runWander(script))
+        return printResult(script)
       })
     </script>
   </head>
