@@ -16,6 +16,8 @@ function networkToGraph(_network: any) {
   //let nodes = new Set<string>()
   let graph = []
 
+  let attrId = 0
+
   for (let statement of network) {
     const entity: string = statement.Entity[1][1]
     const attribute: string = statement.Attribute[1][1]
@@ -24,7 +26,7 @@ function networkToGraph(_network: any) {
     // nodes.add(entity)
     // nodes.add(value)
     graph.push({data: {id: entity}})
-    graph.push({data: {id: attribute, source: entity, target: value}})
+    graph.push({data: {id: attrId++, label: attribute, source: entity, target: value}})
     graph.push({data: {id: value}})
   }
 
@@ -73,7 +75,7 @@ export function initializeGraph(element: HTMLElement, input: string) {
             'target-arrow-color': '#ccc',
             'target-arrow-shape': 'triangle',
             'curve-style': 'bezier',
-            'label': 'data(id)'
+            'label': 'data(label)'
           }
         }
       ],

@@ -33,8 +33,7 @@ function networkToTable(_network: any) {
       if (cell == undefined) {
          row[attribute] = value
       } else {
-         //TODO handle repeated values
-         throw new Error("TODO")
+         row[attribute] = [cell, value]
       }
    }
 
