@@ -26,11 +26,7 @@ export interface Network {
     /**
      * Get all of the Triples in this Network.
      */
-    triples: () => Set<Triple>
-    /**
-     * Check if this Network contains a single Triple.
-     */
-    contains: (triple: Triple) => boolean
+    write: () => Set<Triple>
     /**
      * Get the number of Triples in this Network.
      */
@@ -42,7 +38,7 @@ export interface Network {
     /**
      * Find all instances of the given pattern and extract the matching values.
      */
-    extract: (pattern: Network) => Set<Map<Identifier, Value>>
+    educe: (pattern: Network) => Set<Map<Identifier, Value>>
     /**
      * Merge two networks.
      */
