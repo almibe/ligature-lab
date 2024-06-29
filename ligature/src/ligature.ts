@@ -1,4 +1,4 @@
-import { Set, Record } from "immutable"
+import { Set, Record, Map } from "immutable"
 
 export type Identifier = { identifier: string }
 
@@ -8,12 +8,12 @@ export type Slot = { name: string | undefined }
 
 export const Slot = Record<Slot>({ name: undefined })
 
-export type Value = bigint | string | Identifier | Uint8Array
+export type Value = bigint | string | Identifier | Uint8Array | Slot
 
 export type Triple = { 
     entity: Identifier | Slot, 
     attribute: Identifier | Slot, 
-    value: Value | Slot
+    value: Value
 }
 
 export const Triple = Record<Triple>({
@@ -40,6 +40,10 @@ export interface Network {
      */
     match: (pattern: Network) => boolean
     /**
+     * Find all instances of the given pattern and extract the matching values.
+     */
+    extract: (pattern: Network) => Set<Map<Identifier, Value>>
+    /**
      * Merge two networks.
      */
     merge: (network: Network) => Network
@@ -48,11 +52,15 @@ export interface Network {
      */
     minus: (network: Network) => Network
     /**
-     * Use this Network to fill in the passed in Pattern.
+     * Insert the given values into the Network and return the new Network.
      */
-    apply: (pattern: Network) => Network
+    apply: (values: Map<Identifier, Value>) => Network
     /**
-     * 
+     * Select Subnetworks using match, apply 
      */
     query: (match: Network, trans: Network) => Network
+    /**
+     * Perform a query and merge the results back into the original Network.
+     */
+    infer: (match: Network, trans: Network) => Network
 }
