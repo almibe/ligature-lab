@@ -1,9 +1,9 @@
 import { expect, test } from 'vitest'
-import { Identifier, Triple, inMemoryNetwork } from './ligature'
+import { Identifier, Triple, inMemoryNetwork } from './Ligature'
 import { Set } from 'immutable'
 
 test('inMemoryNetwork should start empty', () => {
-    expect(inMemoryNetwork().statements()).toEqual(Set([]))
+    expect(inMemoryNetwork().triples()).toEqual(Set([]))
 })
 
 test('inMemeoryNetworks with initial values', () => {
@@ -15,7 +15,7 @@ test('inMemeoryNetworks with initial values', () => {
         entity: Identifier({identifier: "entity"}),
         attribute: Identifier({identifier: "attribute"}),
         value: Identifier({identifier: "value"})
-    })])).statements()).toEqual(Set([Triple({
+    })])).triples()).toEqual(Set([Triple({
         entity: Identifier({identifier: "entity"}),
         attribute: Identifier({identifier: "attribute"}),
         value: Identifier({identifier: "value"}),
@@ -33,7 +33,7 @@ test('test merge', () => {
         attribute: {identifier: "attribute"},
         value: {identifier: "value"},
     }])
-    const res = inMemoryNetwork(left).merge(inMemoryNetwork(right)).statements()
+    const res = inMemoryNetwork(left).merge(inMemoryNetwork(right)).triples()
     expect(res).toEqual(inMemoryNetwork(Set([{
         entity: {identifier: "entity"},
         attribute: {identifier: "attribute"},
@@ -43,7 +43,7 @@ test('test merge', () => {
         entity: {identifier: "entity2"},
         attribute: {identifier: "attribute"},
         value: {identifier: "value"},
-    }])).statements())
+    }])).triples())
 })
 
 test('test match', () => {
@@ -81,7 +81,7 @@ test('test minus', () => {
         attribute: Identifier({identifier: "attribute"}),
         value: Identifier({identifier: "value"}),
     })])
-    const res = inMemoryNetwork(left).minus(inMemoryNetwork(right)).statements()
+    const res = inMemoryNetwork(left).minus(inMemoryNetwork(right)).triples()
     expect(res).toEqual(Set([Triple({
         entity: Identifier({identifier: "entity"}),
         attribute: Identifier({identifier: "attribute"}),

@@ -1,4 +1,4 @@
-import { Set, Record, List } from "immutable"
+import { Set, Record } from "immutable"
 
 export type Identifier = { identifier: string }
 
@@ -11,57 +11,48 @@ export const Slot = Record<Slot>({ name: undefined })
 export type Value = bigint | string | Identifier | Uint8Array
 
 export type Triple = { 
-    entity: Identifier, 
-    attribute: Identifier, 
-    value: Value 
-}
-
-export const Triple = Record<Triple>({
-    entity: Identifier(),
-    attribute: Identifier(),
-    value: Identifier()
-})
-
-export type PatternTriple = {
-    entity: Identifier | Slot,
-    attribte: Identifier | Slot,
+    entity: Identifier | Slot, 
+    attribute: Identifier | Slot, 
     value: Value | Slot
 }
 
-export const Pattern = Record<PatternTriple>({
+export const Triple = Record<Triple>({
     entity: Slot(),
-    attribte: Slot(),
+    attribute: Slot(),
     value: Slot()
 })
 
-export type Pattern = List<Record<PatternTriple>>
-
 export interface Network {
-    statements: () => Set<Triple>
-    match: (pattern: Pattern | Triple) => boolean
+    /**
+     * Get all of the Triples in this Network.
+     */
+    triples: () => Set<Triple>
+    /**
+     * Check if this Network contains a single Triple.
+     */
+    contains: (triple: Triple) => boolean
+    /**
+     * Get the number of Triples in this Network.
+     */
+    count: () => number
+    /**
+     * Check if this Pattern of Triple matches this Network.
+     */
+    match: (pattern: Network) => boolean
+    /**
+     * Merge two networks.
+     */
     merge: (network: Network) => Network
+    /**
+     * Remove all of the Triples from the argument Network from this Network and return the new Network.
+     */
     minus: (network: Network) => Network
-}
-
-export const inMemoryNetwork = (initial: Set<Triple> = Set([])) => {
-    const statements = initial
-    return {
-        statements: () => {
-            return statements
-        },
-        match: (pattern: Pattern | Triple) => {
-            if (Array.isArray(pattern)) {
-                throw "TODO"
-            } else {
-                console.log("in match", pattern, statements.toArray(), statements.contains(pattern as Triple))
-                return statements.contains(pattern as Triple)
-            }
-        },
-        merge: (network: Network) => {
-            return inMemoryNetwork(Set.union([statements, network.statements()]))
-        },
-        minus: (network: Network) => {
-            return inMemoryNetwork(statements.subtract(network.statements()))
-        }
-    }
+    /**
+     * Use this Network to fill in the passed in Pattern.
+     */
+    apply: (pattern: Network) => Network
+    /**
+     * 
+     */
+    query: (match: Network, trans: Network) => Network
 }
