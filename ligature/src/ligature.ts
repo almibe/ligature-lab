@@ -4,9 +4,13 @@ export type Identifier = { identifier: string }
 
 export const Identifier = Record<Identifier>({ identifier: "" })
 
-export type Slot = { name: string | undefined }
+export const identifier = (identifier: string) => Identifier({identifier})
 
-export const Slot = Record<Slot>({ name: undefined })
+export type Slot = { name: string | null }
+
+export const Slot = Record<Slot>({ name: null })
+
+export const slot = (name: string) => Slot({name})
 
 export type Value = bigint | string | Identifier | Uint8Array | Slot
 
@@ -32,14 +36,6 @@ export interface Network {
      */
     count: () => number
     /**
-     * Check if this Pattern of Triple matches this Network.
-     */
-    match: (pattern: Network) => boolean
-    /**
-     * Find all instances of the given pattern and extract the matching values.
-     */
-    educe: (pattern: Network) => Set<Map<Identifier, Value>>
-    /**
      * Merge two networks.
      */
     merge: (network: Network) => Network
@@ -50,7 +46,15 @@ export interface Network {
     /**
      * Insert the given values into the Network and return the new Network.
      */
-    apply: (values: Map<Identifier, Value>) => Network
+    apply: (values: Map<Slot, Value>) => Network
+    /**
+     * Check if this Pattern of Triple matches this Network.
+     */
+    match: (pattern: Network) => boolean
+    /**
+     * Find all instances of the given pattern and extract the matching values.
+     */
+    educe: (pattern: Network) => Set<Map<Slot, Value>>
     /**
      * Select Subnetworks using match, apply 
      */

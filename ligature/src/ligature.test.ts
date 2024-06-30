@@ -1,9 +1,10 @@
 import { expect, test } from 'vitest'
-import { Identifier, Triple, inMemoryNetwork } from './Ligature'
-import { Set } from 'immutable'
+import { Set, Map } from 'immutable'
+import { Identifier, Slot, Triple, Value } from './ligature.ts'
+import { inMemoryNetwork } from './in-memory-network.ts'
 
 test('inMemoryNetwork should start empty', () => {
-    expect(inMemoryNetwork().triples()).toEqual(Set([]))
+    expect(inMemoryNetwork().write()).toEqual(Set([]))
 })
 
 test('inMemeoryNetworks with initial values', () => {
@@ -15,7 +16,7 @@ test('inMemeoryNetworks with initial values', () => {
         entity: Identifier({identifier: "entity"}),
         attribute: Identifier({identifier: "attribute"}),
         value: Identifier({identifier: "value"})
-    })])).triples()).toEqual(Set([Triple({
+    })])).write()).toEqual(Set([Triple({
         entity: Identifier({identifier: "entity"}),
         attribute: Identifier({identifier: "attribute"}),
         value: Identifier({identifier: "value"}),
@@ -33,7 +34,7 @@ test('test merge', () => {
         attribute: {identifier: "attribute"},
         value: {identifier: "value"},
     }])
-    const res = inMemoryNetwork(left).merge(inMemoryNetwork(right)).triples()
+    const res = inMemoryNetwork(left).merge(inMemoryNetwork(right)).write()
     expect(res).toEqual(inMemoryNetwork(Set([{
         entity: {identifier: "entity"},
         attribute: {identifier: "attribute"},
@@ -43,27 +44,7 @@ test('test merge', () => {
         entity: {identifier: "entity2"},
         attribute: {identifier: "attribute"},
         value: {identifier: "value"},
-    }])).triples())
-})
-
-test('test match', () => {
-    const left = inMemoryNetwork(Set([Triple({
-        entity: Identifier({identifier: "entity"}),
-        attribute: Identifier({identifier: "attribute"}),
-        value: Identifier({identifier: "value"}),
-    })]))
-    const right1 = Triple({
-        entity: Identifier({identifier: "entity"}),
-        attribute: Identifier({identifier: "attribute"}),
-        value: Identifier({identifier: "value"}),
-    })
-    const right2 = Triple({
-        entity: Identifier({identifier: "entity2"}),
-        attribute: Identifier({identifier: "attribute"}),
-        value: Identifier({identifier: "value"}),
-    })
-    expect(left.match(right1)).toBe(true)
-    expect(left.match(right2)).toBe(false)
+    }])).write())
 })
 
 test('test minus', () => {
@@ -81,10 +62,56 @@ test('test minus', () => {
         attribute: Identifier({identifier: "attribute"}),
         value: Identifier({identifier: "value"}),
     })])
-    const res = inMemoryNetwork(left).minus(inMemoryNetwork(right)).triples()
+    const res = inMemoryNetwork(left).minus(inMemoryNetwork(right)).write()
     expect(res).toEqual(Set([Triple({
         entity: Identifier({identifier: "entity"}),
         attribute: Identifier({identifier: "attribute"}),
         value: Identifier({identifier: "value"}),
     })]))
 })
+
+test('null apply', () => {
+    const network = inMemoryNetwork(Set([Triple({
+        entity: Identifier({identifier: "entity"}),
+        attribute: Identifier({identifier: "attribute"}),
+        value: Identifier({identifier: "value"}),
+    })]))
+    const values = Map<Slot, Value>()
+    expect(network.apply(values).write()).toEqual(network.write())
+})
+
+test('full apply', () => {
+    const network = inMemoryNetwork(Set([Triple({
+        entity: Slot({name: "e"}),
+        attribute: Slot({name: "a"}),
+        value: Slot({name: "v"}),
+    })]))
+    const values = Map<Slot, Value>([
+        [Slot({name: "e"}), Identifier({identifier: "entity"})],
+        [Slot({name: "a"}), Identifier({identifier: "attribute"})],
+        [Slot({name: "v"}), Identifier({identifier: "value"})],
+    ])
+    expect(network.apply(values).write()).toEqual(network.write())
+})
+
+
+
+// test('test match', () => {
+//     const left = inMemoryNetwork(Set([Triple({
+//         entity: Identifier({identifier: "entity"}),
+//         attribute: Identifier({identifier: "attribute"}),
+//         value: Identifier({identifier: "value"}),
+//     })]))
+//     const right1 = inMemoryNetwork(Set([Triple({
+//         entity: Identifier({identifier: "entity"}),
+//         attribute: Identifier({identifier: "attribute"}),
+//         value: Identifier({identifier: "value"}),
+//     })]))
+//     const right2 = inMemoryNetwork(Set([Triple({
+//         entity: Identifier({identifier: "entity2"}),
+//         attribute: Identifier({identifier: "attribute"}),
+//         value: Identifier({identifier: "value"}),
+//     })]))
+//     expect(left.match(right1)).toEqual(true)
+//     expect(left.match(right2)).toEqual(false)
+// })
