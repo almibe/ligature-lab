@@ -21,8 +21,6 @@
         element: document.querySelector("#editor"),
         onRun: (script) => {
           const result = printResult(script)
-          console.log("Running", script)
-          console.log("Result", result)
           initializeTable(document.querySelector("#table"), result)
           initializeGraph(document.querySelector("#graph"), result)
         },

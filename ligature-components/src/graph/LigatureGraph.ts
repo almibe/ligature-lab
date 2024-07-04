@@ -1,8 +1,11 @@
 import cytoscape from 'cytoscape';
 import { run } from "@ligature/ligature"
+import coseBilkent from 'cytoscape-cose-bilkent';
+
+cytoscape.use( coseBilkent );
+
 
 function readValue(value: any) {
-  console.log("value", value)
   if (value[0] == "Identifier") {
      return value[1][1]
   } else {
@@ -11,18 +14,16 @@ function readValue(value: any) {
 }
 
 function networkToGraph(_network: any) {
-  console.log("network2graph", _network[1])
-  let network = _network[1]
+  let network = _network[1].network
   //let nodes = new Set<string>()
   let graph = []
 
   let attrId = 0
 
-  for (let statement of network) {
-    const entity: string = statement.Entity[1][1]
-    const attribute: string = statement.Attribute[1][1]
-    const value: any = readValue(statement.Value)
-    console.log(entity, " - ", attribute, " - ", value)
+  for (let triple of network) {
+    const entity: string = triple.Entity[1][1]
+    const attribute: string = triple.Attribute[1][1]
+    const value: any = readValue(triple.Value)
     // nodes.add(entity)
     // nodes.add(value)
     graph.push({data: {id: entity}})
@@ -81,8 +82,7 @@ export function initializeGraph(element: HTMLElement, input: string) {
       ],
     
       layout: {
-        name: 'grid',
-        rows: 1
+        name: 'cose-bilkent',
       }
     });
   } else {

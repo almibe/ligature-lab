@@ -3,7 +3,6 @@ import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import "tabulator-tables/dist/css/tabulator.min.css";
 
 function readValue(value: any) {
-   console.log("value", value)
    if (value[0] == "Identifier") {
       return value[1][1]
    } else {
@@ -12,16 +11,14 @@ function readValue(value: any) {
 }
 
 function networkToTable(_network: any) {
-   console.log(_network[1])
-   let network = _network[1]
+   let network = _network[1].network
    let data: any = {}
    let columns = new Set<string>();
 
-   for (let statement of network) {
-      const entity: string = statement.Entity[1][1]
-      const attribute: string = statement.Attribute[1][1]
-      const value: any = readValue(statement.Value)
-      console.log(entity, " - ", attribute, " - ", value)
+   for (let triple of network) {
+      const entity: string = triple.Entity[1][1]
+      const attribute: string = triple.Attribute[1][1]
+      const value: any = readValue(triple.Value)
       columns.add(attribute)
       let row = data[entity]
       if (row == undefined) {
@@ -52,7 +49,6 @@ function networkToTable(_network: any) {
 
 export function initializeTable(element: Element, input: string) {
    const res = run(input)
-   console.log(res)
    if (res[0] == "Ok") {
       let tableData = networkToTable(res[1])
       return new Tabulator(element, tableData)
