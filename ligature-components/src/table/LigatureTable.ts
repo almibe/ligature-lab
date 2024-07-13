@@ -1,24 +1,35 @@
-import { run } from "@ligature/ligature"
+import { run, Triple } from "@ligature/ligature"
 import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import "tabulator-tables/dist/css/tabulator.min.css";
 
-function readValue(value: any) {
-   if (value[0] == "Identifier") {
-      return value[1][1]
+function readEntity(entity: any) {
+   if (entity.identifier != undefined) {
+      return entity.identifier
+   } else if (entity.slot != undefined) {
+      return "$" + entity.slot
    } else {
-      return {}
+      throw "Error"
    }
 }
 
-function networkToTable(_network: any) {
-   let network = _network[1].network
+function readValue(value: any) {
+   if (value.identifier != undefined) {
+      return value.identifier
+   } else if (value.slot != undefined) {
+      return "$" + value.slot
+   } else {
+      throw "Error"
+   }
+}
+
+function networkToTable(network: Triple[]) {
    let data: any = {}
    let columns = new Set<string>();
 
    for (let triple of network) {
-      const entity: string = triple.Entity[1][1]
-      const attribute: string = triple.Attribute[1][1]
-      const value: any = readValue(triple.Value)
+      const entity: string = readEntity(triple[0])
+      const attribute: string = readEntity(triple[1])
+      const value: any = readValue(triple[2])
       columns.add(attribute)
       let row = data[entity]
       if (row == undefined) {
@@ -49,8 +60,8 @@ function networkToTable(_network: any) {
 
 export function initializeTable(element: Element, input: string) {
    const res = run(input)
-   if (res[0] == "Ok") {
-      let tableData = networkToTable(res[1])
+   if (res.error == undefined && Array.isArray(res)) {
+      let tableData = networkToTable(res)
       return new Tabulator(element, tableData)
    } else {
       element.textContent = "Error creating table."

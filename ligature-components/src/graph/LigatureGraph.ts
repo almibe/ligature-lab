@@ -1,29 +1,29 @@
 import cytoscape from 'cytoscape';
-import { run } from "@ligature/ligature"
+import { run, Triple } from "@ligature/ligature"
 import coseBilkent from 'cytoscape-cose-bilkent';
 
 cytoscape.use( coseBilkent );
 
-
-function readValue(value: any) {
-  if (value[0] == "Identifier") {
-     return value[1][1]
+function readValue(entity: any) {
+  if (entity.identifier != undefined) {
+     return entity.identifier
+  } else if (entity.slot != undefined) {
+     return "$" + entity.slot
   } else {
-     return {}
+     throw "Error"
   }
 }
 
-function networkToGraph(_network: any) {
-  let network = _network[1].network
+function networkToGraph(network: Triple[]) {
   //let nodes = new Set<string>()
   let graph = []
 
   let attrId = 0
 
   for (let triple of network) {
-    const entity: string = triple.Entity[1][1]
-    const attribute: string = triple.Attribute[1][1]
-    const value: any = readValue(triple.Value)
+    const entity: string = readValue(triple[0])
+    const attribute: string = readValue(triple[1])
+    const value: any = readValue(triple[2])
     // nodes.add(entity)
     // nodes.add(value)
     graph.push({data: {id: entity}})
@@ -51,8 +51,8 @@ function redraw() {
 
 export function initializeGraph(element: HTMLElement, input: string) {
   const res = run(input)
-  if (res[0] == "Ok") {
-     let graphData = networkToGraph(res[1])
+  if (res.error == undefined && Array.isArray(res)) {
+     let graphData = networkToGraph(res)
      return cytoscape({
 
       container: element, // container to render in
