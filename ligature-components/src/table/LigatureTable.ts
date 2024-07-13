@@ -18,7 +18,7 @@ function readValue(value: any) {
    } else if (value.slot != undefined) {
       return "$" + value.slot
    } else {
-      throw "Error"
+      return value
    }
 }
 

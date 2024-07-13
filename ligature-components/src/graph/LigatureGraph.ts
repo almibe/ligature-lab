@@ -4,13 +4,13 @@ import coseBilkent from 'cytoscape-cose-bilkent';
 
 cytoscape.use( coseBilkent );
 
-function readValue(entity: any) {
-  if (entity.identifier != undefined) {
-     return entity.identifier
-  } else if (entity.slot != undefined) {
-     return "$" + entity.slot
+function readValue(value: any) {
+  if (value.identifier != undefined) {
+     return value.identifier
+  } else if (value.slot != undefined) {
+     return "$" + value.slot
   } else {
-     throw "Error"
+     return value.toString()
   }
 }
 
