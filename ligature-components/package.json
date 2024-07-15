@@ -1,7 +1,9 @@
 {
   "name": "@ligature/ligature-components",
   "private": true,
-  "version": "0.5.0",
+  "license": "MPL-2.0",
+  "version": "0.6.0",
+  "author": { "name": "Alex Michael Berry", "url": "https://almibe.dev"},
   "type": "module",
   "scripts": {
     "dev": "vite",
