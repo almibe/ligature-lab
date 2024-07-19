@@ -3,7 +3,7 @@
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
 type token =
-    | Name(string)
+    | Word(string)
     | EqualSign
     | OpenBrace
     | CloseBrace
@@ -46,6 +46,11 @@ let identifierNibbler: Gaze.nibbler<string, token> = Nibblers.takeAll([
     backTickNibber
 ], (res) => res->Array.getUnsafe(1))
 
+let wordRegex = RegExp.fromString("[_a-zA-Z.]")
+
+let wordNibbler: Gaze.nibbler<string, token> =
+    Nibblers.takeWhile ((value) => String.match(value, wordRegex)->Option.isSome, (value) => Word(Array.join(value, "")))
+
 let stringNibbler: Gaze.nibbler<string, token> = Nibblers.takeAll([
     doubleQuoteNibber,
     stringValueNibbler,
@@ -53,6 +58,7 @@ let stringNibbler: Gaze.nibbler<string, token> = Nibblers.takeAll([
 ], (res) => res->Array.getUnsafe(1))
 
 let tokenNibbler = Nibblers.takeFirst([
+    wordNibbler,
     openBraceNibbler, 
     closeBraceNibbler, 
     commaNibbler, 

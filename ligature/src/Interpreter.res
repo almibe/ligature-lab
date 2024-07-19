@@ -27,7 +27,7 @@ and interpretNetwork = (values: array<Parser.expression>): result<Wander.wanderV
     Ok(Wander.Network(Ligature.networkFromArray([(entity, attribute, value)])))
 }
 
-let interpret = (ast: array<Parser.expression>): result<Wander.wanderValue, Ligature.ligatureError> => {
+let interpret = (ast: array<Parser.expression>, words: Belt.Map.String.t<list<Wander.wanderValue>>): result<Wander.wanderValue, Ligature.ligatureError> => {
     let result = ref(Ok(Wander.String(""))) //TODO replace with empty namespace
     ast->Array.forEach(expr => {
         result.contents = interpretExpression(expr)
@@ -36,11 +36,22 @@ let interpret = (ast: array<Parser.expression>): result<Wander.wanderValue, Liga
 }
 
 @genType
-let runWander = (input: string): result<Wander.wanderValue, Ligature.ligatureError> => {
+let eval = (value: Wander.wanderValue, ~words: Belt.Map.String.t<list<Wander.wanderValue>> = Belt.Map.String.empty, ~stack: list<Wander.wanderValue> = list{}): result<list<Wander.wanderValue>, Ligature.ligatureError> => 
+    switch (value) {
+        | Word(word) =>
+            switch (Belt.Map.String.get(words, word)) {
+                | Some(word) => %todo
+                | None => Error("Could not find Word " ++ word)
+            }
+        | value => Ok(list{value, ...stack})
+    }
+
+@genType
+let evalString = (input: string, ~words: Belt.Map.String.t<list<Wander.wanderValue>> = Belt.Map.String.empty): result<Wander.wanderValue, Ligature.ligatureError> => {
     switch Tokenizer.tokenize(input) {
         | Ok(tokens) => {
             switch Parser.parse(tokens) {
-                | Ok(ast) => interpret(ast)
+                | Ok(ast) => interpret(ast, words)
                 | Error(err) => Error(err)
             }
         }
