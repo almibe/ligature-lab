@@ -11,3 +11,4 @@ type rec wanderValue =
     | Identifier(Ligature.identifier) 
     | Network(Ligature.network)
     | Bytes(Js.TypedArray2.Uint8Array.t)
+    | Definition(string, wanderValue)

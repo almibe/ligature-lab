@@ -21,6 +21,10 @@ let openBraceNibbler: Gaze.nibbler<string, token> = Nibblers.take("{", OpenBrace
 
 let closeBraceNibbler = Nibblers.take("}", CloseBrace)
 
+let openSquareNibbler: Gaze.nibbler<string, token> = Nibblers.take("[", OpenSquare)
+
+let closeSqureNibbler = Nibblers.take("]", CloseSquare)
+
 let commaNibbler: Gaze.nibbler<string, token> = Nibblers.take(",", Comma)
 
 let backTickNibber = Nibblers.take("`", Ignore)
@@ -60,7 +64,9 @@ let stringNibbler: Gaze.nibbler<string, token> = Nibblers.takeAll([
 let tokenNibbler = Nibblers.takeFirst([
     wordNibbler,
     openBraceNibbler, 
-    closeBraceNibbler, 
+    closeBraceNibbler,
+    openSquareNibbler,
+    closeSqureNibbler,
     commaNibbler, 
     identifierNibbler, 
     whiteSpaceNibbler,

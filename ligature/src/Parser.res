@@ -2,14 +2,16 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+@genType
 type rec expression =
+    | Quote(list<expression>)
     | Word(string)
-    | Identifier(string)
-    | Int(bigint)
-    | Bytes
-    | String(string)
+    | String(string) 
+    | Int(bigint) 
+    | Identifier(string) 
     | Network(array<expression>)
-    | Binding(string, expression)
+    | Bytes(Js.TypedArray2.Uint8Array.t)
+    | Definition(string, expression)
     | Ignore
 
 let openBraceNibbler = 

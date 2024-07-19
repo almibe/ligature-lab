@@ -10,6 +10,7 @@ let testValues: array<(string, result<array<Tokenizer.token>, string>)> = [
     ("1 \"hello\" `test`", Ok([Tokenizer.Int(1n), Tokenizer.String("hello"), Tokenizer.Identifier("test")])),
     ("{}", Ok([Tokenizer.OpenBrace, Tokenizer.CloseBrace])),
     ("word", Ok([Tokenizer.Word("word")])),
+    ("[]", Ok([Tokenizer.OpenSquare, Tokenizer.CloseSquare]))
 ]
 
 test("basic tokenization", () => {
