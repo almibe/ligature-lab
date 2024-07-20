@@ -56,7 +56,8 @@ let takeCond = predicateMapper => gaze => {
   let next = Gaze.peek(gaze)
 
   switch next {
-  | Ok(value) => switch predicateMapper(value) {
+  | Ok(value) =>
+    switch predicateMapper(value) {
     | Some(value) => {
         Gaze.next(gaze)->ignore
         Ok(value)
@@ -87,7 +88,8 @@ let takeWhile = (predicate, mapper) => gaze => {
     let next = Gaze.peek(gaze)
 
     switch next {
-    | Ok(value) => if predicate(value) {
+    | Ok(value) =>
+      if predicate(value) {
         Gaze.next(gaze)->ignore
         results->Array.push(value)
       } else {

@@ -86,7 +86,8 @@ let tokenize = (input: string): result<array<token>, Ligature.ligatureError> => 
   let cont = ref(true)
   while !Gaze.isComplete(gaze) && cont.contents {
     switch Gaze.attempt(tokenNibbler, gaze) {
-    | Ok(res) => if res != Ignore {
+    | Ok(res) =>
+      if res != Ignore {
         results->Array.push(res)
       }
     | Error(_) => cont.contents = false

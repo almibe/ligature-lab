@@ -12,3 +12,13 @@ type rec wanderValue =
   | Network(Ligature.network)
   | Bytes(Js.TypedArray2.Uint8Array.t)
   | Definition(string, wanderValue)
+  | Error(string)
+
+type hostFunction = {
+  doc: string,
+  eval: list<wanderValue> => result<list<wanderValue>, Ligature.ligatureError>,
+}
+
+type wordInstance =
+  | Quote(list<wanderValue>)
+  | HostFunction(hostFunction)

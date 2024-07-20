@@ -36,13 +36,13 @@ let newEngine = () => {
   {
     "setStack": (stack: list<Model.wanderValue>) => setStack(stack),
     "evalScript": (script: string) => {
-      switch Interpreter.evalString(script, ~stack=state.stack) {
+      switch Interpreter.evalString(script, ~words=HostFunctions.std, ~stack=state.stack) {
       | Ok(res) => setStack(res)
-      | Error(err) => %todo
+      | Error(err) => setStack(list{Model.Error("Error running command"), ...state.stack})
       }
     },
     "eval": (value: Model.wanderValue) => {
-      switch Interpreter.evalSingle(value, ~stack=state.stack) {
+      switch Interpreter.evalSingle(value, ~words=HostFunctions.std, ~stack=state.stack) {
       | Ok(res) => setStack(res)
       | Error(err) => %todo
       }
