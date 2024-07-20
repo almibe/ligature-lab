@@ -2,19 +2,20 @@
 
 let check = (left, right) => %raw(`Vitest.expect(left).toStrictEqual(right)`)
 
-let singleTestValues: array<(Wander.wanderValue, result<list<Wander.wanderValue>, string>)> = [
-    (Wander.Int(123n), Ok(list{Wander.Int(123n)})),
+let singleTestValues: array<(Model.wanderValue, result<list<Model.wanderValue>, string>)> = [
+    (Model.Int(123n), Ok(list{Model.Int(123n)})),
 ]
 
-let testScripts: array<(list<Wander.wanderValue>, result<list<Wander.wanderValue>, string>)> = [
-    (list{Wander.Int(123n)}, Ok(list{Wander.Int(123n)})),
-    (list{Wander.Int(123n), Wander.Int(321n)}, Ok(list{Wander.Int(321n), Wander.Int(123n)})),
+let testScripts: array<(list<Model.wanderValue>, result<list<Model.wanderValue>, string>)> = [
+    (list{Model.Int(123n)}, Ok(list{Model.Int(123n)})),
+    (list{Model.Int(123n), Model.Int(321n)}, Ok(list{Model.Int(321n), Model.Int(123n)})),
 ]
 
-let testStrings: array<(string, result<list<Wander.wanderValue>, string>)> = [
-    ("234", Ok(list{Wander.Int(234n)})),
-  //  ("\"test\"", Ok(list{Wander.String("test")})),
-  //  ("234 `test`", Ok(list{Wander.Int(234n), Wander.Identifier({identifier: "test"})})),
+let testStrings: array<(string, result<list<Model.wanderValue>, string>)> = [
+    ("234", Ok(list{Model.Int(234n)})),
+    ("\"test\"", Ok(list{Model.String("test")})),
+    ("`test`", Ok(list{Model.Identifier({identifier: "test"})})),
+    //("234 `test`", Ok(list{Model.Int(234n), Model.Identifier({identifier: "test"})})),
 ]
 
 test("single eval", () => {
@@ -25,7 +26,7 @@ test("single eval", () => {
 
 test("script eval", () => {
     testScripts->Array.forEach(((script, result)) => {
-        check(Interpreter.eval(script), result)
+        check(Interpreter.evalList(script), result)
     })
 })
 
