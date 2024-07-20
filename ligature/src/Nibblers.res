@@ -5,41 +5,40 @@
 /// <summary>Create a Nibbler that take a single literal value.</summary>
 /// <param name="t">The literal to take.</param>
 /// <returns>A Nibbler that takes a single literal.</returns>
-let take = (t, r) => (gaze) =>
-    if Gaze.next(gaze) == Ok(t) {
-        Ok(r)
-    }
-    else {
-        Error(Gaze.NoMatch)
-    }
+let take = (t, r) => gaze =>
+  if Gaze.next(gaze) == Ok(t) {
+    Ok(r)
+  } else {
+    Error(Gaze.NoMatch)
+  }
 
 /// <summary>Create a Nibbler that takes a list of tokens.</summary>
 /// <param name="list">The list of tokens to take.</param>
 /// <returns>The newly created Nibbler.</returns>
-let takeArray = (array) => (gaze) => {
-    let length = array->Array.length
-    let index = ref(0)
-    let cont = ref(true)
+let takeArray = array => gaze => {
+  let length = array->Array.length
+  let index = ref(0)
+  let cont = ref(true)
 
-    while not (Gaze.isComplete(gaze)) && cont.contents && index.contents < length {
-        let next = Gaze.next (gaze)
+  while !Gaze.isComplete(gaze) && cont.contents && index.contents < length {
+    let next = Gaze.next(gaze)
 
-        switch next {
-        | Ok(value) =>
-            if Some(value) == array[index.contents] {
-                index.contents = index.contents + 1
-            } else {
-                cont.contents = false
-            }
-        | Error(_) => cont.contents = false
-        }
+    switch next {
+    | Ok(value) =>
+      if Some(value) == array[index.contents] {
+        index.contents = index.contents + 1
+      } else {
+        cont.contents = false
+      }
+    | Error(_) => cont.contents = false
     }
+  }
 
-    if cont.contents && index.contents == length {
-        Ok(array)
-    } else {
-        Error(Gaze.NoMatch)
-    }
+  if cont.contents && index.contents == length {
+    Ok(array)
+  } else {
+    Error(Gaze.NoMatch)
+  }
 }
 
 // /// <summary>Create a Nibbler that takes a String when working with a Gaze of Chars.
@@ -53,21 +52,19 @@ let takeArray = (array) => (gaze) => {
 /// and returns a bool.</summary>
 /// <param name="predicate">The function used to decide if a token matches.</param>
 /// <returns>A Nibbler that consumes one item as long as the predicate passes.</returns>
-let takeCond = (predicateMapper) => (gaze) => {
-    let next = Gaze.peek(gaze)
+let takeCond = predicateMapper => gaze => {
+  let next = Gaze.peek(gaze)
 
-    switch next {
-    | Ok(value) => {
-        switch predicateMapper(value) {
-            | Some(value) => {
-                Gaze.next(gaze) -> ignore
-                Ok(value)
-            }
-            | None => Error(Gaze.NoMatch)
-        }
+  switch next {
+  | Ok(value) => switch predicateMapper(value) {
+    | Some(value) => {
+        Gaze.next(gaze)->ignore
+        Ok(value)
+      }
+    | None => Error(Gaze.NoMatch)
     }
-    | _ => Error(Gaze.NoMatch)
-    }
+  | _ => Error(Gaze.NoMatch)
+  }
 }
 
 // /// <summary>Create a Nibbler that takes values if they are within a set of given ranges.</summary>
@@ -82,33 +79,29 @@ let takeCond = (predicateMapper) => (gaze) => {
 /// and returns a bool.</summary>
 /// <param name="predicate">The function used to decide if a token matches.</param>
 /// <returns>A Nibbler that consumes input as long as the predicate passes.</returns>
-let takeWhile = (predicate, mapper) => (gaze) => {
-    let cont = ref(true)
-    let results = []
+let takeWhile = (predicate, mapper) => gaze => {
+  let cont = ref(true)
+  let results = []
 
-    while cont.contents {
-        let next = Gaze.peek(gaze)
+  while cont.contents {
+    let next = Gaze.peek(gaze)
 
-        switch next {
-            | Ok(value) => {
-                if predicate(value) {
-                    Gaze.next(gaze)->ignore
-                    results->Array.push(value)
-                } else {
-                    cont.contents = false
-                }
-            }
-            | _ => {
-                cont.contents = false
-            }
-        }
+    switch next {
+    | Ok(value) => if predicate(value) {
+        Gaze.next(gaze)->ignore
+        results->Array.push(value)
+      } else {
+        cont.contents = false
+      }
+    | _ => cont.contents = false
     }
+  }
 
-    if Array.length (results) == 0 {
-        Error(Gaze.NoMatch)
-    } else {
-        Ok(mapper(results))
-    }
+  if Array.length(results) == 0 {
+    Error(Gaze.NoMatch)
+  } else {
+    Ok(mapper(results))
+  }
 }
 
 // /// <summary>Create a Nibbler that accepts input based on a function that recieves the current token
@@ -234,21 +227,21 @@ let takeWhile = (predicate, mapper) => (gaze) => {
 //         Ok(results)
 
 let repeat = (nibbler, gaze) => {
-    let cont = ref(true)
-    let results = []
+  let cont = ref(true)
+  let results = []
 
-    while (cont.contents) {
-        switch Gaze.attempt(nibbler, gaze) {
-            | Ok(result) => results->Array.push(result)
-            | Error(_) => cont.contents = false
-        }
+  while cont.contents {
+    switch Gaze.attempt(nibbler, gaze) {
+    | Ok(result) => results->Array.push(result)
+    | Error(_) => cont.contents = false
     }
+  }
 
-    if (results == []) {
-        Error(Gaze.NoMatch)
-    } else {
-        Ok(results)
-    }
+  if results == [] {
+    Error(Gaze.NoMatch)
+  } else {
+    Ok(results)
+  }
 }
 
 // let repeatOptional nibbler gaze =
@@ -284,26 +277,26 @@ let repeat = (nibbler, gaze) => {
 /// passed in Nibblers succeed in order.</summary>
 /// <param name="nibblers">A List of nibblers.</param>
 /// <returns>A List of all of the results from each Nibbler internally grouped in Lists.</returns>
-let takeAll = (nibblers, mapper) => (gaze) => {
-    let results = []
-    let nibblerIndex = ref(0)
+let takeAll = (nibblers, mapper) => gaze => {
+  let results = []
+  let nibblerIndex = ref(0)
 
-    while nibblerIndex.contents >= 0 && nibblerIndex.contents < Array.length (nibblers) {
-        let nibbler = nibblers->Array.getUnsafe(nibblerIndex.contents)
+  while nibblerIndex.contents >= 0 && nibblerIndex.contents < Array.length(nibblers) {
+    let nibbler = nibblers->Array.getUnsafe(nibblerIndex.contents)
 
-        switch Gaze.attempt(nibbler, gaze) {
-        | Ok(result) =>
-            results->Array.push(result)
-            nibblerIndex.contents = nibblerIndex.contents + 1
-        | Error(_) => nibblerIndex.contents = -1
-        }
+    switch Gaze.attempt(nibbler, gaze) {
+    | Ok(result) =>
+      results->Array.push(result)
+      nibblerIndex.contents = nibblerIndex.contents + 1
+    | Error(_) => nibblerIndex.contents = -1
     }
+  }
 
-    if results == [] || nibblerIndex.contents == -1 {
-        Error(Gaze.NoMatch)
-    } else {
-        Ok(mapper(results))
-    }
+  if results == [] || nibblerIndex.contents == -1 {
+    Error(Gaze.NoMatch)
+  } else {
+    Ok(mapper(results))
+  }
 }
 
 // /// <summary>Create a Nibbler that accepts a List of Nibblers and only succeeds if all of the
@@ -328,25 +321,24 @@ let takeAll = (nibblers, mapper) => (gaze) => {
 //     else
 //         Ok(results)
 
-
 /// <summary>Create a Nibbler that accepts a List of Nibblers and matches on the first that succeeds.
 /// If all fail the created Nibbler will fail as well.</summary>
 /// <param name="nibblers">A list of Nibblers to check.</param>
 /// <returns>The newly created Nibbler.</returns>
-let takeFirst = (nibblers) => (gaze) => {
-    let result = ref(Error(Gaze.NoMatch))
-    let nibblerIndex = ref(0)
+let takeFirst = nibblers => gaze => {
+  let result = ref(Error(Gaze.NoMatch))
+  let nibblerIndex = ref(0)
 
-    while nibblerIndex.contents >= 0 && nibblerIndex.contents < Array.length(nibblers) {
-        let nibbler = Option.getExn(nibblers[nibblerIndex.contents])
+  while nibblerIndex.contents >= 0 && nibblerIndex.contents < Array.length(nibblers) {
+    let nibbler = Option.getExn(nibblers[nibblerIndex.contents])
 
-        switch Gaze.attempt(nibbler, gaze) {
-        | Ok(res) =>
-            result.contents = Ok(res)
-            nibblerIndex.contents = -1
-        | Error(_) => nibblerIndex.contents = nibblerIndex.contents + 1
-        }
+    switch Gaze.attempt(nibbler, gaze) {
+    | Ok(res) =>
+      result.contents = Ok(res)
+      nibblerIndex.contents = -1
+    | Error(_) => nibblerIndex.contents = nibblerIndex.contents + 1
     }
+  }
 
-    result.contents
+  result.contents
 }

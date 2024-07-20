@@ -8,6 +8,7 @@
   "author": "Alex Michael Berry",
   "license": "MPL-2.0",
   "scripts": {
+    "res:format": "rescript format -all",
     "res:build": "rescript",
     "res:clean": "rescript clean",
     "res:dev": "rescript -w",

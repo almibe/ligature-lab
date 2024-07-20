@@ -4,11 +4,11 @@
 
 @genType
 type rec wanderValue =
-    | Quote(list<wanderValue>)
-    | Word(string)
-    | String(string) 
-    | Int(bigint) 
-    | Identifier(Ligature.identifier) 
-    | Network(Ligature.network)
-    | Bytes(Js.TypedArray2.Uint8Array.t)
-    | Definition(string, wanderValue)
+  | Quote(list<wanderValue>)
+  | Word(string)
+  | String(string)
+  | Int(bigint)
+  | Identifier(Ligature.identifier)
+  | Network(Ligature.network)
+  | Bytes(Js.TypedArray2.Uint8Array.t)
+  | Definition(string, wanderValue)
