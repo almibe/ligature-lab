@@ -13,17 +13,19 @@ let rec quoteToJS = (value: list<Model.wanderValue>) => {
   ->List.toArray
 }
 
-and valueToJS = (value: Model.wanderValue) =>
+and valueToJS = (value: Model.wanderValue) => {
   switch value {
   | Model.Int(intValue) => %raw(`BigInt(value._0)`)
   | Model.String(value) => %raw(`value._0`)
-  | Model.Identifier({identifier: value}) => %raw(`value._0.identifier`)
+  | Model.Identifier({identifier: value}) => %raw(`{identifier: value._0.identifier}`)
   | Model.Quote(quote) => %raw(`quoteToJS(value._0)`)
   | Model.Word(value) => %raw(`{word: value._0}`)
+  | Model.Slot(slot) => %raw(`{slot: value._0}`)
   // | Model.Bytes(value) => value
   // | Model.Identifier(value) => value
   // | Model.Definition(_, _) => %todo
   }
+}
 
 let stackToJS = (stack: list<Model.wanderValue>) =>
   stack

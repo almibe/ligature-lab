@@ -8,8 +8,8 @@ type token =
   | OpenBrace
   | CloseBrace
   | Identifier(string)
+  | Slot(string)
   | Int(bigint)
-  //    | Bytes
   | String(string)
   | OpenSquare
   | CloseSquare
@@ -29,6 +29,8 @@ let commaNibbler: Gaze.nibbler<string, token> = Nibblers.take(",", Comma)
 
 let backTickNibber = Nibblers.take("`", Ignore)
 
+let dollarSignNibber = Nibblers.take("$", Ignore)
+
 let doubleQuoteNibber = Nibblers.take("\"", Ignore)
 
 let whiteSpaceNibbler = Nibblers.take(" ", Ignore)
@@ -36,6 +38,13 @@ let whiteSpaceNibbler = Nibblers.take(" ", Ignore)
 let identifierValueNibbler: Gaze.nibbler<string, token> = Nibblers.takeWhile(
   value => value != "`",
   value => Identifier(Array.join(value, "")),
+)
+
+let slotRegex = RegExp.fromString("[a-zA-Z_0-9]")
+
+let slotValueNibbler: Gaze.nibbler<string, token> = Nibblers.takeWhile(
+  value => String.match(value, slotRegex)->Option.isSome,
+  value => Slot(Array.join(value, "")),
 )
 
 let stringValueNibbler: Gaze.nibbler<string, token> = Nibblers.takeWhile(
@@ -52,6 +61,11 @@ let intNibbler: Gaze.nibbler<string, token> = Nibblers.takeWhile(
 
 let identifierNibbler: Gaze.nibbler<string, token> = Nibblers.takeAll(
   [backTickNibber, identifierValueNibbler, backTickNibber],
+  res => res->Array.getUnsafe(1),
+)
+
+let slotNibbler: Gaze.nibbler<string, token> = Nibblers.takeAll(
+  [dollarSignNibber, slotValueNibbler],
   res => res->Array.getUnsafe(1),
 )
 
@@ -75,6 +89,7 @@ let tokenNibbler = Nibblers.takeFirst([
   closeSqureNibbler,
   commaNibbler,
   identifierNibbler,
+  slotNibbler,
   whiteSpaceNibbler,
   intNibbler,
   stringNibbler,

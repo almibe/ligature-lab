@@ -19,6 +19,10 @@ let testStrings: array<(string, result<list<Model.wanderValue>, string>)> = [
   ("234 `test`", Ok(list{Model.Identifier({identifier: "test"}), Model.Int(234n)})),
   ("1 pop", Ok(list{})),
   ("[]", Ok(list{Model.Quote(list{})})),
+  ("$test", Ok(list{Model.Slot("test")})),
+  ("[$test]", Ok(list{Model.Quote(list{Model.Slot("test")})})),
+  ("[$test] apply", Ok(list{Model.Slot("test")})),
+  ("1 [2] apply", Ok(list{Model.Int(2n), Model.Int(1n)})),
 ]
 
 test("single eval", () => {

@@ -26,22 +26,12 @@ let std: Belt.Map.String.t<Model.wordInstance> = Belt.Map.String.fromArray([
     Model.HostFunction({
       doc: "",
       eval: (stack, words) => {
-        Console.log("!!!")
-        Console.log(List.head(stack))
         switch List.head(stack) {
-          | Some(Quote(values)) => 
-            switch (Interpreter.evalList(values, ~words, ~stack=List.tail(stack)->Option.getUnsafe)) {
-              | Ok(res) =>
-                switch (List.tail(stack)) {
-                  | Some(tail) => Ok(List.concat(res, tail))
-                  | None => Ok(res)
-                }
-              | Error(err) => %todo
-            }
-          | _ => %todo
+        | Some(Quote(values)) =>
+          Interpreter.evalList(values, ~words, ~stack=List.tail(stack)->Option.getUnsafe)
+        | _ => %todo
         }
-      }
-    })
-  )
-  // ("test", Model.Quote(list{Model.Int(45n)}))
+      },
+    }),
+  ),
 ])

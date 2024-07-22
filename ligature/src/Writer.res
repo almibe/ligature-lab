@@ -24,13 +24,16 @@ let write = (network: Ligature.network): string => {
   "{" ++ res ++ "}"
 }
 
+let writeQuote = quote => "test"
+
 @genType
 let printResult = (input: result<Model.wanderValue, Ligature.ligatureError>) => {
   switch input {
   | Ok(Int(value)) => BigInt.toString(value)
   | Ok(String(value)) => Js.Json.stringifyAny(value)->Option.getUnsafe
   | Ok(Identifier(value)) => writeIdentifier(value)
-  | Ok(Network(value)) => write(value)
+  | Ok(Quote(values)) => writeQuote(values)
+  | Ok(Slot(value)) => "$" ++ value
   | Error(err) => "Error: " ++ err
   }
 }

@@ -14,7 +14,7 @@ let interpretIdentifier = (expression: Parser.expression): result<
 
 let interpretWord = word => %todo("test")
 
-let rec interpretExpression = (expression: Parser.expression): result<
+let interpretExpression = (expression: Parser.expression): result<
   Model.wanderValue,
   Ligature.ligatureError,
 > => {
@@ -25,17 +25,6 @@ let rec interpretExpression = (expression: Parser.expression): result<
   | Parser.Word(word) => interpretWord(word)
   | _ => %todo
   }
-}
-
-and interpretNetwork = (values: array<Parser.expression>): result<
-  Model.wanderValue,
-  Ligature.ligatureError,
-> => {
-  let entity = interpretIdentifier(values->Array.getUnsafe(0))->Result.getExn
-  let attribute = interpretIdentifier(values->Array.getUnsafe(1))->Result.getExn
-  let value = Ligature.Identifier(interpretIdentifier(values->Array.getUnsafe(2))->Result.getExn)
-
-  Ok(Model.Network(Ligature.networkFromArray([(entity, attribute, value)])))
 }
 
 @genType
@@ -84,11 +73,13 @@ let rec processExpressions = (expressions: array<Parser.expression>): list<Model
     | Parser.String(value) => Model.String(value)
     | Parser.Identifier(value) => Model.Identifier({identifier: value})
     | Parser.Word(value) => Model.Word(value)
-    | Parser.Quote(quote) => quote
+    | Parser.Quote(quote) =>
+      quote
       ->List.map(expr => processExpression(expr))
       ->Model.Quote
     | Parser.Bytes(_) => %todo
     | Parser.Definition(_, _) => %todo
+    | Parser.Slot(slot) => Model.Slot(slot)
     | Parser.Ignore => raise(Failure("should not reach"))
     }
   )
@@ -99,6 +90,7 @@ and processExpression = (expression: Parser.expression): Model.wanderValue =>
   | Parser.Int(value) => Model.Int(value)
   | Parser.String(value) => Model.String(value)
   | Parser.Identifier(value) => Model.Identifier({identifier: value})
+  | Parser.Slot(slot) => Model.Slot(slot)
   | Parser.Word(value) => Model.Word(value)
   | Parser.Quote(quote) => Quote(processExpressions(List.toArray(quote)))
   | Parser.Bytes(_) => %todo

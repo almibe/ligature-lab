@@ -9,6 +9,7 @@ type rec expression =
   | String(string)
   | Int(bigint)
   | Identifier(string)
+  | Slot(string)
   | Bytes(Js.TypedArray2.Uint8Array.t)
   | Definition(string, expression)
   | Ignore
@@ -34,6 +35,13 @@ let identifierNibbler = Nibblers.takeCond(value => {
   }
 })
 
+let slotNibbler = Nibblers.takeCond(value => {
+  switch value {
+  | Tokenizer.Slot(value) => Some(Slot(value))
+  | _ => None
+  }
+})
+
 let stringNibbler = Nibblers.takeCond(value => {
   switch value {
   | Tokenizer.String(value) => Some(String(value))
@@ -48,13 +56,13 @@ let quoteNibbler: Gaze.gaze<Tokenizer.token> => result<expression, Gaze.gazeErro
     let contents = ref(list{})
     while !complete.contents && !error.contents {
       switch Gaze.next(gaze) {
+      | Ok(Tokenizer.Slot(slot)) => contents.contents = list{...contents.contents, Slot(slot)}
       | Ok(Tokenizer.CloseSquare) => complete.contents = true
       | Ok(Tokenizer.Int(value)) => contents.contents = list{...contents.contents, Int(value)}
       | Ok(Tokenizer.String(value)) => contents.contents = list{...contents.contents, String(value)}
       | Ok(Tokenizer.Word(value)) => contents.contents = list{...contents.contents, Word(value)}
       | Ok(Tokenizer.Identifier(value)) =>
         contents.contents = list{...contents.contents, Identifier(value)}
-      //        | Ok(Tokenizer.Slot(slot)) => contents.contents = list{Slot(slot), ...contents.contents}
       | _ => error.contents = true
       }
     }
@@ -70,6 +78,7 @@ let quoteNibbler: Gaze.gaze<Tokenizer.token> => result<expression, Gaze.gazeErro
 let expressionNibbler = Nibblers.takeFirst([
   intNibbler,
   identifierNibbler,
+  slotNibbler,
   stringNibbler,
   wordNibbler,
   quoteNibbler,

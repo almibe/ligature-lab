@@ -14,6 +14,8 @@ let testValues: array<(string, result<array<Tokenizer.token>, string>)> = [
   ("{}", Ok([Tokenizer.OpenBrace, Tokenizer.CloseBrace])),
   ("word", Ok([Tokenizer.Word("word")])),
   ("[]", Ok([Tokenizer.OpenSquare, Tokenizer.CloseSquare])),
+  ("[123]", Ok([Tokenizer.OpenSquare, Tokenizer.Int(123n), Tokenizer.CloseSquare])),
+  ("[$test]", Ok([Tokenizer.OpenSquare, Tokenizer.Slot("test"), Tokenizer.CloseSquare])),
 ]
 
 test("basic tokenization", () => {
