@@ -4,6 +4,7 @@ let check = (left, right) => %raw(`Vitest.expect(left).toStrictEqual(right)`)
 
 let singleTestValues: array<(Model.wanderValue, result<list<Model.wanderValue>, string>)> = [
   (Model.Int(123n), Ok(list{Model.Int(123n)})),
+  (Model.Quote(list{}), Ok(list{Model.Quote(list{})})),
 ]
 
 let testScripts: array<(list<Model.wanderValue>, result<list<Model.wanderValue>, string>)> = [
@@ -17,6 +18,7 @@ let testStrings: array<(string, result<list<Model.wanderValue>, string>)> = [
   ("`test`", Ok(list{Model.Identifier({identifier: "test"})})),
   ("234 `test`", Ok(list{Model.Identifier({identifier: "test"}), Model.Int(234n)})),
   ("1 pop", Ok(list{})),
+  ("[]", Ok(list{Model.Quote(list{})})),
 ]
 
 test("single eval", () => {
@@ -33,6 +35,6 @@ test("script eval", () => {
 
 test("string eval", () => {
   testStrings->Array.forEach(((script, result)) => {
-    check(Interpreter.evalString(script), result)
+    check(Interpreter.evalString(script, ~words=HostFunctions.std), result)
   })
 })

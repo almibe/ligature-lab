@@ -12,6 +12,7 @@ let valueToJS = (value: Model.wanderValue) =>
   | Model.Int(intValue) => %raw(`BigInt(value._0)`)
   | Model.String(value) => %raw(`value._0`)
   | Model.Identifier({identifier: value}) => %raw(`value._0.identifier`)
+  //  | Model.Quote(quote) => %raw(`value._0`)
   // | Model.Word(value) => Word(value)
   // | Model.Bytes(value) => value
   // | Model.Identifier(value) => value

@@ -22,7 +22,6 @@ let rec interpretExpression = (expression: Parser.expression): result<
   | Parser.Int(value) => Ok(Model.Int(value))
   | Parser.Identifier(value) => Ok(Model.Identifier({identifier: value}))
   | Parser.String(value) => Ok(Model.String(value))
-  | Parser.Network(value) => interpretNetwork(value)
   | Parser.Word(word) => interpretWord(word)
   | _ => %todo
   }
@@ -72,7 +71,7 @@ let evalList = (
   Ok(stack.contents)
 }
 
-let processExpressions = (expressions: array<Parser.expression>): list<Model.wanderValue> =>
+let rec processExpressions = (expressions: array<Parser.expression>): list<Model.wanderValue> =>
   Array.filter(expressions, expression =>
     switch expression {
     | Parser.Ignore => false
@@ -85,14 +84,27 @@ let processExpressions = (expressions: array<Parser.expression>): list<Model.wan
     | Parser.String(value) => Model.String(value)
     | Parser.Identifier(value) => Model.Identifier({identifier: value})
     | Parser.Word(value) => Model.Word(value)
-    | Parser.Quote(_) => %todo
-    | Parser.Network(_) => %todo
+    | Parser.Quote(quote) => quote
+      ->List.map(expr => processExpression(expr))
+      ->Model.Quote
     | Parser.Bytes(_) => %todo
     | Parser.Definition(_, _) => %todo
     | Parser.Ignore => raise(Failure("should not reach"))
     }
   )
   ->List.fromArray
+
+and processExpression = (expression: Parser.expression): Model.wanderValue =>
+  switch expression {
+  | Parser.Int(value) => Model.Int(value)
+  | Parser.String(value) => Model.String(value)
+  | Parser.Identifier(value) => Model.Identifier({identifier: value})
+  | Parser.Word(value) => Model.Word(value)
+  | Parser.Quote(quote) => Quote(processExpressions(List.toArray(quote)))
+  | Parser.Bytes(_) => %todo
+  | Parser.Definition(_, _) => %todo
+  | Parser.Ignore => raise(Failure("should not reach"))
+  }
 
 @genType
 let evalString = (

@@ -9,14 +9,9 @@ type rec expression =
   | String(string)
   | Int(bigint)
   | Identifier(string)
-  | Network(array<expression>)
   | Bytes(Js.TypedArray2.Uint8Array.t)
   | Definition(string, expression)
   | Ignore
-
-let openBraceNibbler = Nibblers.take(Tokenizer.OpenBrace, [Ignore])
-
-let closeBraceNibbler = Nibblers.take(Tokenizer.CloseBrace, [Ignore])
 
 let intNibbler = Nibblers.takeCond(value => {
   switch value {
@@ -46,22 +41,38 @@ let stringNibbler = Nibblers.takeCond(value => {
   }
 })
 
-let statementNibbler = Nibblers.takeAll(
-  [identifierNibbler, identifierNibbler, identifierNibbler],
-  res => res,
-)
-
-let networkNibber = Nibblers.takeAll(
-  [openBraceNibbler, statementNibbler, closeBraceNibbler],
-  res => Network(res->Array.getUnsafe(1)),
-)
+let quoteNibbler: Gaze.gaze<Tokenizer.token> => result<expression, Gaze.gazeError> = gaze =>
+  if Gaze.next(gaze) == Ok(Tokenizer.OpenSquare) {
+    let complete = ref(false)
+    let error = ref(false)
+    let contents = ref(list{})
+    while !complete.contents && !error.contents {
+      switch Gaze.next(gaze) {
+      | Ok(Tokenizer.CloseSquare) => complete.contents = true
+      | Ok(Tokenizer.Int(value)) => contents.contents = list{Int(value), ...contents.contents}
+      | Ok(Tokenizer.String(value)) => contents.contents = list{String(value), ...contents.contents}
+      | Ok(Tokenizer.Word(value)) => contents.contents = list{Word(value), ...contents.contents}
+      | Ok(Tokenizer.Identifier(value)) =>
+        contents.contents = list{Identifier(value), ...contents.contents}
+      //        | Ok(Tokenizer.Slot(slot)) => contents.contents = list{Slot(slot), ...contents.contents}
+      | _ => error.contents = true
+      }
+    }
+    if error.contents {
+      Error(NoMatch)
+    } else {
+      Ok(Quote(contents.contents))
+    }
+  } else {
+    Error(NoMatch)
+  }
 
 let expressionNibbler = Nibblers.takeFirst([
   intNibbler,
   identifierNibbler,
   stringNibbler,
-  networkNibber,
   wordNibbler,
+  quoteNibbler,
 ])
 
 let parse = (input: array<Tokenizer.token>): result<array<expression>, Ligature.ligatureError> => {

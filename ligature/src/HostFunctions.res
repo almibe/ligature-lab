@@ -17,7 +17,7 @@ let std: Belt.Map.String.t<Model.wordInstance> = Belt.Map.String.fromArray([
       eval: stack =>
         switch List.tail(stack) {
         | Some(tail) => Ok(tail)
-        | None => %todo
+        | None => Ok(list{})
         },
     }),
   ),
