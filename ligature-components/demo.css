@@ -2,3 +2,14 @@
     width:1200px;
     height:400px;
 }
+
+#repl {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+}
+
+#terminal {
+}
+
+#stack {
+}
