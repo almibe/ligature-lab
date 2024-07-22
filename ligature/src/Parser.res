@@ -49,11 +49,11 @@ let quoteNibbler: Gaze.gaze<Tokenizer.token> => result<expression, Gaze.gazeErro
     while !complete.contents && !error.contents {
       switch Gaze.next(gaze) {
       | Ok(Tokenizer.CloseSquare) => complete.contents = true
-      | Ok(Tokenizer.Int(value)) => contents.contents = list{Int(value), ...contents.contents}
-      | Ok(Tokenizer.String(value)) => contents.contents = list{String(value), ...contents.contents}
-      | Ok(Tokenizer.Word(value)) => contents.contents = list{Word(value), ...contents.contents}
+      | Ok(Tokenizer.Int(value)) => contents.contents = list{...contents.contents, Int(value)}
+      | Ok(Tokenizer.String(value)) => contents.contents = list{...contents.contents, String(value)}
+      | Ok(Tokenizer.Word(value)) => contents.contents = list{...contents.contents, Word(value)}
       | Ok(Tokenizer.Identifier(value)) =>
-        contents.contents = list{Identifier(value), ...contents.contents}
+        contents.contents = list{...contents.contents, Identifier(value)}
       //        | Ok(Tokenizer.Slot(slot)) => contents.contents = list{Slot(slot), ...contents.contents}
       | _ => error.contents = true
       }

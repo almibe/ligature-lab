@@ -14,11 +14,11 @@ type rec wanderValue =
   | Definition(string, wanderValue)
   | Error(string)
 
-type hostFunction = {
+type rec hostFunction = {
   doc: string,
-  eval: list<wanderValue> => result<list<wanderValue>, Ligature.ligatureError>,
+  eval: (list<wanderValue>, Belt.Map.String.t<wordInstance>) => result<list<wanderValue>, Ligature.ligatureError>,
 }
 
-type wordInstance =
+and wordInstance =
   | Quote(list<wanderValue>)
   | HostFunction(hostFunction)

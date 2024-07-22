@@ -7,13 +7,19 @@ type engineState = {
   mutable stack: list<Model.wanderValue>,
 }
 
-let valueToJS = (value: Model.wanderValue) =>
+let rec quoteToJS = (value: list<Model.wanderValue>) => {
+  value
+  ->List.map(value => valueToJS(value))
+  ->List.toArray
+}
+
+and valueToJS = (value: Model.wanderValue) =>
   switch value {
   | Model.Int(intValue) => %raw(`BigInt(value._0)`)
   | Model.String(value) => %raw(`value._0`)
   | Model.Identifier({identifier: value}) => %raw(`value._0.identifier`)
-  //  | Model.Quote(quote) => %raw(`value._0`)
-  // | Model.Word(value) => Word(value)
+  | Model.Quote(quote) => %raw(`quoteToJS(value._0)`)
+  | Model.Word(value) => %raw(`{word: value._0}`)
   // | Model.Bytes(value) => value
   // | Model.Identifier(value) => value
   // | Model.Definition(_, _) => %todo

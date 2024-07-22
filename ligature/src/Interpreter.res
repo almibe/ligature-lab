@@ -47,7 +47,7 @@ let evalSingle = (
   switch value {
   | Word(word) =>
     switch Belt.Map.String.get(words, word) {
-    | Some(HostFunction(hostFunction)) => hostFunction.eval(stack)
+    | Some(HostFunction(hostFunction)) => hostFunction.eval(stack, words)
     | Some(Quote(quote)) => %todo
     //valList(quote, words, stack)
     | None => Error("Could not find Word " ++ word)
