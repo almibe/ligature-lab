@@ -38,11 +38,11 @@ let stackToJS = (stack: list<Model.wanderValue>) =>
   ->Array.map(valueToJS)
 
 @genType
-let newEngine = (lookup: (string) ) => {
+let newEngine = (lookup: string) => {
   let state = {
     stack: list{},
     stackListeners: [],
-    words: Belt.Map.String.empty,
+    words: HostFunctions.std,
   }
   let setStack = (stack: list<Model.wanderValue>) => {
     state.stack = stack
@@ -52,13 +52,13 @@ let newEngine = (lookup: (string) ) => {
   {
     "setStack": (stack: list<Model.wanderValue>) => setStack(stack),
     "evalScript": (script: string) => {
-      switch Interpreter.evalString(script, ~words=state.words, ~stack=state.stack) {
+      switch Interpreter.evalString(script, state.words, state.stack) {
       | Ok(res) => setStack(res)
       | Error(err) => setStack(list{Model.Error("Error running command"), ...state.stack})
       }
     },
     "eval": (value: Model.wanderValue) => {
-      switch Interpreter.evalSingle(value, ~words=state.words, ~stack=state.stack) {
+      switch Interpreter.evalSingle(value, state.words, state.stack) {
       | Ok(res) => setStack(res)
       | Error(err) => Console.log(err)
       }
@@ -73,6 +73,6 @@ let newEngine = (lookup: (string) ) => {
     },
     "addHostFunction": (name: string, fn: Model.hostFunction) => {
       state.words = Belt.Map.String.set(state.words, name, Model.HostFunction(fn))
-    }
+    },
   }
 }

@@ -15,6 +15,13 @@ type rec wanderValue =
   | Definition(string, wanderValue)
   | Error(string)
 
+type rec wanderType =
+  | AnyT
+  | StringT
+  | IntT
+  | QuoteT(array<wanderType>)
+  | UnknownT
+
 @genType
 type rec hostFunction = {
   doc: string,
@@ -22,9 +29,17 @@ type rec hostFunction = {
     list<wanderValue>,
     Belt.Map.String.t<wordInstance>,
   ) => result<list<wanderValue>, Ligature.ligatureError>,
+  pre: array<wanderType>,
+  post: array<wanderType>,
+}
+
+@genType
+and word = {
+  doc: string,
+  quote: list<wanderValue>  
 }
 
 @genType
 and wordInstance =
-  | Quote(list<wanderValue>)
+  | Word(word)
   | HostFunction(hostFunction)

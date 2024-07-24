@@ -21,24 +21,25 @@ let testStrings: array<(string, result<list<Model.wanderValue>, string>)> = [
   ("[]", Ok(list{Model.Quote(list{})})),
   ("$test", Ok(list{Model.Slot("test")})),
   ("[$test]", Ok(list{Model.Quote(list{Model.Slot("test")})})),
-  ("[$test] apply", Ok(list{Model.Slot("test")})),
-  ("1 [2] apply", Ok(list{Model.Int(2n), Model.Int(1n)})),
+  ("[$test] run", Ok(list{Model.Slot("test")})),
+  ("1 [2] run", Ok(list{Model.Int(2n), Model.Int(1n)})),
+//  ("(x = 5) x", Ok(list{Model.Int(5n)})),
 ]
 
 test("single eval", () => {
   singleTestValues->Array.forEach(((script, result)) => {
-    check(Interpreter.evalSingle(script), result)
+    check(Interpreter.evalSingle(script, Belt.Map.String.empty, list{}), result)
   })
 })
 
 test("script eval", () => {
   testScripts->Array.forEach(((script, result)) => {
-    check(Interpreter.evalList(script), result)
+    check(Interpreter.evalList(script, Belt.Map.String.empty, list{}), result)
   })
 })
 
 test("string eval", () => {
   testStrings->Array.forEach(((script, result)) => {
-    check(Interpreter.evalString(script, ~words=HostFunctions.std), result)
+    check(Interpreter.evalString(script, HostFunctions.std, list{}), result)
   })
 })

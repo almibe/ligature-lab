@@ -28,37 +28,36 @@ let interpretExpression = (expression: Parser.expression): result<
 }
 
 @genType
-let evalSingle = (
-  value: Model.wanderValue,
-  ~words: Belt.Map.String.t<Model.wordInstance>=Belt.Map.String.empty,
-  ~stack: list<Model.wanderValue>=list{},
-): result<list<Model.wanderValue>, Ligature.ligatureError> =>
-  switch value {
-  | Word(word) =>
-    switch Belt.Map.String.get(words, word) {
-    | Some(HostFunction(hostFunction)) => hostFunction.eval(stack, words)
-    | Some(Quote(quote)) => %todo
-    //valList(quote, words, stack)
-    | None => Error("Could not find Word " ++ word)
-    }
-  | value => Ok(list{value, ...stack})
-  }
-
-@genType
-let evalList = (
+let rec evalList = (
   values: list<Model.wanderValue>,
-  ~words: Belt.Map.String.t<Model.wordInstance>=Belt.Map.String.empty,
-  ~stack: list<Model.wanderValue>=list{},
+  words: Belt.Map.String.t<Model.wordInstance>,
+  stack: list<Model.wanderValue>,
 ): result<list<Model.wanderValue>, Ligature.ligatureError> => {
   let stack = ref(stack)
   values->List.forEach(value => {
-    switch evalSingle(value, ~words, ~stack=stack.contents) {
+    switch evalSingle(value, words, stack.contents) {
     | Ok(res) => stack := res
     | Error(res) => Console.log(res)
     }
   })
   Ok(stack.contents)
 }
+
+@genType
+and evalSingle = (
+  value: Model.wanderValue,
+  words: Belt.Map.String.t<Model.wordInstance>,
+  stack: list<Model.wanderValue>,
+): result<list<Model.wanderValue>, Ligature.ligatureError> =>
+  switch value {
+  | Word(word) =>
+    switch Belt.Map.String.get(words, word) {
+    | Some(HostFunction(hostFunction)) => hostFunction.eval(stack, words)
+    | Some(Word(quote)) => evalList(quote.quote, words, stack)
+    | None => Error("Could not find Word " ++ word)
+    }
+  | value => Ok(list{value, ...stack})
+  }
 
 let rec processExpressions = (expressions: array<Parser.expression>): list<Model.wanderValue> =>
   Array.filter(expressions, expression =>
@@ -101,15 +100,15 @@ and processExpression = (expression: Parser.expression): Model.wanderValue =>
 @genType
 let evalString = (
   input: string,
-  ~words: Belt.Map.String.t<Model.wordInstance>=Belt.Map.String.empty,
-  ~stack: list<Model.wanderValue>=list{},
+  words: Belt.Map.String.t<Model.wordInstance>,
+  stack: list<Model.wanderValue>,
 ): result<list<Model.wanderValue>, Ligature.ligatureError> => {
   switch Tokenizer.tokenize(input) {
   | Ok(tokens) =>
     switch Parser.parse(tokens) {
     | Ok(ast) => {
         let ast = processExpressions(ast)
-        evalList(ast, ~words, ~stack)
+        evalList(ast, words, stack)
       }
     | Error(err) => Error(err)
     }
