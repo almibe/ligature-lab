@@ -15,6 +15,7 @@ type rec wanderValue =
   | Definition(string, wanderValue)
   | Error(string)
 
+@genType
 type rec hostFunction = {
   doc: string,
   eval: (
@@ -23,6 +24,7 @@ type rec hostFunction = {
   ) => result<list<wanderValue>, Ligature.ligatureError>,
 }
 
+@genType
 and wordInstance =
   | Quote(list<wanderValue>)
   | HostFunction(hostFunction)

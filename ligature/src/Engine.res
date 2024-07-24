@@ -2,17 +2,21 @@
 // License, v. 2.0. If a copy of the MPL was not distributed with this
 // file, You can obtain one at http://mozilla.org/MPL/2.0/.
 
+@genType
 type engineState = {
   stackListeners: array<array<unknown> => unit>,
   mutable stack: list<Model.wanderValue>,
+  mutable words: Belt.Map.String.t<Model.wordInstance>,
 }
 
+@genType
 let rec quoteToJS = (value: list<Model.wanderValue>) => {
   value
   ->List.map(value => valueToJS(value))
   ->List.toArray
 }
 
+@genType
 and valueToJS = (value: Model.wanderValue) => {
   switch value {
   | Model.Int(intValue) => %raw(`BigInt(value._0)`)
@@ -27,15 +31,18 @@ and valueToJS = (value: Model.wanderValue) => {
   }
 }
 
+@genType
 let stackToJS = (stack: list<Model.wanderValue>) =>
   stack
   ->List.toArray
   ->Array.map(valueToJS)
 
-let newEngine = () => {
+@genType
+let newEngine = (lookup: (string) ) => {
   let state = {
     stack: list{},
     stackListeners: [],
+    words: Belt.Map.String.empty,
   }
   let setStack = (stack: list<Model.wanderValue>) => {
     state.stack = stack
@@ -45,15 +52,15 @@ let newEngine = () => {
   {
     "setStack": (stack: list<Model.wanderValue>) => setStack(stack),
     "evalScript": (script: string) => {
-      switch Interpreter.evalString(script, ~words=HostFunctions.std, ~stack=state.stack) {
+      switch Interpreter.evalString(script, ~words=state.words, ~stack=state.stack) {
       | Ok(res) => setStack(res)
       | Error(err) => setStack(list{Model.Error("Error running command"), ...state.stack})
       }
     },
     "eval": (value: Model.wanderValue) => {
-      switch Interpreter.evalSingle(value, ~words=HostFunctions.std, ~stack=state.stack) {
+      switch Interpreter.evalSingle(value, ~words=state.words, ~stack=state.stack) {
       | Ok(res) => setStack(res)
-      | Error(err) => %todo
+      | Error(err) => Console.log(err)
       }
     },
     "readStack": () => {
@@ -64,5 +71,8 @@ let newEngine = () => {
     "addStackListener": listener => {
       Array.push(state.stackListeners, listener)
     },
+    "addHostFunction": (name: string, fn: Model.hostFunction) => {
+      state.words = Belt.Map.String.set(state.words, name, Model.HostFunction(fn))
+    }
   }
 }

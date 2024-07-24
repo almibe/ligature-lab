@@ -54,7 +54,7 @@ let evalList = (
   values->List.forEach(value => {
     switch evalSingle(value, ~words, ~stack=stack.contents) {
     | Ok(res) => stack := res
-    | Error(res) => %todo
+    | Error(res) => Console.log(res)
     }
   })
   Ok(stack.contents)
