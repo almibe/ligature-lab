@@ -1,9 +1,9 @@
 {
-  "name": "@ligature/ligature",
-  "version": "0.6.0",
+  "name": "@wander-lang/wander",
+  "version": "0.8.0",
+  "private": true,
   "type": "module",
   "keywords": [
-    "rescript"
   ],
   "author": "Alex Michael Berry",
   "license": "MPL-2.0",
