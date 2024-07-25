@@ -18,6 +18,7 @@ let rec quoteToJS = (value: list<Model.wanderValue>) => {
 
 @genType
 and valueToJS = (value: Model.wanderValue) => {
+  Console.log(value)
   switch value {
   | Model.Int(intValue) => %raw(`BigInt(value._0)`)
   | Model.String(value) => %raw(`value._0`)
@@ -25,9 +26,10 @@ and valueToJS = (value: Model.wanderValue) => {
   | Model.Quote(quote) => %raw(`quoteToJS(value._0)`)
   | Model.Word(value) => %raw(`{word: value._0}`)
   | Model.Slot(slot) => %raw(`{slot: value._0}`)
-  // | Model.Bytes(value) => value
-  // | Model.Identifier(value) => value
-  | Model.Definition(_, _) => raise(Failure("Should not reach"))
+  | Model.Bytes(value) => %todo
+  | Model.Definition(name, _) => %raw(`{definition: value._0}`)
+  | Model.Error(err) => %raw(`{error: value._0}`)
+  | _ => %todo
   }
 }
 
@@ -60,7 +62,7 @@ let newEngine = (lookup: string) => {
         setStack(stackRes)
         setWords(wordsRes)
       }
-      | Error(err) => setStack(list{Model.Error("Error running command"), ...state.stack})
+      | Error(err) => setStack(list{Model.Error("Error running command: " ++ err), ...state.stack})
       }
     },
     "eval": (value: Model.wanderValue) => {

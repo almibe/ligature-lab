@@ -12,35 +12,21 @@ engine.addHostFunction("test", {
   eval:(stack, words) => { console.log("test"); return stack; }
 })
 
-function getType(value) {
-  if (typeof value == "bigint") {
-    return "Int"
-  } else if (typeof value =="string") {
-    return "String"
-  } else if (value.identifier !== undefined) {
-    return "Identifier"
-  } else if (value.slot !== undefined) {
-    return "Slot"
-  } else if (Array.isArray(value)) {
-    return "Quote"
-  } else {
-    return "Unknown"
-  }
-}
-
 function printValue(value) {
   if (typeof value == "bigint") {
-    return value
+    return ["Int", value]
   } else if (typeof value =="string") {
-    return JSON.stringify(value)
+    return ["String", JSON.stringify(value)]
   } else if (value.identifier !== undefined) {
-    return "`" + value.identifier + "`"
+    return ["Identifier", "`" + value.identifier + "`"]
   } else if (value.slot !== undefined) {
-    return "$" + value.slot
+    return ["Slot", "$" + value.slot]
+  } else if (value.error !== undefined) {
+    return ["Error", value.error]
   } else if (Array.isArray(value)) {
-    return "[" + value.reduce((state, value) => state + " " + printValue(value), "") + "]" //TODO print each value separately, calling printValue
+    return ["Quote", "[" + value.reduce((state, value) => state + " " + printValue(value), "") + "]"] //TODO print each value separately, calling printValue
   } else {
-    return value          
+    return ["Unknown", value]
   }
 }
 
@@ -52,7 +38,8 @@ initializeRepl(document.querySelector("#terminal"), (script) => {
 
   let index = 0
   stack.forEach((value) => {
-    tabledata.push({id: ++index, value: printValue(value), type: getType(value)})
+    const [type, displayValue] = printValue(value)
+    tabledata.push({id: ++index, value: displayValue, type})
   })
   return "Okay."
 })
