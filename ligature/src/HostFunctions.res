@@ -7,7 +7,7 @@ let std: Belt.Map.String.t<Model.wordInstance> = Belt.Map.String.fromArray([
     "clear",
     Model.HostFunction({
       doc: "Clear the Datastack.",
-      eval: (_, _) => Ok(list{}),
+      eval: (_, words) => Ok(list{}, words),
       pre: [Model.UnknownT],
       post: [Model.UnknownT],
     }),
@@ -18,8 +18,8 @@ let std: Belt.Map.String.t<Model.wordInstance> = Belt.Map.String.fromArray([
       doc: "Remove the top Element from the Stack.",
       eval: (stack, words) =>
         switch List.tail(stack) {
-        | Some(tail) => Ok(tail)
-        | None => Ok(list{})
+        | Some(tail) => Ok(tail, words)
+        | None => Ok(list{}, words)
         },
       pre: [Model.UnknownT],
       post: [Model.UnknownT],
@@ -44,8 +44,8 @@ let std: Belt.Map.String.t<Model.wordInstance> = Belt.Map.String.fromArray([
     "id",
     Model.HostFunction({
       doc: "Return the value of the Datastack, basically a no-op.",
-      eval: (stack, _) => {
-        Ok(stack)
+      eval: (stack, words) => {
+        Ok(stack, words)
       },
       pre: [Model.UnknownT],
       post: [Model.UnknownT],
@@ -55,9 +55,9 @@ let std: Belt.Map.String.t<Model.wordInstance> = Belt.Map.String.fromArray([
     "dup",
     Model.HostFunction({
       doc: "Repeat the top Element on the Datastack.",
-      eval: (stack, _) => {
+      eval: (stack, words) => {
         switch stack {
-        | list{head, ...tail} => Ok(list{head, head, ...tail})
+        | list{head, ...tail} => Ok(list{head, head, ...tail}, words)
         | _ => %todo
         }
       },
@@ -76,10 +76,10 @@ let std: Belt.Map.String.t<Model.wordInstance> = Belt.Map.String.fromArray([
     "count",
     Model.HostFunction({
       doc: "Count the number of Elements in Quotations on the top of the Datastack.",
-      eval: (stack, _) => {
+      eval: (stack, words) => {
         switch stack {
         | list{Quote(quote), ..._} =>
-          Ok(list{Model.Int(BigInt.fromInt(quote->List.length)), ...stack})
+          Ok(list{Model.Int(BigInt.fromInt(quote->List.length)), ...stack}, words)
         | _ => %todo
         }
       },
@@ -91,10 +91,10 @@ let std: Belt.Map.String.t<Model.wordInstance> = Belt.Map.String.fromArray([
     "cat",
     Model.HostFunction({
       doc: "Combine the top two Quotations on the Datastack and place it on top of the Datastack.",
-      eval: (stack, _) => {
+      eval: (stack, words) => {
         switch stack {
         | list{Quote(quote1), Quote(quote2), ...tail} =>
-          Ok(list{Quote(list{...quote1, ...quote2}), ...tail})
+          Ok(list{Quote(list{...quote1, ...quote2}), ...tail}, words)
         | _ => %todo
         }
       },
@@ -102,6 +102,13 @@ let std: Belt.Map.String.t<Model.wordInstance> = Belt.Map.String.fromArray([
       post: [Model.QuoteT([Model.UnknownT])],
     }),
   ),  
+  // (
+  //   "assertEqual",
+  //   Model.Word({
+  //     doc: "Execute two Quotations and compare them with the third.",
+  //     quote: list{Model.Word("dup"), Model.Word("dup")}
+  //   })
+  // ),
   // (
   //   "assertEqual",
   //   Model.HostFunction({

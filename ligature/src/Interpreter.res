@@ -32,15 +32,19 @@ let rec evalList = (
   values: list<Model.wanderValue>,
   words: Belt.Map.String.t<Model.wordInstance>,
   stack: list<Model.wanderValue>,
-): result<list<Model.wanderValue>, Ligature.ligatureError> => {
+): result<(list<Model.wanderValue>, Belt.Map.String.t<Model.wordInstance>), Ligature.ligatureError> => {
   let stack = ref(stack)
+  let wordsRef = ref(words)
   values->List.forEach(value => {
-    switch evalSingle(value, words, stack.contents) {
-    | Ok(res) => stack := res
+    switch evalSingle(value, wordsRef.contents, stack.contents) {
+    | Ok((stackRes, wordsRes)) => {
+      wordsRef := wordsRes
+      stack := stackRes
+    }
     | Error(res) => Console.log(res)
     }
   })
-  Ok(stack.contents)
+  Ok((stack.contents, wordsRef.contents))
 }
 
 @genType
@@ -48,15 +52,16 @@ and evalSingle = (
   value: Model.wanderValue,
   words: Belt.Map.String.t<Model.wordInstance>,
   stack: list<Model.wanderValue>,
-): result<list<Model.wanderValue>, Ligature.ligatureError> =>
+): result<(list<Model.wanderValue>, Belt.Map.String.t<Model.wordInstance>), Ligature.ligatureError> =>
   switch value {
+  | Definition(name, quote) => Ok(stack, words->Belt.Map.String.set(name, Model.Word({doc: "Anon", quote: quote})))
   | Word(word) =>
     switch Belt.Map.String.get(words, word) {
     | Some(HostFunction(hostFunction)) => hostFunction.eval(stack, words)
     | Some(Word(quote)) => evalList(quote.quote, words, stack)
     | None => Error("Could not find Word " ++ word)
     }
-  | value => Ok(list{value, ...stack})
+  | value => Ok(list{value, ...stack}, words)
   }
 
 let rec processExpressions = (expressions: array<Parser.expression>): list<Model.wanderValue> =>
@@ -77,7 +82,7 @@ let rec processExpressions = (expressions: array<Parser.expression>): list<Model
       ->List.map(expr => processExpression(expr))
       ->Model.Quote
     | Parser.Bytes(_) => %todo
-    | Parser.Definition(_, _) => %todo
+    | Parser.Definition(name, quote) => Model.Definition(name, processExpressions(quote->List.toArray))
     | Parser.Slot(slot) => Model.Slot(slot)
     | Parser.Ignore => raise(Failure("should not reach"))
     }
@@ -93,7 +98,7 @@ and processExpression = (expression: Parser.expression): Model.wanderValue =>
   | Parser.Word(value) => Model.Word(value)
   | Parser.Quote(quote) => Quote(processExpressions(List.toArray(quote)))
   | Parser.Bytes(_) => %todo
-  | Parser.Definition(_, _) => %todo
+  | Parser.Definition(name, quote) => Definition(name, processExpressions(quote->List.toArray))
   | Parser.Ignore => raise(Failure("should not reach"))
   }
 
@@ -102,7 +107,7 @@ let evalString = (
   input: string,
   words: Belt.Map.String.t<Model.wordInstance>,
   stack: list<Model.wanderValue>,
-): result<list<Model.wanderValue>, Ligature.ligatureError> => {
+): result<(list<Model.wanderValue>, Belt.Map.String.t<Model.wordInstance>), Ligature.ligatureError> => {
   switch Tokenizer.tokenize(input) {
   | Ok(tokens) =>
     switch Parser.parse(tokens) {

@@ -14,6 +14,7 @@ type token =
   | OpenSquare
   | CloseSquare
   | Colon
+  | Semicolon
   | Comma
   | Ignore
 
@@ -28,6 +29,10 @@ let closeSqureNibbler = Nibblers.take("]", CloseSquare)
 let commaNibbler: Gaze.nibbler<string, token> = Nibblers.take(",", Comma)
 
 let backTickNibber = Nibblers.take("`", Ignore)
+
+let colonNibber = Nibblers.take(":", Colon)
+
+let semicolonNibber = Nibblers.take(";", Semicolon)
 
 let dollarSignNibber = Nibblers.take("$", Ignore)
 
@@ -88,6 +93,8 @@ let tokenNibbler = Nibblers.takeFirst([
   openSquareNibbler,
   closeSqureNibbler,
   commaNibbler,
+  colonNibber,
+  semicolonNibber,
   identifierNibbler,
   slotNibbler,
   whiteSpaceNibbler,

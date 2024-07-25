@@ -12,7 +12,7 @@ type rec wanderValue =
   | Slot(string)
   //  | Network(Ligature.network)
   | Bytes(Js.TypedArray2.Uint8Array.t)
-  | Definition(string, wanderValue)
+  | Definition(string, list<wanderValue>)
   | Error(string)
 
 type rec wanderType =
@@ -28,7 +28,7 @@ type rec hostFunction = {
   eval: (
     list<wanderValue>,
     Belt.Map.String.t<wordInstance>,
-  ) => result<list<wanderValue>, Ligature.ligatureError>,
+  ) => result<(list<wanderValue>, Belt.Map.String.t<wordInstance>), Ligature.ligatureError>,
   pre: array<wanderType>,
   post: array<wanderType>,
 }

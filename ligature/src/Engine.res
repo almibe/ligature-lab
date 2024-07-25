@@ -53,13 +53,13 @@ let newEngine = (lookup: string) => {
     "setStack": (stack: list<Model.wanderValue>) => setStack(stack),
     "evalScript": (script: string) => {
       switch Interpreter.evalString(script, state.words, state.stack) {
-      | Ok(res) => setStack(res)
+      | Ok((res, _)) => setStack(res)
       | Error(err) => setStack(list{Model.Error("Error running command"), ...state.stack})
       }
     },
     "eval": (value: Model.wanderValue) => {
       switch Interpreter.evalSingle(value, state.words, state.stack) {
-      | Ok(res) => setStack(res)
+      | Ok((res, _)) => setStack(res)
       | Error(err) => Console.log(err)
       }
     },
