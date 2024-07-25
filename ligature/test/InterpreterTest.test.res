@@ -1,10 +1,21 @@
 @module("vitest") external test: (string, _ => _) => unit = "test"
 
-let check = (left, right) => %raw(`Vitest.expect(left).toStrictEqual(right)`)
+let check = (left, right) => 
+  switch ((left, right)) {
+    | (Ok(left), Ok(right)) => {
+      Console.log(left)
+      Console.log(right)
+      %raw(`Vitest.expect(left).toStrictEqual(right)`)
+    }
+    | _ => %todo
+  }
+
+let empty = Belt.Map.String.empty
 
 let singleTestValues: array<(Model.wanderValue, result<(list<Model.wanderValue>, Belt.Map.String.t<Model.wordInstance>), string>)> = [
-  (Model.Int(123n), Ok(list{Model.Int(123n)}, HostFunctions.std)),
-  (Model.Quote(list{}), Ok(list{Model.Quote(list{})}, HostFunctions.std)),
+  (Model.Int(123n), Ok(list{Model.Int(123n)}, empty)),
+  (Model.Quote(list{}), Ok(list{Model.Quote(list{})}, empty)),
+  (Model.Definition("test", list{}), Ok(list{}, Belt.Map.String.fromArray([("test", Model.Word({doc:"Anon", quote:list{}}))])))
 ]
 
 let testScripts: array<(list<Model.wanderValue>, result<(list<Model.wanderValue>, Belt.Map.String.t<Model.wordInstance>), string>)> = [
@@ -23,12 +34,12 @@ let testStrings: array<(string, result<(list<Model.wanderValue>, Belt.Map.String
   ("[$test]", Ok(list{Model.Quote(list{Model.Slot("test")})}, HostFunctions.std)),
   ("[$test] run", Ok(list{Model.Slot("test")}, HostFunctions.std)),
   ("1 [2] run", Ok(list{Model.Int(2n), Model.Int(1n)}, HostFunctions.std)),
-  //(":x 5; x", Ok(list{Model.Int(5n)}, HostFunctions.std)),
+  (":x 5; x", Ok(list{Model.Int(5n)}, HostFunctions.std->Belt.Map.String.set("x", Model.Word({doc:"Anon", quote:list{Model.Int(5n)}})))),
 ]
 
 test("single eval", () => {
   singleTestValues->Array.forEach(((script, result)) => {
-    check(Interpreter.evalSingle(script, HostFunctions.std, list{}), result)
+    check(Interpreter.evalSingle(script, Belt.Map.String.empty, list{}), result)
   })
 })
 

@@ -54,7 +54,12 @@ and evalSingle = (
   stack: list<Model.wanderValue>,
 ): result<(list<Model.wanderValue>, Belt.Map.String.t<Model.wordInstance>), Ligature.ligatureError> =>
   switch value {
-  | Definition(name, quote) => Ok(stack, words->Belt.Map.String.set(name, Model.Word({doc: "Anon", quote: quote})))
+  | Definition(name, quote) => {
+      switch (List.tail(stack)) {
+        | Some(tail) => Ok(tail, words->Belt.Map.String.set(name, Model.Word({doc: "Anon", quote: quote})))
+        | None => Ok(list{}, words->Belt.Map.String.set(name, Model.Word({doc: "Anon", quote: quote})))
+      }
+    }
   | Word(word) =>
     switch Belt.Map.String.get(words, word) {
     | Some(HostFunction(hostFunction)) => hostFunction.eval(stack, words)
