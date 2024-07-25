@@ -27,7 +27,7 @@ and valueToJS = (value: Model.wanderValue) => {
   | Model.Slot(slot) => %raw(`{slot: value._0}`)
   // | Model.Bytes(value) => value
   // | Model.Identifier(value) => value
-  // | Model.Definition(_, _) => %todo
+  | Model.Definition(_, _) => raise(Failure("Should not reach"))
   }
 }
 
@@ -48,12 +48,18 @@ let newEngine = (lookup: string) => {
     state.stack = stack
     state.stackListeners->Array.forEach(listener => listener(stackToJS(stack)))
   }
+  let setWords = (words: Belt.Map.String.t<Model.wordInstance>) => {
+    state.words = words
+  }
 
   {
     "setStack": (stack: list<Model.wanderValue>) => setStack(stack),
     "evalScript": (script: string) => {
       switch Interpreter.evalString(script, state.words, state.stack) {
-      | Ok((res, _)) => setStack(res)
+      | Ok((stackRes, wordsRes)) => {
+        setStack(stackRes)
+        setWords(wordsRes)
+      }
       | Error(err) => setStack(list{Model.Error("Error running command"), ...state.stack})
       }
     },

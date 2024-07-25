@@ -36,7 +36,7 @@ type rec hostFunction = {
 @genType
 and word = {
   doc: string,
-  quote: list<wanderValue>  
+  quote: list<wanderValue>,
 }
 
 @genType

@@ -80,14 +80,15 @@ let definitionNibbler: Gaze.gaze<Tokenizer.token> => result<expression, Gaze.gaz
     let complete = ref(false)
     let error = ref(false)
     let contents = ref(list{})
-    switch (Gaze.next(gaze)) {
-      | Ok(Tokenizer.Word(name)) => {
+    switch Gaze.next(gaze) {
+    | Ok(Tokenizer.Word(name)) => {
         while !complete.contents && !error.contents {
           switch Gaze.next(gaze) {
           | Ok(Tokenizer.Slot(slot)) => contents.contents = list{...contents.contents, Slot(slot)}
           | Ok(Tokenizer.Semicolon) => complete.contents = true
           | Ok(Tokenizer.Int(value)) => contents.contents = list{...contents.contents, Int(value)}
-          | Ok(Tokenizer.String(value)) => contents.contents = list{...contents.contents, String(value)}
+          | Ok(Tokenizer.String(value)) =>
+            contents.contents = list{...contents.contents, String(value)}
           | Ok(Tokenizer.Word(value)) => contents.contents = list{...contents.contents, Word(value)}
           | Ok(Tokenizer.Identifier(value)) =>
             contents.contents = list{...contents.contents, Identifier(value)}
@@ -100,7 +101,7 @@ let definitionNibbler: Gaze.gaze<Tokenizer.token> => result<expression, Gaze.gaz
           Ok(Definition(name, contents.contents))
         }
       }
-      | _ => Error(NoMatch)
+    | _ => Error(NoMatch)
     }
   } else {
     Error(NoMatch)

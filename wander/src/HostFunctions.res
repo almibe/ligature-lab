@@ -69,8 +69,8 @@ let std: Belt.Map.String.t<Model.wordInstance> = Belt.Map.String.fromArray([
     "trip",
     Model.Word({
       doc: "Duplicate the top Element on the Datastack twice.",
-      quote: list{Model.Word("dup"), Model.Word("dup")}
-    })
+      quote: list{Model.Word("dup"), Model.Word("dup")},
+    }),
   ),
   (
     "count",
@@ -101,7 +101,7 @@ let std: Belt.Map.String.t<Model.wordInstance> = Belt.Map.String.fromArray([
       pre: [Model.QuoteT([Model.UnknownT]), Model.QuoteT([Model.UnknownT])],
       post: [Model.QuoteT([Model.UnknownT])],
     }),
-  ),  
+  ),
   // (
   //   "assertEqual",
   //   Model.Word({
@@ -115,7 +115,7 @@ let std: Belt.Map.String.t<Model.wordInstance> = Belt.Map.String.fromArray([
   //     doc: "Check if two Quotations are equal after being ran.",
   //     eval: (stack, words) => {
   //       switch (stach) {
-  //         | list{Model.Quote(left), Model.Quote(right), Model.Quote(test), Model.String(message), ...tail} => 
+  //         | list{Model.Quote(left), Model.Quote(right), Model.Quote(test), Model.String(message), ...tail} =>
   //           let leftRes = Interpreter.evalList(left, ~words, ~stack=List.empty)
   //           let rightRes = Interpreter.evalList(right, ~words, ~stack=List.empty)
 

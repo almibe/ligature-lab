@@ -2,12 +2,15 @@ import {TabulatorFull as Tabulator} from 'tabulator-tables';
 import 'tabulator-tables/dist/css/tabulator_simple.css'
 import { initializeRepl } from "./src/repl/Repl.ts"
 import "./demo.css"
-import { newEngine } from '@ligature/ligature/src/Engine.res.js'
+import { newEngine } from '@wander-lang/wander/src/Wander.ts'
 
 const engine = newEngine()
 
 //      console.log(Object.keys(engine))
-engine.addHostFunction("test", () => { TAG: "Ok"; _0: [] })
+engine.addHostFunction("test", {
+  doc:"test", 
+  eval:(stack, words) => { console.log("test"); return stack; }
+})
 
 function getType(value) {
   if (typeof value == "bigint") {
