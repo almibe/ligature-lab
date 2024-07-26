@@ -49,8 +49,8 @@ let stringNibbler = Nibblers.takeCond(value => {
   }
 })
 
-let quoteNibbler: Gaze.gaze<Tokenizer.token> => result<expression, Gaze.gazeError> = gaze =>
-  if Gaze.next(gaze) == Ok(Tokenizer.OpenSquare) {
+let quoteNibbler: (Gaze.gaze<Tokenizer.token>) => result<expression, Gaze.gazeError> = (gaze) => {
+  let rec quoteNibblerInner = gaze => {
     let complete = ref(false)
     let error = ref(false)
     let contents = ref(list{})
@@ -58,6 +58,12 @@ let quoteNibbler: Gaze.gaze<Tokenizer.token> => result<expression, Gaze.gazeErro
       switch Gaze.next(gaze) {
       | Ok(Tokenizer.Slot(slot)) => contents.contents = list{...contents.contents, Slot(slot)}
       | Ok(Tokenizer.CloseSquare) => complete.contents = true
+      | Ok(Tokenizer.OpenSquare) => {
+        switch (quoteNibblerInner(gaze)) {
+          | Ok(res) => contents.contents = list{...contents.contents, res}
+          | Error(_) => %todo
+        }
+      }
       | Ok(Tokenizer.Int(value)) => contents.contents = list{...contents.contents, Int(value)}
       | Ok(Tokenizer.String(value)) => contents.contents = list{...contents.contents, String(value)}
       | Ok(Tokenizer.Word(value)) => contents.contents = list{...contents.contents, Word(value)}
@@ -67,45 +73,48 @@ let quoteNibbler: Gaze.gaze<Tokenizer.token> => result<expression, Gaze.gazeErro
       }
     }
     if error.contents {
-      Error(NoMatch)
+      Error(Gaze.NoMatch)
     } else {
       Ok(Quote(contents.contents))
     }
+  }
+  if (Gaze.next(gaze) == Ok(Tokenizer.OpenSquare)) {
+    quoteNibblerInner(gaze)
   } else {
     Error(NoMatch)
-  }
+  }}
 
-let definitionNibbler: Gaze.gaze<Tokenizer.token> => result<expression, Gaze.gazeError> = gaze =>
-  if Gaze.next(gaze) == Ok(Tokenizer.Colon) {
-    let complete = ref(false)
-    let error = ref(false)
-    let contents = ref(list{})
-    switch Gaze.next(gaze) {
-    | Ok(Tokenizer.Word(name)) => {
-        while !complete.contents && !error.contents {
-          switch Gaze.next(gaze) {
-          | Ok(Tokenizer.Slot(slot)) => contents.contents = list{...contents.contents, Slot(slot)}
-          | Ok(Tokenizer.Semicolon) => complete.contents = true
-          | Ok(Tokenizer.Int(value)) => contents.contents = list{...contents.contents, Int(value)}
-          | Ok(Tokenizer.String(value)) =>
-            contents.contents = list{...contents.contents, String(value)}
-          | Ok(Tokenizer.Word(value)) => contents.contents = list{...contents.contents, Word(value)}
-          | Ok(Tokenizer.Identifier(value)) =>
-            contents.contents = list{...contents.contents, Identifier(value)}
-          | _ => error.contents = true
-          }
-        }
-        if error.contents {
-          Error(NoMatch)
-        } else {
-          Ok(Definition(name, contents.contents))
-        }
-      }
-    | _ => Error(NoMatch)
-    }
-  } else {
-    Error(NoMatch)
-  }
+// let definitionNibbler: Gaze.gaze<Tokenizer.token> => result<expression, Gaze.gazeError> = gaze =>
+//   if Gaze.next(gaze) == Ok(Tokenizer.Colon) {
+//     let complete = ref(false)
+//     let error = ref(false)
+//     let contents = ref(list{})
+//     switch Gaze.next(gaze) {
+//     | Ok(Tokenizer.Word(name)) => {
+//         while !complete.contents && !error.contents {
+//           switch Gaze.next(gaze) {
+//           | Ok(Tokenizer.Slot(slot)) => contents.contents = list{...contents.contents, Slot(slot)}
+//           | Ok(Tokenizer.Semicolon) => complete.contents = true
+//           | Ok(Tokenizer.Int(value)) => contents.contents = list{...contents.contents, Int(value)}
+//           | Ok(Tokenizer.String(value)) =>
+//             contents.contents = list{...contents.contents, String(value)}
+//           | Ok(Tokenizer.Word(value)) => contents.contents = list{...contents.contents, Word(value)}
+//           | Ok(Tokenizer.Identifier(value)) =>
+//             contents.contents = list{...contents.contents, Identifier(value)}
+//           | _ => error.contents = true
+//           }
+//         }
+//         if error.contents {
+//           Error(NoMatch)
+//         } else {
+//           Ok(Definition(name, contents.contents))
+//         }
+//       }
+//     | _ => Error(NoMatch)
+//     }
+//   } else {
+//     Error(NoMatch)
+//   }
 
 let expressionNibbler = Nibblers.takeFirst([
   intNibbler,
@@ -114,7 +123,7 @@ let expressionNibbler = Nibblers.takeFirst([
   stringNibbler,
   wordNibbler,
   quoteNibbler,
-  definitionNibbler,
+//  definitionNibbler,
 ])
 
 let parse = (input: array<Tokenizer.token>): result<array<expression>, Ligature.ligatureError> => {

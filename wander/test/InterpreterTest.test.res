@@ -7,7 +7,7 @@ let check = (left, right) =>
       Console.log(right)
       %raw(`Vitest.expect(left).toStrictEqual(right)`)
     }
-  | _ => %todo
+  | (left, right) => %todo
   }
 
 let empty = Belt.Map.String.empty
@@ -52,16 +52,17 @@ let testStrings: array<(
   ("[$test]", Ok(list{Model.Quote(list{Model.Slot("test")})}, HostFunctions.std)),
   ("[$test] run", Ok(list{Model.Slot("test")}, HostFunctions.std)),
   ("1 [2] run", Ok(list{Model.Int(2n), Model.Int(1n)}, HostFunctions.std)),
-  (
-    ":x 5; x",
-    Ok(
-      list{Model.Int(5n)},
-      HostFunctions.std->Belt.Map.String.set(
-        "x",
-        Model.Word({doc: "Anon", quote: list{Model.Int(5n)}}),
-      ),
-    ),
-  ),
+  // (
+  //   ":x 5; x",
+  //   Ok(
+  //     list{Model.Int(5n)},
+  //     HostFunctions.std->Belt.Map.String.set(
+  //       "x",
+  //       Model.Word({doc: "Anon", quote: list{Model.Int(5n)}}),
+  //     ),
+  //   ),
+  // ),
+  ("[[]]", Ok(list{Model.Quote(list{Model.Quote(list{})})}, HostFunctions.std)),
 ]
 
 test("single eval", () => {
@@ -78,6 +79,7 @@ test("script eval", () => {
 
 test("string eval", () => {
   testStrings->Array.forEach(((script, result)) => {
+    Console.log("Running " ++ script)
     check(Interpreter.evalString(script, HostFunctions.std, list{}), result)
   })
 })
