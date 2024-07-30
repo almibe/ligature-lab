@@ -1,10 +1,10 @@
 import { Set, Record, Map } from "immutable"
 
-export type Identifier = { identifier: string }
+export type Word = { word: string }
 
-export const Identifier = Record<Identifier>({ identifier: "" })
+export const Word = Record<Word>({ word: "" })
 
-export const identifier = (identifier: string) => Identifier({identifier})
+export const word = (word: string) => Word({word})
 
 export type Slot = { name: string | null }
 
@@ -12,11 +12,11 @@ export const Slot = Record<Slot>({ name: null })
 
 export const slot = (name: string) => Slot({name})
 
-export type Value = bigint | string | Identifier | Uint8Array | Slot
+export type Value = bigint | string | Word | Uint8Array | Slot
 
 export type Triple = { 
-    entity: Identifier | Slot, 
-    attribute: Identifier | Slot, 
+    entity: Word | Slot, 
+    attribute: Word | Slot, 
     value: Value
 }
 

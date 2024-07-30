@@ -1,5 +1,5 @@
 import { Map, Set } from "immutable"
-import { Triple, Network, Slot, Value, Identifier } from "./ligature.ts"
+import { Triple, Network, Slot, Value, Word } from "./ligature.ts"
 
 const isSlot = (value: any): boolean => value.name !== undefined
 
@@ -68,18 +68,18 @@ export const inMemoryNetwork = (initial: Set<Triple> = Set([])) => {
         },
         apply: (values: Map<Slot, Value>) => {
             return inMemoryNetwork(triples.map((triple) => {
-                var entity: Identifier | Slot = triple.entity
+                var entity: Word | Slot = triple.entity
                 if (isSlot(triple.entity)) {
                     let slotName = (triple.entity as Slot)
                     if (values.contains(slotName)) {
-                        entity = (values.get(slotName) as Identifier | Slot)
+                        entity = (values.get(slotName) as Word | Slot)
                     }
                 }
-                var attribute: Identifier | Slot = triple.attribute
+                var attribute: Word | Slot = triple.attribute
                 if (isSlot(triple.attribute)) {
                     let slotName = (triple.attribute as Slot)
                     if (values.contains(slotName)) {
-                        attribute = (values.get(slotName) as Identifier | Slot)
+                        attribute = (values.get(slotName) as Word | Slot)
                     }
                 }
                 var value: Value = triple.value
