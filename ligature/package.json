@@ -1,0 +1,22 @@
+{
+    "name": "@ligature/ligature",
+    "private": true,
+    "version": "0.3.0",
+    "type": "module",
+    "license": "MPL-2.0",
+    "author": { "name": "Alex Michael Berry", "url": "https://almibe.dev"}
+    ,  "scripts": {
+      "test": "vitest",
+      "dev": "vite",
+      "build": "tsc && vite build",
+      "preview": "vite preview"
+    },
+    "devDependencies": {
+      "typescript": "^5.2.2",
+      "vite": "^5.3.1",
+      "vitest": "^1.6.0"
+    },
+    "dependencies": {
+      "immutable": "^4.3.6"
+    }
+  }
