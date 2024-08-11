@@ -7,10 +7,10 @@ import { newEngine } from '@wander-lang/wander/src/Wander.ts'
 const engine = newEngine()
 
 //      console.log(Object.keys(engine))
-engine.addHostFunction("test", {
-  doc:"test", 
-  eval:(stack, words) => { console.log("test"); return stack; }
-})
+// engine.addHostFunction("test", {
+//   doc:"test", 
+//   eval:(stack, words) => { console.log("test"); return stack; }
+// })
 
 function printValue(value) {
   if (typeof value == "bigint") {

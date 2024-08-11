@@ -12,15 +12,17 @@ export const Slot = Record<Slot>({ name: null })
 
 export const slot = (name: string) => Slot({name})
 
-export type Value = bigint | string | Word | Uint8Array | Slot
+export type Quote = Array<Value | Network>
 
-export type Triple = { 
+export type Value = bigint | string | Word | Uint8Array | Slot | Quote
+
+export type Statement = { 
     entity: Word | Slot, 
     attribute: Word | Slot, 
     value: Value
 }
 
-export const Triple = Record<Triple>({
+export const Statement = Record<Statement>({
     entity: Slot(),
     attribute: Slot(),
     value: Slot()
@@ -28,11 +30,11 @@ export const Triple = Record<Triple>({
 
 export interface Network {
     /**
-     * Get all of the Triples in this Network.
+     * Get all of the Statements in this Network.
      */
-    write: () => Set<Triple>
+    write: () => Set<Statement>
     /**
-     * Get the number of Triples in this Network.
+     * Get the number of Statements in this Network.
      */
     count: () => number
     /**
@@ -40,7 +42,7 @@ export interface Network {
      */
     merge: (network: Network) => Network
     /**
-     * Remove all of the Triples from the argument Network from this Network and return the new Network.
+     * Remove all of the Statements from the argument Network from this Network and return the new Network.
      */
     minus: (network: Network) => Network
     /**
@@ -48,7 +50,7 @@ export interface Network {
      */
     apply: (values: Map<Slot, Value>) => Network
     /**
-     * Check if this Pattern of Triple matches this Network.
+     * Check if this Pattern of Statement matches this Network.
      */
     match: (pattern: Network) => boolean
     /**

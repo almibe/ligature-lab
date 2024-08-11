@@ -1,38 +1,38 @@
 import { Map, Set } from "immutable"
-import { Triple, Network, Slot, Value, Word } from "./ligature.ts"
+import { Statement, Network, Slot, Value, Word } from "./ligature.ts"
 
 const isSlot = (value: any): boolean => value.name !== undefined
 
 export const utility = {
-    extractTriple: (triple: Triple, patternTriple: Triple): null | Map<Slot, Value> => {
+    extractStatement: (statement: Statement, patternStatement: Statement): null | Map<Slot, Value> => {
         var result = Map<Slot, Value>()
 
-        console.log(JSON.stringify(patternTriple))
+        console.log(JSON.stringify(patternStatement))
 
-        if (isSlot(patternTriple.entity)) {
-            const slot = patternTriple.entity as Slot
+        if (isSlot(patternStatement.entity)) {
+            const slot = patternStatement.entity as Slot
             if (slot.name != null) {
-                result = result.set(slot, triple.entity)
+                result = result.set(slot, statement.entity)
             }
-        } else if (triple.entity != patternTriple.entity) {
+        } else if (statement.entity != patternStatement.entity) {
             return null
         }
     
-        if (isSlot(patternTriple.attribute)) {
-            const slot = patternTriple.attribute as Slot
+        if (isSlot(patternStatement.attribute)) {
+            const slot = patternStatement.attribute as Slot
             if (slot.name != null) {
-                result = result.set(slot, triple.attribute)
+                result = result.set(slot, statement.attribute)
             }
-        } else if (triple.attribute != patternTriple.attribute) {
+        } else if (statement.attribute != patternStatement.attribute) {
             return null
         }
     
-        if (isSlot(patternTriple.value)) {
-            const slot = patternTriple.value as Slot
+        if (isSlot(patternStatement.value)) {
+            const slot = patternStatement.value as Slot
             if (slot.name != null) {
-                result = result.set(slot, triple.value)
+                result = result.set(slot, statement.value)
             }
-        } else if (triple.value != patternTriple.value ) {
+        } else if (statement.value != patternStatement.value ) {
             return null
         }
 
@@ -42,58 +42,58 @@ export const utility = {
     /**
      * A utility function that 
      */
-    extractNetwork: (triples: Set<Triple>, pattern: Network): null | Set<Map<Slot, Value>> => {
+    extractNetwork: (statements: Set<Statement>, pattern: Network): null | Set<Map<Slot, Value>> => {
         var results = Set<Map<Slot, Value>>();
-        triples.forEach((triple) => {
+        statements.forEach((statement) => {
     
         })
         return results
     }    
 }
 
-export const inMemoryNetwork = (initial: Set<Triple> = Set([])) => {
-    const triples = initial
+export const inMemoryNetwork = (initial: Set<Statement> = Set([])) => {
+    const statements = initial
     return {
         write: () => {
-            return triples
+            return statements
         },
         count: () => {
-            return triples.size
+            return statements.size
         },
         merge: (network: Network) => {
-            return inMemoryNetwork(Set.union([triples, network.write()]))
+            return inMemoryNetwork(Set.union([statements, network.write()]))
         },
         minus: (network: Network) => {
-            return inMemoryNetwork(triples.subtract(network.write()))
+            return inMemoryNetwork(statements.subtract(network.write()))
         },
         apply: (values: Map<Slot, Value>) => {
-            return inMemoryNetwork(triples.map((triple) => {
-                var entity: Word | Slot = triple.entity
-                if (isSlot(triple.entity)) {
-                    let slotName = (triple.entity as Slot)
+            return inMemoryNetwork(statements.map((statement) => {
+                var entity: Word | Slot = statement.entity
+                if (isSlot(statement.entity)) {
+                    let slotName = (statement.entity as Slot)
                     if (values.contains(slotName)) {
                         entity = (values.get(slotName) as Word | Slot)
                     }
                 }
-                var attribute: Word | Slot = triple.attribute
-                if (isSlot(triple.attribute)) {
-                    let slotName = (triple.attribute as Slot)
+                var attribute: Word | Slot = statement.attribute
+                if (isSlot(statement.attribute)) {
+                    let slotName = (statement.attribute as Slot)
                     if (values.contains(slotName)) {
                         attribute = (values.get(slotName) as Word | Slot)
                     }
                 }
-                var value: Value = triple.value
-                if (isSlot(triple.value)) {
-                    let slotName = (triple.value as Slot)
+                var value: Value = statement.value
+                if (isSlot(statement.value)) {
+                    let slotName = (statement.value as Slot)
                     if (values.contains(slotName)) {
                         value = (values.get(slotName) as Value)
                     }
                 }
-                return Triple({entity, attribute, value})
+                return Statement({entity, attribute, value})
             }))
         },
         match: (pattern: Network): boolean => {
-            return utility.extractNetwork(triples, pattern) != null
+            return utility.extractNetwork(statements, pattern) != null
         },
         educe: (pattern: Network): Set<Map<Slot, Value>> => {
             
