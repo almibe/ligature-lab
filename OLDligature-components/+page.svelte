@@ -1,44 +1,43 @@
 <script lang="ts">
 	import { newEngine } from "@ligature/ligature";
-  import Split from "split.js";
   import { browser } from '$app/environment';
+  import { wsConnect } from '$lib'
 
 	let text: string = '';
-  let result: string = "{}";
+  let result: string = "@ {}";
   let engine = newEngine()
-	function greet(event) {
+
+  let wsEngine: undefined | any = undefined
+
+	function checkInput(event) {
 		if (event.keyCode == 13) {
-      result = JSON.stringify(engine.run(text))
+      wsEngine.run(text)
+      // result = JSON.stringify(engine.run(text))
       text = ""
       event.preventDefault();
     }
 	}
 
   if (browser) {
-    setTimeout(() => {
-      Split(['#results', '#input'], {
-        direction: "vertical",
-        sizes: [70, 30]
-      })
-     document.querySelector("#input").focus();
-    })
+    wsEngine = wsConnect("ws://localhost:8080/websocket")
+    wsEngine.addListener((cbResult) => result = cbResult)
+
+    document.querySelector("#input").focus();
   }
 </script>
-  
+
 <div id="container">
+  <div id="input">
+    <textarea  bind:value={text} on:keydown={checkInput}></textarea>  
+  </div>
   <section id="results">{result}</section>
-  <textarea id="input" bind:value={text} on:keydown={greet}></textarea>  
 </div>
 
 <style>
   #container {
-    height: 100vh;
   }
 
   #results {
-    display: flex;
-    align-items: flex-end;
-    width: 100%;
     padding: 20px;
   }
 
@@ -46,7 +45,7 @@
   }
 
   textarea {
-    resize: none;
+    resize: vertical;
     field-sizing: content;
     width: 100%;
     height:1;
