@@ -9,6 +9,7 @@ export interface Editor {
 }
 
 export interface EditorConfig {
+  readonly engine: any
   readonly element: HTMLElement
   readonly onRun: (text: string) => void
   readonly onChange: (text: string) => void
@@ -33,6 +34,9 @@ export function initializeEditor(config: EditorConfig): Editor {
       EditorView.domEventHandlers({
         keydown: (e, v) => {
           if((e.code == "Enter") && (e.metaKey || e.ctrlKey)) {
+            config.onRun(v.state.doc.toString());
+            e.preventDefault();
+          } else if ((e.code == "Enter")) {
             config.onRun(v.state.doc.toString());
             e.preventDefault();
           }
