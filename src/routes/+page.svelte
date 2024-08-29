@@ -5,6 +5,7 @@
 	import TextView from "$lib/components/TextView.svelte";
   import { state } from "$lib/stores";
 	import { setContext } from 'svelte';
+  import "@shoelace-style/shoelace/dist/themes/light.css"
 
   let engine = newEngine()
   setContext("engine", engine)

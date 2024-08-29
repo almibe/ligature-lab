@@ -39,6 +39,7 @@ export function initializeEditor(config: EditorConfig): Editor {
           } else if ((e.code == "Enter")) {
             config.onRun(v.state.doc.toString());
             e.preventDefault();
+            inputEditor.dispatch({changes: {from: 0, to: inputEditor.state.doc.length, insert: ""}})
           }
         },
       }),
