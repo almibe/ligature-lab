@@ -2,7 +2,7 @@
 	import { newEngine } from "@ligature/ligature";
   import { browser } from '$app/environment';
   import Editor from "$lib/components/Editor.svelte";
-	import TextView from "$lib/components/TextView.svelte";
+	import ReplView from "$lib/components/ReplView.svelte";
   import { state } from "$lib/stores";
 	import { setContext } from 'svelte';
   import "@shoelace-style/shoelace/dist/themes/light.css"
@@ -20,7 +20,7 @@
     <Editor></Editor>
   </div>
   <section id="results">
-    <TextView></TextView>
+    <ReplView></ReplView>
   </section>
 </div>
 

@@ -2,6 +2,7 @@
   import { initializeEditor } from "./LigatureEditor.ts"
   import { browser } from '$app/environment'
   import { getContext } from "svelte";
+	import { addResult } from "./Store.js";
 
   if (browser) {
     import("@shoelace-style/shoelace/dist/shoelace.js")
@@ -16,7 +17,8 @@
         engine: engine,
         element: document.querySelector("#editor"),
         onRun: (text: string) => {
-          engine.run(text)
+          let res = engine.run(text)
+          addResult(res)
         },
         onChange: (text: string) => {}
       })
@@ -27,7 +29,6 @@
 
 //  openButton.addEventListener('click', () => dialog.show());
   closeButton.addEventListener('click', () => dialog.hide());
-      engine.run("")
     })
   }
 
