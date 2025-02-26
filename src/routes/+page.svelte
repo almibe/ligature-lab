@@ -1,19 +1,21 @@
 <script lang="ts">
     import { onMount } from "svelte";
-    import {showEditor, createComponentFns} from "@ligature/ligature-components"
-    import {runWithFns} from "@ligature/ligature"
+    import {showEditor, runScript} from "@ligature/ligature-components"
 
     let editor = null;
-    let actions = null;
 
-    function run() {
+    async function run() {
         document.querySelector("#results").innerHTML = ""
-        runWithFns(actions, editor.state.doc.toString())
+        let result = await fetch("/api/", {
+            method: "POST",
+            body: editor.state.doc.toString(),
+        })
+        let resultText = await result.text()
+        runScript(resultText, document.querySelector("#results"))
     }
 
     onMount(() => {
-        editor = showEditor(document.querySelector("#editor"), "docs display-table")
-        actions = createComponentFns(document.querySelector("#results"))
+        editor = showEditor(document.querySelector("#editor"), "docs")
     })
 </script>
 
