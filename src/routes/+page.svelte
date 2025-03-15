@@ -1,33 +1,62 @@
 <script lang="ts">
-    import { onMount } from "svelte";
-    import {showEditor, runScript} from "@ligature/ligature-components"
+    import KBs from "$lib/KBs.svelte";
+    import Docs from "$lib/Docs.svelte";
+    import Editor from "$lib/Editor.svelte";
 
-    let editor = null;
+    let display = $state({comp: Editor})
 
-    async function run() {
-        document.querySelector("#results").innerHTML = ""
-        let result = await fetch("/api/", {
-            method: "POST",
-            body: editor.state.doc.toString(),
-        })
-        let resultText = await result.text()
-        runScript(resultText, document.querySelector("#results"))
+    function script() {
+        display = { comp: Editor }
     }
 
-    onMount(() => {
-        editor = showEditor(document.querySelector("#editor"), "docs")
-    })
+    function showDocs() {
+        display = { comp: Docs }
+    }
+
+    function showKbs() {
+        display = { comp: KBs }
+    }
 </script>
 
 <div id="app">
-    <div><button onclick={run} id="runButton">Run</button></div>
-    <div id="editor"></div>
-    <div id="results"></div>
+    <div id="sidebar">
+        <div><button onclick={script}>Script Eval</button></div>
+        <div><button onclick={showDocs}>Docs</button></div>
+        <div><button onclick={showKbs}>KBs</button></div>
+    </div>
+    <div id="main">
+        <display.comp />
+    </div>
 </div>
 
 <style>
+    #sidebar {
+        margin: 0;
+        padding: 0;
+        width: 200px;
+        background-color: #EEE;
+        position: fixed;
+        height: 100%;
+        overflow: auto;
+    }
+
+    #sidebar button {
+        background: none;
+        border: none;
+        cursor: pointer;
+    }
+
+    #main {
+        padding-left: 200px;
+    }
+
     :global(.graph) {
         width: 400px;
         height: 400px;
+    }
+
+    :global(body) {
+        margin: 0;
+        padding: 0;
     }
 </style>
