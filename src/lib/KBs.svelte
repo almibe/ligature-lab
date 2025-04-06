@@ -6,7 +6,7 @@
     let kbs = $state([])
 
     onMount(async () => {
-        const script = "kbs"
+        const script = "(stores)"
         let result = await fetch("/api/", {
             method: "POST",
             body: script,

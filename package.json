@@ -27,7 +27,7 @@
 		"vitest": "^3.0.0"
 	},
 	"dependencies": {
-		"@ligature/ligature": "file:../ligature-components/packages/ligature-fable",
+		"@ligature/ligature": "file:../ligature-fs/src/LigatureFable",
 		"@ligature/ligature-components": "file:../ligature-components/packages/ligature-components"
 	}
 }
